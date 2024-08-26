@@ -67,7 +67,7 @@ router.post("/create-shop", catchAsyncErrors(async (req, res, next) => {
 
     const activationToken = createActivationToken(seller);
 
-    const activationUrl = `https://allsextoyss.vercel.app/seller/activation/${activationToken}`;
+    const activationUrl = `https://medical-e-app.vercel.app/seller/activation/${activationToken}`;
 
     try {
       await sendMail({
