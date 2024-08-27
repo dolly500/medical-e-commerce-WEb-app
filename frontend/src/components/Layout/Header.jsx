@@ -138,7 +138,7 @@ const Header = ({ activeHeading, data }) => {
         <div className="hidden 800px:h-[50px] 800px:my-[20px] 800px:flex items-center justify-between">
           <div className="">
             <Link to="/">
-              <img className="h-auto max-w-full w-2/5 ml-8"
+              <img className="h-20 max-w-full w-3/5 ml-8"
                 src={logo}
                 alt=""
               />
@@ -376,8 +376,8 @@ const Header = ({ activeHeading, data }) => {
               <img
                 src={logo}
                 alt=""
-                className="mt-3 cursor-pointer max-w-full h-auto"
-                style={{ maxHeight: '150px' }}
+                className="mt-3 cursor-pointer max-w-full h-14"
+                style={{ maxHeight: '150px', backgroundColor: "transparent" }}
               />
             </Link>
           </div>

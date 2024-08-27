@@ -23,16 +23,16 @@ const Hero = () => {
     <div style={{ overflow: 'hidden' }}>
     <Slider {...settings}>
     <div
-      className={`relative min-h-[70vh] 800px:min-h-[80vh] w-full bg-cover bg-center bg-no-repeat bg-center bg-[url(https://img.freepik.com/premium-photo/female-set-sex-toys-bdsm_118086-2207.jpg?size=626&ext=jpg&ga=GA1.1.1799229163.1671081494&semt=ais)] bg-blend-darken ${styles.noramlFlex}`}
+      className={`relative min-h-[70vh] 800px:min-h-[80vh] w-full bg-cover bg-center bg-no-repeat bg-center bg-[url(https://img.freepik.com/free-photo/metal-treatment-device-background-diagnostic_1232-4186.jpg?size=626&ext=jpg&ga=GA1.2.39547238.1724736152&semt=ais_hybrid)] bg-blend-darken ${styles.noramlFlex}`}
     >
       <div className={`${styles.section}  w-[90%] 800px:w-[60%]`} style={{marginTop: '100px'}}>
         <h1
-          className={`text-[45px] leading-[1.2] 800px:text-[80px] 1200px:text-[80px] text-[#E6007E] font-[700] capitalize`}
+          className={`text-[45px] leading-[1.2] 800px:text-[80px] 1200px:text-[80px] text-blue-700 font-[700] capitalize`}
         >
-          Best Collection Of <br /> Sex Toys
+          Best Collection Of <br /> Medical Equipments
         </h1>
-        <p className="pt-5 text-[16px] 800px:text-[16px] 1200px:text-[20px] font-[400] text-[#ffffff]">
-        We provide solutions and guidance needed in relationships regarding all aspects of their sex life's challenges. With our experienced and  professional counselors, date deal  offers an accessible, convenient solution for those seeking online therapy. Take an in-depth questionnaire to find the right therapist for you.
+        <p className="pt-5 text-[16px] 800px:text-[16px] 1200px:text-[20px] font-[400] text-[#000]">
+        Our range of medical equipment is designed to meet the highest standards of safety, accuracy, and reliability.
         </p>
         <Link to="/products" className="inline-block">
           <div className={`${styles.button} mt-5`}>
@@ -44,17 +44,17 @@ const Hero = () => {
       </div>
     </div>
     <div
-        className={`relative min-h-[70vh] 800px:min-h-[80vh] w-full bg-cover bg-center bg-no-repeat bg-center bg-[url(https://img.freepik.com/free-photo/top-view-woman-with-smartphone-vibrator_23-2150232187.jpg?size=626&ext=jpg&ga=GA1.1.1799229163.1671081494&semt=ais)] bg-blend-darken ${styles.noramlFlex}`}
+        className={`relative min-h-[83.5vh] 800px:min-h-[80vh] w-full bg-cover bg-center bg-no-repeat bg-center bg-[url(https://img.freepik.com/premium-photo/high-angle-view-drink-table_1048944-11933435.jpg?size=626&ext=jpg&ga=GA1.1.39547238.1724736152&semt=ais_hybrid)] bg-blend-darken ${styles.noramlFlex}`}
       >
         {/* Slide 2 content */}
         <div className={`${styles.section}  w-[90%] 800px:w-[60%]`} style={{marginTop: '100px'}}>
         <h1
-          className={`text-[45px] leading-[1.2] 800px:text-[80px] 1200px:text-[80px] text-white font-[700] capitalize`}
+          className={`text-[45px] leading-[1.2] 800px:text-[80px] 1200px:text-[80px] text-blue-700 font-[700] capitalize`}
         >
-          Message your therapist anytime
+          Shop your Medical Equipment here anytime
         </h1>
-        <p className="pt-5 text-[16px] 800px:text-[16px] 1200px:text-[20px] font-[400] text-[#ffffff]">
-        24/7 messaging services with our assigned therapists via text messaging & voice calls.
+        <p className="pt-5 text-[16px] 800px:text-[16px] 1200px:text-[20px] font-[400] text-gray-600">
+        Our equipment is manufactured using top-grade materials and cutting-edge technology to ensure durability and precision.
         </p>
         <Link to="/sign-up" className="inline-block">
           <div className={`${styles.button} mt-5`}>
@@ -67,16 +67,16 @@ const Hero = () => {
     </div>
 
     <div
-        className={`relative min-h-[70vh] 800px:min-h-[80vh] w-full bg-cover bg-center bg-no-repeat bg-center bg-[url(https://img.freepik.com/free-photo/close-up-sex-toys_23-2149151785.jpg?size=626&ext=jpg&ga=GA1.1.1799229163.1671081494&semt=ais)] bg-blend-darken ${styles.noramlFlex}`}
+        className={`relative min-h-[83.5vh] 800px:min-h-[80vh] w-full bg-cover bg-center bg-no-repeat bg-center bg-[url(https://img.freepik.com/free-photo/medical-equipments-report-pills-isolated-white-background_23-2147941693.jpg?size=626&ext=jpg)] bg-blend-darken ${styles.noramlFlex}`}
       >
         {/* Slide 3 content */}
         <div className={`${styles.section}  w-[90%] 800px:w-[60%]`} style={{marginTop: '100px'}}>
             <h1
-              className={`text-[45px] leading-[1.2] 800px:text-[80px] 1200px:text-[80px] text-white font-[700] capitalize`}
+              className={`text-[45px] leading-[1.2] 800px:text-[80px] 1200px:text-[80px] text-blue-700 font-[700] capitalize`}
             >
-              Affordable quality products of sex toys
+              Affordable quality products of Medical Equipments
             </h1>
-            <p className="pt-5 text-[16px] 800px:text-[16px] 1200px:text-[20px] font-[400] text-[#ffffff]">
+            <p className="pt-5 text-[16px] 800px:text-[16px] 1200px:text-[20px] font-[400] text-[#000]">
             Affordable compared to other providers.
             </p>
             <Link to="/products" className="inline-block">

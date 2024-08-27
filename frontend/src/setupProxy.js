@@ -4,7 +4,7 @@ module.exports = function(app) {
   app.use(
     '/api',
     createProxyMiddleware({
-      target: 'https://allsextoyss.vercel.app',
+      target: 'https://medical-e-app.vercel.app/',
       changeOrigin: true,
     })
   );
