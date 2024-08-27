@@ -7,17 +7,17 @@ const cors = require("cors");
 const path = require("path");
 const fileUpload = require('express-fileupload');
 const morgan = require("morgan");
-
 const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = require('./swagger-output.json');
 
 
 
 
+
 app.use(cors({
-  origin: ['https://medical-e-app.vercel.app/', 'http://localhost:4000'],
+  origin: ['https://medical-e-app.vercel.app', 'http://localhost:3000'],
   credentials: true,
-  domain: 'https://medical-e-app.vercel.app/'
+  domain: 'https://medical-e-app.vercel.app'
 }));
 
 // app.use(express.bodyParser({limit: '50mb'}))
