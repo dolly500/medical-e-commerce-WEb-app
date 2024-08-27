@@ -275,12 +275,15 @@ router.put('/reset-password', catchAsyncErrors(async (req, res, next) => {
 // // load shop
 router.get(
   "/getSeller",
-  isSeller,
+  isSeller, 
   catchAsyncErrors(async (req, res, next) => {
     try {
-      const seller = await Shop.find().sort({
-        createdAt: -1,
-      });
+      const seller = await Shop.findById(req.seller.id);  // Using the authenticated seller's ID from req.user
+
+      if (!seller) {
+        return next(new ErrorHandler("Seller doesn't exist", 400));
+      }
+
       res.status(200).json({
         success: true,
         seller,
@@ -290,6 +293,7 @@ router.get(
     }
   })
 );
+
 
 
 // log out from shop
