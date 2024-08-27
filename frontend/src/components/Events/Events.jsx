@@ -20,7 +20,7 @@ const Events = () => {
           allEvents?.length !== 0 && (
             <EventCard data={allEvents && allEvents[0]} />
           )
-         }
+         } 
          <h4 style={{textAlign: 'center'}}>{
            allEvents?.length === 0 && (
             'No Events currently!'
