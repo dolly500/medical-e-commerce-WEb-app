@@ -55,9 +55,9 @@ const DashboardHeader = () => {
               className="mx-5 cursor-pointer text-[#555] hover:text-[#8E376A]"
             />
           </Link>
-          <Link to={`/shop/${JSON.parse(localStorage.getItem("user"))._id}`}>
+          <Link to={`/shop/${seller._id}`}>
             <img
-              src={`${JSON.parse(localStorage.getItem("user")).avatar}}`}
+              src={`${seller.avatar}}`}
               alt=""
               className="w-[50px] h-[50px] rounded-full object-cover"
             />

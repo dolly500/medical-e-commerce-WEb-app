@@ -5,16 +5,17 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { server } from "../../server";
 import { toast } from "react-toastify";
-import Cookies from "js-cookie"
+// import Cookies from "js-cookie"
 import { FaHome } from "react-icons/fa";
 import logo from '../../static/imgs/logo.png'
+import { setLocalStorage } from "../../lib/localStorage";
 
 const ShopLogin = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [visible, setVisible] = useState(false);
-  const expirationTime = new Date(Date.now() + 25 * 60 * 1000);
+  // const expirationTime = new Date(Date.now() + 25 * 60 * 1000);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -29,10 +30,11 @@ const ShopLogin = () => {
         { withCredentials: true }
       )
       .then((res) => {
-        Cookies.set('currentSeller', JSON.stringify(res.data.user), { sameSite: "none", expires: expirationTime })
-        localStorage.setItem("user", JSON.stringify(res.data.user))
+        //Set token gotten as response in localstorage
+        setLocalStorage("auth-token", res.data?.token, 4 * 60 * 60)
         toast.success("Login Success!");
         navigate("/dashboard");
+        window.location.reload(true);
       })
       .catch((err) => {
         toast.error(err.response.data.message);
