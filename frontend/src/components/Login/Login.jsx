@@ -53,7 +53,7 @@ const Login = () => {
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <Link to="/">
           {/* Home Icon Button */}
-          <button className="absolute top-4 right-4 text-pink-600">
+          <button className="absolute top-4 right-4 text-blue-600">
             <FaHome size={24} />
           </button>
         </Link>
@@ -133,7 +133,7 @@ const Login = () => {
               <div className="text-sm">
                 <a
                   href="/forgot-password"
-                  className="font-medium text-pink-600 hover:text-pink-500"
+                  className="font-medium text-blue-600 hover:text-black"
                 >
                   Forgot your password?
                 </a>
@@ -142,14 +142,14 @@ const Login = () => {
             <div>
               <button
                 type="submit"
-                className="group relative w-full h-[40px] flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-pink-600 hover:bg-blue-700"
+                className="group relative w-full h-[40px] flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"
               >
                 Submit
               </button>
             </div>
             <div className={`${styles.noramlFlex} w-full`}>
               <h4>Not have any account?</h4>
-              <Link to="/sign-up" className="text-pink-600 pl-2">
+              <Link to="/sign-up" className="text-blue-600 pl-2">
                 Sign Up
               </Link>
             </div>

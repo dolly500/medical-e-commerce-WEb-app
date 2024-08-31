@@ -125,14 +125,14 @@ const Checkout = () => {
             <div>
               <h4 className="font-medium">{item.name}</h4>
               <p>Quantity: {item.qty}</p>
-              <p>Price: ₦{item.discountPrice}</p>
+              <p>Price: ${item.discountPrice}</p>
             </div>
-            <p className="font-medium">₦{item.qty * item.discountPrice}</p>
+            <p className="font-medium">${item.qty * item.discountPrice}</p>
           </div>
         ))}
         <div className="flex justify-between items-center font-semibold text-lg">
           <p>Total:</p>
-          <p>₦{totalPrice}</p>
+          <p>${totalPrice}</p>
         </div>
 
         <h2 className="text-xl font-semibold mb-4 mt-5">Shipping Address</h2>
@@ -168,32 +168,6 @@ const Checkout = () => {
           onChange={handleShippingAddressChange}
           className="mb-2 p-2 border rounded w-full"
         />
-
-        {/* <h2 className="text-xl font-semibold mb-4 mt-5">Payment Information</h2>
-        <input
-          type="text"
-          name="cardNumber"
-          placeholder="Card Number"
-          value={paymentInfo.cardNumber}
-          onChange={handlePaymentInfoChange}
-          className="mb-2 p-2 border rounded w-full"
-        />
-        <input
-          type="text"
-          name="expiryDate"
-          placeholder="Expiry Date (MM/YY)"
-          value={paymentInfo.expiryDate}
-          onChange={handlePaymentInfoChange}
-          className="mb-2 p-2 border rounded w-full"
-        />
-        <input
-          type="text"
-          name="cvv"
-          placeholder="CVV"
-          value={paymentInfo.cvv}
-          onChange={handlePaymentInfoChange}
-          className="mb-2 p-2 border rounded w-full"
-        /> */}
 
         <button
           onClick={handlePayment}

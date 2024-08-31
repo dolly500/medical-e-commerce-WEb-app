@@ -46,7 +46,7 @@ const ForgotPassword = () => {
 
       <Link to="/">
           {/* Home Icon Button */}
-          <button className="absolute top-4 right-4 text-pink-600">
+          <button className="absolute top-4 right-4 text-blue-600">
             <FaHome size={24} />
           </button>
       </Link>
