@@ -10,7 +10,7 @@ const styles = {
   productDiscountPrice:"font-bold text-[18px] text-[#000] font-Roboto",
   price:"font-[500] text-[16px] text-[#000] pl-3 mt-[-4px] line-through",
   shop_name:"pt-3 text-[15px] text-blue-700 pb-3",
-  active_indicator:"absolute bottom-[-27%] left-0 h-[3px] w-full bg-[#E6007E]",
+  active_indicator:"absolute bottom-[-27%] left-0 h-[3px] w-full bg-[#0000FF]",
   button: '800:w-[100px] w-[120px] hover:bg-[#c79bb5] bg-[#0000FF] h-[50px] my-3 flex items-center justify-center rounded-xl cursor-pointer',
   cart_button: "px-[20px] h-[38px] rounded-[20px] bg-[#0000FF] flex items-center justify-center cursor-pointer",
   cart_button_text:"text-[#fff] text-[16px] font-[600]",
