@@ -195,11 +195,6 @@ const App = () => {
             </SellerProtectedRoute>
           }
         />
-        {/* <Route path="/shop/:id"  element={
-            <SellerProtectedRoute>
-              <ShopInfo />
-            </SellerProtectedRoute>
-          } /> */}
 
         <Route
           path="/settings"
