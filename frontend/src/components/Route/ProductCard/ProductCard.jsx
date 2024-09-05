@@ -4,8 +4,6 @@ import {
   AiFillStar,
   AiOutlineEye,
   AiOutlineHeart,
-  AiOutlineShoppingCart,
-  AiOutlineStar,
 } from "react-icons/ai";
 import { Link } from "react-router-dom";
 import styles from "../../../styles/styles";
@@ -106,28 +104,29 @@ const ProductCard = ({ data,isEvent }) => {
           {click ? (
             <AiFillHeart
               size={22}
-              className="cursor-pointer absolute right-2 top-5"
+              className="cursor-pointer absolute right-2 top-44"
               onClick={() => removeFromWishlistHandler(data)}
-              color={click ? "red" : "#333"}
+              color={click ? "red" : "#0000FF"}
               title="Remove from wishlist"
             />
           ) : (
             <AiOutlineHeart
               size={22}
-              className="cursor-pointer absolute right-2 top-5"
+              className="cursor-pointer absolute right-2 top-48"
               onClick={() => addToWishlistHandler(data)}
-              color={click ? "red" : "#333"}
+              color={click ? "red" : "#0000FF"}
               title="Add to wishlist"
             />
           )}
-          <AiOutlineShoppingCart
-            size={25}
-            className="cursor-pointer absolute right-2 top-24"
-            onClick={() => addToCartHandler(data?._id)}
-            color="#444"
-            title="Add to cart"
-          />
           {open ? <ProductDetailsCard setOpen={setOpen} data={data} /> : null}
+        </div>
+        <div className="absolute bottom-3 w-full flex justify-center">
+          <button
+            className="bg-blue-700 text-white px-4 py-2 rounded"
+            onClick={() => addToCartHandler(data?._id)}
+          >
+            Add to Cart
+          </button>
         </div>
       </div>
     </>
