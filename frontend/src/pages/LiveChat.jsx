@@ -362,7 +362,7 @@ const AboutUs = () => {
         <div className="pt-14">
           <h3 className="text-5xl font-bold mb-10">Our Services</h3>
           <div className="md:flex md:items-center md:justify-center">
-            <div className="rounded-sm p-4 md:p-10 mb-6 md:w-1/2 md:mr-10 bg-[#1D4ED8]">
+            <div className="rounded-sm p-4 md:p-10 mb-6 md:w-1/2 md:mr-10 bg-[#1D4ED8] text-white">
               <h4 className="font-bold mb-2">What We Offer</h4>
               <ul className="list-disc pl-6">
                 <li>Comprehensive primary care services</li>
