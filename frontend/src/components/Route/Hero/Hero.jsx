@@ -31,7 +31,7 @@ const Hero = () => {
         >
           Best Collection Of <br /> Medical Equipments
         </h1>
-        <p className="pt-5 text-[16px] 800px:text-[16px] 1200px:text-[20px] font-[400] text-[#000]">
+        <p className="pt-5 text-[16px] 800px:text-[16px] 1200px:text-[20px] font-[400] text-black">
         Our range of medical equipment is designed to meet the highest standards of safety, accuracy, and reliability.
         </p>
         <Link to="/products" className="inline-block">
@@ -53,7 +53,7 @@ const Hero = () => {
         >
           Shop your Medical Equipment here anytime
         </h1>
-        <p className="pt-5 text-[16px] 800px:text-[16px] 1200px:text-[20px] font-[400] text-gray-600">
+        <p className="pt-5 text-[16px] 800px:text-[16px] 1200px:text-[20px] font-[400] text-black   ">
         Our equipment is manufactured using top-grade materials and cutting-edge technology to ensure durability and precision.
         </p>
         <Link to="/sign-up" className="inline-block">

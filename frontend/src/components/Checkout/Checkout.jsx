@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
+import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -9,9 +10,8 @@ const Checkout = () => {
   const { cart } = useSelector((state) => state.cart);
   const { user } = useSelector((state) => state.user);
 
-  const userId = user._id
-  const userEmail = user.email
-
+  const userId = user._id;
+  const userEmail = user.email;
   const navigate = useNavigate();
 
   const [orders, setOrders] = useState([]);
@@ -21,85 +21,14 @@ const Checkout = () => {
     postalCode: '',
     country: '',
   });
-  const [paymentInfo, setPaymentInfo] = useState({
-    cardNumber: '',
-    expiryDate: '',
-    cvv: '',
-  });
-  const [paystackApiKey, setPaystackApiKey] = useState('');
 
-  const totalPrice = cart.reduce((acc, item) => acc + item.qty * item.discountPrice, 0)
+  const totalPrice = cart.reduce((acc, item) => acc + item.qty * item.discountPrice, 0);
 
   useEffect(() => {
     if (!cart.length) {
       navigate('/cart');
     }
   }, [cart, navigate]);
-
-  // Get PayStack API key on page load
-  useEffect(() => {
-    const fetchPaystackApiKey = async () => {
-      try {
-        const res = await axios.get(`${server}/payment/paystackapikey`);
-        setPaystackApiKey(res.data.paystackApikey);
-      } catch (error) {
-        console.error('Error fetching Paystack API key:', error);
-      }
-    };
-
-    fetchPaystackApiKey();
-  }, []);
-
-  const handlePayment = async () => {
-    try {
-      // API request to create order
-      const createOrderResponse = await axios.post(`${server}/order/create-order`, {
-        cart,
-        shippingAddress,
-        user: user,
-        totalPrice,
-        paymentInfo,
-      });
-
-      const { orders } = createOrderResponse.data;
-      setOrders(orders);
-
-      // Process and verify payment for each order
-      for (const order of orders) {
-        const orderId = order._id;
-
-        try {
-          await axios.post(
-            `${server}/payment/process/${orderId}`,
-            {
-              email: userEmail,
-              amount: order?.totalPrice * 100 //Convert amount to subunit of currency
-            },
-            {
-              headers: {
-                'Authorization': `Bearer ${paystackApiKey}`,
-                'Content-Type': 'application/json'
-              }
-            }
-          ).then((res) => {
-            /** Redirect users to a paystack payment page,
-             * If transaction is initialized succesfully
-            */
-            if (res.status === 200 && res?.data.success) {
-              window.location.replace(res?.data.client_secret?.data?.authorization_url)
-            }
-          }).catch((err) => {
-            throw new Error(err.response.data.message)
-          })
-        } catch (error) {
-          console.error('Error making payment request:', error);
-        }
-      }
-    } catch (error) {
-      console.error(error);
-      toast.error("Payment Failed!");
-    }
-  };
 
   const handleShippingAddressChange = (e) => {
     setShippingAddress({
@@ -108,11 +37,43 @@ const Checkout = () => {
     });
   };
 
-  const handlePaymentInfoChange = (e) => {
-    setPaymentInfo({
-      ...paymentInfo,
-      [e.target.name]: e.target.value,
-    });
+  // PayPal Order Creation and Payment Handling
+  const createOrder = async () => {
+    try {
+      const createOrderResponse = await axios.post(`${server}/order/create-order`, {
+        cart,
+        shippingAddress,
+        user: user,
+        totalPrice,
+      });
+
+      const { orders } = createOrderResponse.data;
+      setOrders(orders);
+
+      return orders[0]._id; // Assuming you're creating a single order
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to create order!");
+    }
+  };
+
+  const handleApprove = async (data, actions) => {
+    try {
+      const response = await axios.post(
+        `${server}/order/complete-order/${data.orderID}`, // Adjust route based on your backend
+        { orderID: data.orderID },
+      );
+      const result = response.data;
+      if (result.success) {
+        toast.success("Payment successful!");
+        navigate("/order-confirmation"); // Redirect to order confirmation
+      } else {
+        toast.error("Payment failed.");
+      }
+    } catch (error) {
+      console.error("Error capturing order", error);
+      toast.error("Payment could not be processed.");
+    }
   };
 
   return (
@@ -169,12 +130,18 @@ const Checkout = () => {
           className="mb-2 p-2 border rounded w-full"
         />
 
-        <button
-          onClick={handlePayment}
-          className="mt-5 w-full bg-red-500 text-white py-2 rounded"
-        >
-          Confirm and Pay
-        </button>
+        <PayPalScriptProvider options={{ "client-id": "AZ7RR3vamknNm726JI4Jz-lOlRWDvV6GtRxrEmAHWvM6cptl76diS78FHfUPw3dmzgLyUScPmZWVJ1gQ" }}>
+          <PayPalButtons
+            createOrder={(data, actions) => createOrder()}
+            onApprove={handleApprove}
+            style={{
+              shape: "rect",
+              layout: "vertical",
+              color: "blue",
+              label: "paypal",
+            }}
+          />
+        </PayPalScriptProvider>
       </div>
     </div>
   );
