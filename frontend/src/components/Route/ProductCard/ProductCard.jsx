@@ -60,7 +60,7 @@ const ProductCard = ({ data,isEvent }) => {
 
   return (
     <>
-      <div className="w-full h-[370px] bg-gray-200 rounded-lg shadow-sm p-3 relative cursor-pointer">
+      <div className="w-full h-[320px] bg-gray-200 rounded-lg shadow-sm p-3 relative cursor-pointer">
         <div className="flex justify-end"></div>
         <Link to={`${isEvent === true ? `/product/${data?._id}?isEvent=true` : `/product/${data?._id}`}`}>
           <img
@@ -69,17 +69,17 @@ const ProductCard = ({ data,isEvent }) => {
             className="w-full h-[170px] object-contain"
           />
         </Link>
-        <Link to={`/shop/preview/${data?.shop?._id}`}>
+        {/* <Link to={`/shop/preview/${data?.shop?._id}`}>
           <h5 className={`${styles.shop_name}`}>{data?.shop?.name}</h5>
-        </Link>
+        </Link> */}
         <Link to={`${isEvent === true ? `/product/${data?._id}?isEvent=true` : `/product/${data?._id}`}`}>
           <h4 className="pb-3 font-[500]">
             {data?.name?.length > 40 ? data?.name?.slice(0, 40) + "..." : data?.name}
           </h4>
 
-          <div className="flex">
+          {/* <div className="flex">
           <Ratings rating={data?.ratings} />
-          </div>
+          </div> */}
 
           <div className="py-2 flex items-center justify-between">
             <div className="flex">

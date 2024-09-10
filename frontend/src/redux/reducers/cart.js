@@ -5,24 +5,35 @@ const initialState = {
 };
 
 export const cartReducer = (state = initialState, action) => {
+  let updatedCart;
+  
   switch (action.type) {
     case ADD_TO_CART:
       // Check if the item already exists in the cart
       const existingItemIndex = state.cart.findIndex(item => item._id === action.payload.data._id);
       if (existingItemIndex !== -1) {
         // If item exists, update its quantity
-        const updatedCart = state.cart.map((item, index) =>
+        updatedCart = state.cart.map((item, index) =>
           index === existingItemIndex ? { ...item, qty: action.payload.data.qty } : item
         );
-        return { ...state, cart: updatedCart };
       } else {
         // If item does not exist, add it to the cart
-        return { ...state, cart: [...state.cart, action.payload.data] };
+        updatedCart = [...state.cart, action.payload.data];
       }
+
+      // Save the updated cart to localStorage
+      localStorage.setItem(`cart_${action.payload.userId}`, JSON.stringify(updatedCart));
+
+      return { ...state, cart: updatedCart };
 
     case REMOVE_FROM_CART:
       // Remove item from cart logic
-      return { ...state, cart: state.cart.filter(item => item._id !== action.payload.data._id) };
+      updatedCart = state.cart.filter(item => item._id !== action.payload.data._id);
+
+      // Save the updated cart to localStorage
+      localStorage.setItem(`cart_${action.payload.userId}`, JSON.stringify(updatedCart));
+
+      return { ...state, cart: updatedCart };
 
     case LOAD_CART_FROM_LOCAL_STORAGE:
       // Load cart from local storage logic
@@ -33,3 +44,4 @@ export const cartReducer = (state = initialState, action) => {
       return state;
   }
 };
+
