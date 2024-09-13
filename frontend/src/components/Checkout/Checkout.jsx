@@ -2,115 +2,47 @@ import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { toast } from 'react-toastify';
-import { server } from '../../server';
+import { PayPalScriptProvider, PayPalButtons } from '@paypal/react-paypal-js';
+import { server } from '../../server'; // Your backend server URL
 
 const Checkout = () => {
   const { cart } = useSelector((state) => state.cart);
   const { user } = useSelector((state) => state.user);
-
-  const userId = user._id
-  const userEmail = user.email
-
   const navigate = useNavigate();
 
-  const [orders, setOrders] = useState([]);
   const [shippingAddress, setShippingAddress] = useState({
     address: '',
     city: '',
     postalCode: '',
     country: '',
   });
-  const [paymentInfo, setPaymentInfo] = useState({
-    cardNumber: '',
-    expiryDate: '',
-    cvv: '',
-  });
-  const [paystackApiKey, setPaystackApiKey] = useState('');
+  const [message, setMessage] = useState('');
+  const [paypalClientId, setPaypalClientId] = useState(null); // New state for PayPal client ID
 
-  const totalPrice = cart.reduce((acc, item) => acc + item.qty * item.discountPrice, 0)
+  const totalPrice = cart.reduce((acc, item) => acc + item.qty * item.discountPrice, 0);
 
+  // Fetch PayPal client ID from the backend when component mounts
   useEffect(() => {
     if (!cart.length) {
       navigate('/cart');
     }
-  }, [cart, navigate]);
 
-  // Get PayStack API key on page load
-  useEffect(() => {
-    const fetchPaystackApiKey = async () => {
+    const fetchPaypalClientId = async () => {
       try {
-        const res = await axios.get(`${server}/payment/paystackapikey`);
-        setPaystackApiKey(res.data.paystackApikey);
+        const { data } = await axios.get(`${server}/api/config/paypal`);
+        setPaypalClientId(data.clientId); // Set PayPal client ID
       } catch (error) {
-        console.error('Error fetching Paystack API key:', error);
+        console.error('Error fetching PayPal client ID:', error);
+        setMessage('Failed to load PayPal client.');
       }
     };
 
-    fetchPaystackApiKey();
-  }, []);
-
-  const handlePayment = async () => {
-    try {
-      // API request to create order
-      const createOrderResponse = await axios.post(`${server}/order/create-order`, {
-        cart,
-        shippingAddress,
-        user: user,
-        totalPrice,
-        paymentInfo,
-      });
-
-      const { orders } = createOrderResponse.data;
-      setOrders(orders);
-
-      // Process and verify payment for each order
-      for (const order of orders) {
-        const orderId = order._id;
-
-        try {
-          await axios.post(
-            `${server}/payment/process/${orderId}`,
-            {
-              email: userEmail,
-              amount: order?.totalPrice * 100 //Convert amount to subunit of currency
-            },
-            {
-              headers: {
-                'Authorization': `Bearer ${paystackApiKey}`,
-                'Content-Type': 'application/json'
-              }
-            }
-          ).then((res) => {
-            /** Redirect users to a paystack payment page,
-             * If transaction is initialized succesfully
-            */
-            if (res.status === 200 && res?.data.success) {
-              window.location.replace(res?.data.client_secret?.data?.authorization_url)
-            }
-          }).catch((err) => {
-            throw new Error(err.response.data.message)
-          })
-        } catch (error) {
-          console.error('Error making payment request:', error);
-        }
-      }
-    } catch (error) {
-      console.error(error);
-      toast.error("Payment Failed!");
-    }
-  };
+    fetchPaypalClientId();
+  }, [cart, navigate]);
 
   const handleShippingAddressChange = (e) => {
     setShippingAddress({
       ...shippingAddress,
-      [e.target.name]: e.target.value,
-    });
-  };
-
-  const handlePaymentInfoChange = (e) => {
-    setPaymentInfo({
-      ...paymentInfo,
       [e.target.name]: e.target.value,
     });
   };
@@ -169,44 +101,51 @@ const Checkout = () => {
           className="mb-2 p-2 border rounded w-full"
         />
 
-        {/* <h2 className="text-xl font-semibold mb-4 mt-5">Payment Information</h2>
-        <input
-          type="text"
-          name="cardNumber"
-          placeholder="Card Number"
-          value={paymentInfo.cardNumber}
-          onChange={handlePaymentInfoChange}
-          className="mb-2 p-2 border rounded w-full"
-        />
-        <input
-          type="text"
-          name="expiryDate"
-          placeholder="Expiry Date (MM/YY)"
-          value={paymentInfo.expiryDate}
-          onChange={handlePaymentInfoChange}
-          className="mb-2 p-2 border rounded w-full"
-        />
-        <input
-          type="text"
-          name="cvv"
-          placeholder="CVV"
-          value={paymentInfo.cvv}
-          onChange={handlePaymentInfoChange}
-          className="mb-2 p-2 border rounded w-full"
-        /> */}
+        {/* PayPal Integration */}
+        {paypalClientId && (
+          <PayPalScriptProvider options={{ 'client-id': paypalClientId, currency: 'USD' }}>
+            <PayPalButtons
+              style={{
+                shape: 'rect',
+                layout: 'vertical',
+                color: 'gold',
+                label: 'paypal',
+              }}
+              createOrder={async () => {
+                try {
+                  const response = await axios.post(`${server}/api/orders`, {
+                    cart,
+                    shippingAddress,
+                    user: user,
+                    totalPrice,
+                  });
 
-        <button
-          onClick={handlePayment}
-          className="mt-5 w-full bg-blue-500 text-white py-2 rounded"
-        >
-          Pay with Paypal
-        </button>
-        <button
-          
-          className="mt-5 w-full bg-blue-500 text-white py-2 rounded"
-        >
-          Pay with Crypto
-        </button>
+                  const { orderID } = response.data;
+
+                  return orderID; // Return the PayPal order ID from the backend
+                } catch (error) {
+                  console.error(error);
+                  setMessage(`Could not initiate PayPal Checkout...${error}`);
+                }
+              }}
+              onApprove={async (data) => {
+                try {
+                  const response = await axios.post(
+                    `${server}/api/orders/${data.orderID}/capture`
+                  );
+
+                  const transaction = response.data;
+                  setMessage(`Transaction ${transaction.status}: ${transaction.id}`);
+                } catch (error) {
+                  console.error(error);
+                  setMessage(`Sorry, your transaction could not be processed...${error}`);
+                }
+              }}
+            />
+          </PayPalScriptProvider>
+        )}
+
+        {message && <p className="mt-5 text-red-500">{message}</p>}
       </div>
     </div>
   );

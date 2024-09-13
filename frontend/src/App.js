@@ -83,10 +83,10 @@ const App = () => {
   const [paystackApikey, setPaystackApiKey] = useState("");
   const [categoriesData, setCategoriesData] = useState([])
 
-  async function getPaystackApikey() {
-    const { data } = await axios.get(`${server}/payment/paystackapikey`);
-    setPaystackApiKey(data.paystackApikey);
-  }
+  // async function getPaystackApikey() {
+  //   const { data } = await axios.get(`${server}/payment/paystackapikey`);
+  //   setPaystackApiKey(data.paystackApikey);
+  // }
   useEffect(() => {
     Store.dispatch(loadUser());
     Store.dispatch(loadSeller());
@@ -94,7 +94,7 @@ const App = () => {
     Store.dispatch(getAllEvents());
     Store.dispatch(getAllPosts());
     Store.dispatch(getAllCategories());
-    getPaystackApikey();
+    // getPaystackApikey();
     axios.get(`${server}/category`, { withCredentials: true }).then((res) => {
       setCategoriesData(res.data.categorys);
     })
@@ -102,7 +102,6 @@ const App = () => {
 
   return (
     <BrowserRouter>
-      {paystackApikey && (
         <Routes>
           <Route
             path="/payment"
@@ -113,7 +112,7 @@ const App = () => {
             }
           />
         </Routes>
-      )}
+  
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<LoginPage />} />

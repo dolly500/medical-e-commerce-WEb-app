@@ -82,18 +82,18 @@ const Header = ({ activeHeading, data }) => {
   }, []);
 
   // Get PayStack API key on page load
-  useEffect(() => {
-    const fetchPaystackApiKey = async () => {
-      try {
-        const res = await axios.get(`${server}/payment/paystackapikey`);
-        setPaystackApiKey(res.data.paystackApikey);
-      } catch (error) {
-        console.error('Error fetching Paystack API key:', error);
-      }
-    };
+  // useEffect(() => {
+  //   const fetchPaystackApiKey = async () => {
+  //     try {
+  //       const res = await axios.get(`${server}/payment/paystackapikey`);
+  //       setPaystackApiKey(res.data.paystackApikey);
+  //     } catch (error) {
+  //       console.error('Error fetching Paystack API key:', error);
+  //     }
+  //   };
 
-    fetchPaystackApiKey();
-  }, []);
+  //   fetchPaystackApiKey();
+  // }, []);
 
   const handlePayment = async () => {
     const _amount = 5000 // Set your desired amount

@@ -112,15 +112,6 @@ router.get(
 
 
 
-
-
-
-
-
-
-
-
-
 router.put(
   "/verify/:reference",
   catchAsyncErrors(async (req, res, next) => {
