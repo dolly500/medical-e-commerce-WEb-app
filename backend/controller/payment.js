@@ -112,6 +112,15 @@ router.get(
 
 
 
+
+
+
+
+
+
+
+
+
 router.put(
   "/verify/:reference",
   catchAsyncErrors(async (req, res, next) => {
@@ -165,147 +174,43 @@ router.post(
   "/chatpayment/:userId",
   catchAsyncErrors(async (req, res, next) => {
     try {
-      const user = await User.findOne({ _id: req.params.userId });
-      const { amount } = req.body;
-
-      const response = await axios.post(
-        'https://api.paystack.co/transaction/initialize',
-        {
-          email: user.email,
-          amount,
-          callback_url: `${process.env.FRONTEND_URL}?type=chat`, // Corrected callback URL
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${process.env.PAYSTACK_SECRET_KEY}`,
-            'Content-Type': 'application/json',
-          },
-        }
-      );
-
-      const data = {
-        paymentInfo: {
-          paystackRef: response.data.data.reference,
-        }
-      };
-
-      await User.findByIdAndUpdate(req.params.userId, data, { new: true });
-
-      res.status(200).json({
-        success: true,
-        client_secret: response.data,
-        redirect_url: response.data.data.authorization_url, // Paystack URL to redirect user to
-      });
-
+        const { cart } = req.body;
+        const { jsonResponse, httpStatusCode } = await createOrder(cart);
+        res.status(httpStatusCode).json(jsonResponse);
     } catch (error) {
-      console.error("Error processing chat payment:", error);
-      res.status(400).json({
-        success: false,
-        message: error.message,
-      });
+        console.error("Failed to create order:", error);
+        res.status(500).json({ error: "Failed to create order." });
     }
-  })
-);
+});
 
-// router.post(
-//   "/chatpayment/:userId",
-//   catchAsyncErrors(async (req, res, next) => {
-//     try {
-//       const user = await User.findOne({ _id: req.params.userId });
-//       const { amount } = req.body;
+/**
+ * Capture payment for the created order to complete the transaction.
+ */
+const captureOrder = async (orderID) => {
+    const accessToken = await generateAccessToken();
+    const url = `${base}/v2/checkout/orders/${orderID}/capture`;
 
-//       const response = await axios.post(
-//         'https://api.paystack.co/transaction/initialize',
-//         {
-//           email: user.email,
-//           amount,
-//         },
-//         {
-//           headers: {
-//             Authorization: `Bearer ${process.env.PAYSTACK_SECRET_KEY}`,
-//             'Content-Type': 'application/json',
-//           },
-//         }
-//       );
-//       const data = {
-//         paymentInfo: {
-//           paystackRef: response.data.data.reference,
-//         }
-//       };
+    const response = await fetch(url, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+        },
+    });
 
-//       await User.findByIdAndUpdate(req.params.userId, data, { new: true });
+    return handleResponse(response);
+};
 
-//       res.status(200).json({
-//         success: true,
-//         client_secret: response.data,
-//       });
-
-//     } catch (error) {
-//       // Handle errors here
-//       res.status(400).json({
-//         success: error.status,
-//         message: error.message,
-//       });;
-//     }
-//   })
-
-// );
-
-router.put(
-  "/verifyChatPayment/:userId",
-  catchAsyncErrors(async (req, res, next) => {
+// captureOrder route
+router.post("/orders/:orderID/capture", async (req, res) => {
     try {
-      const user = await User.findOne({ _id: req.params.userId });
-      const reference = user.paymentInfo.paystackRef;
-      if (!reference)
-        return res.status(400).send({ message: 'Reference not found' })
-      const response = await axios.get(
-        `https://api.paystack.co/transaction/verify/${reference}`,
-        {
-          headers: {
-            Authorization: `Bearer ${process.env.PAYSTACK_SECRET_KEY}`,
-            'Content-Type': 'application/json',
-          },
-        }
-      );
-      let isPaid = false;
-      if (response.data.data.status && response.data.data.status == "success") {
-        isPaid = true;
-      }
-
-      const data = {
-        paymentInfo: {
-          status: response.data.data.status,
-          paystackRef: response.data.data.reference,
-          isPaid,
-          paidAt: response.data.data.paid_at,
-        },
-      };
-
-      await User.findByIdAndUpdate(req.params.userId, data);
-
-      res.status(200).json({
-        success: true,
-        client_secret: response.data,
-      });
-
+        const { orderID } = req.params;
+        const { jsonResponse, httpStatusCode } = await captureOrder(orderID);
+        res.status(httpStatusCode).json(jsonResponse);
     } catch (error) {
-      // Handle errors here
-      res.status(400).json({
-        success: error.status,
-        message: error.message,
-      });;
+        console.error("Failed to capture order:", error);
+        res.status(500).json({ error: "Failed to capture order." });
     }
-  })
-
-);
-
-router.get(
-  "/paystackapikey",
-  catchAsyncErrors(async (req, res, next) => {
-    res.status(200).json({ paystackApikey: process.env.PAYSTACK_API_KEY });
-  })
-);
-
+});
 
 module.exports = router;
