@@ -1,6 +1,7 @@
 const app = require("./app");
 const connectDatabase = require("./db/Database");
 const cloudinary = require("cloudinary");
+const PAYPAL_CLIENT_ID = process.env.PAYPAL_CLIENT_ID;
 
 
 
@@ -18,7 +19,11 @@ if (process.env.NODE_ENV !== "PRODUCTION") {
   });
 }
 
-
+// Route to get PayPal Client ID
+app.get('/api/config/paypal', (req, res) => {
+  console.log("PayPal Client ID: ", PAYPAL_CLIENT_ID); // Debug log
+  res.send({ clientId: PAYPAL_CLIENT_ID });
+});
 // connect db 
 connectDatabase();
 

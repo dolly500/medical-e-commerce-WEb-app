@@ -10,7 +10,6 @@ const morgan = require("morgan");
 const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = require('./swagger-output.json');
 
-const PAYPAL_CLIENT_ID = process.env.PAYPAL_CLIENT_ID;
 
 
 
@@ -38,10 +37,7 @@ app.use(fileUpload({
   limits: { fileSize: 50 * 1024 * 1024 },
 }));
 
-// Route to get PayPal Client ID
-app.get('/api/config/paypal', (req, res) => {
-  res.send({ clientId: PAYPAL_CLIENT_ID });
-});
+
 
 
 
