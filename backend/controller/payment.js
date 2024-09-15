@@ -6,10 +6,10 @@ const PAYPAL_CLIENT_ID = process.env.PAYPAL_CLIENT_ID;
 const PAYPAL_SECRET = process.env.PAYPAL_SECRET;
 const PAYPAL_API = 'https://api-m.sandbox.paypal.com'; // Use sandbox for testing
 
-// Route to get PayPal Client ID
-router.get('/api/config/paypal', (req, res) => {
-  res.send({ clientId: PAYPAL_CLIENT_ID });
-});
+// // Route to get PayPal Client ID
+// router.get('/api/config/paypal', (req, res) => {
+//   res.send({ clientId: PAYPAL_CLIENT_ID });
+// });
 
 // Create order
 router.post('/orders', async (req, res) => {
