@@ -2,12 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import { PayPalScriptProvider, PayPalButtons } from '@paypal/react-paypal-js';
-import { server } from '../../server'; // Your backend server URL
+import { servercl } from '../../server';
 
 const Checkout = () => {
   const { cart } = useSelector((state) => state.cart);
   const { user } = useSelector((state) => state.user);
+
   const navigate = useNavigate();
 
   const [shippingAddress, setShippingAddress] = useState({
@@ -17,20 +19,20 @@ const Checkout = () => {
     country: '',
   });
   const [message, setMessage] = useState('');
-  const [paypalClientId, setPaypalClientId] = useState(null); // New state for PayPal client ID
+  const [paypalClientId, setPaypalClientId] = useState(null);
 
   const totalPrice = cart.reduce((acc, item) => acc + item.qty * item.discountPrice, 0);
 
-  // Fetch PayPal client ID from the backend when component mounts
   useEffect(() => {
     if (!cart.length) {
       navigate('/cart');
     }
 
+    // Fetch PayPal client ID from backend
     const fetchPaypalClientId = async () => {
       try {
-        const { data } = await axios.get(`${server}/api/config/paypal`);
-        setPaypalClientId(data.clientId); // Set PayPal client ID
+        const { data } = await axios.get(`${servercl}/api/config/paypal`);
+        setPaypalClientId(data.clientId);
       } catch (error) {
         console.error('Error fetching PayPal client ID:', error);
         setMessage('Failed to load PayPal client.');
@@ -103,46 +105,33 @@ const Checkout = () => {
 
         {/* PayPal Integration */}
         {paypalClientId && (
-          <PayPalScriptProvider options={{ 'client-id': paypalClientId, currency: 'USD' }}>
-            <PayPalButtons
-              style={{
-                shape: 'rect',
-                layout: 'vertical',
-                color: 'gold',
-                label: 'paypal',
-              }}
-              createOrder={async () => {
-                try {
-                  const response = await axios.post(`${server}/api/orders`, {
-                    cart,
-                    shippingAddress,
-                    user: user,
-                    totalPrice,
-                  });
-
-                  const { orderID } = response.data;
-
-                  return orderID; // Return the PayPal order ID from the backend
-                } catch (error) {
-                  console.error(error);
-                  setMessage(`Could not initiate PayPal Checkout...${error}`);
-                }
-              }}
-              onApprove={async (data) => {
-                try {
-                  const response = await axios.post(
-                    `${server}/api/orders/${data.orderID}/capture`
-                  );
-
-                  const transaction = response.data;
-                  setMessage(`Transaction ${transaction.status}: ${transaction.id}`);
-                } catch (error) {
-                  console.error(error);
-                  setMessage(`Sorry, your transaction could not be processed...${error}`);
-                }
-              }}
-            />
-          </PayPalScriptProvider>
+         <PayPalScriptProvider options={{ 'client-id': paypalClientId, currency: 'USD' }}>
+        <PayPalButtons
+          style={{ shape: 'rect', layout: 'vertical', color: 'gold', label: 'paypal' }}
+          createOrder={async (data, actions) => {
+            return actions.order.create({
+              purchase_units: [{
+                amount: {
+                  currency_code: 'USD',
+                  value: totalPrice,
+                },
+              }],
+              application_context: {
+                shipping_preference: 'NO_SHIPPING', // Set shipping preference if needed
+              }
+            });
+          }}
+          onApprove={async (data, actions) => {
+            return actions.order.capture().then((details) => {
+              alert('Transaction completed by ' + details.payer.name.given_name);
+              // Handle post-payment processing here
+            });
+          }}
+          onError={(err) => {
+            console.error('PayPal error:', err);
+          }}
+        />
+      </PayPalScriptProvider>
         )}
 
         {message && <p className="mt-5 text-red-500">{message}</p>}
