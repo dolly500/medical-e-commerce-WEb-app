@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { toast } from 'react-toastify';
 import { PayPalScriptProvider, PayPalButtons } from '@paypal/react-paypal-js';
 import { servercl } from '../../server';
 
@@ -49,6 +48,11 @@ const Checkout = () => {
     });
   };
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setMessage('');
+  };
+
   return (
     <div className="container mx-auto p-5">
       <h1 className="text-2xl font-bold mb-5">Checkout</h1>
@@ -69,69 +73,97 @@ const Checkout = () => {
           <p>${totalPrice}</p>
         </div>
 
-        <h2 className="text-xl font-semibold mb-4 mt-5">Shipping Address</h2>
-        <input
-          type="text"
-          name="address"
-          placeholder="Address"
-          value={shippingAddress.address}
-          onChange={handleShippingAddressChange}
-          className="mb-2 p-2 border rounded w-full"
-        />
-        <input
-          type="text"
-          name="city"
-          placeholder="City"
-          value={shippingAddress.city}
-          onChange={handleShippingAddressChange}
-          className="mb-2 p-2 border rounded w-full"
-        />
-        <input
-          type="text"
-          name="postalCode"
-          placeholder="Postal Code"
-          value={shippingAddress.postalCode}
-          onChange={handleShippingAddressChange}
-          className="mb-2 p-2 border rounded w-full"
-        />
-        <input
-          type="text"
-          name="country"
-          placeholder="Country"
-          value={shippingAddress.country}
-          onChange={handleShippingAddressChange}
-          className="mb-2 p-2 border rounded w-full"
-        />
+        {/* Shipping Address Form */}
+        <div className="mt-5">
+          <h2 className="text-xl font-semibold mb-4">Shipping Address</h2>
+          <form onSubmit={handleSubmit} className="grid grid-cols-1 gap-4">
+            <div>
+              <label className="block text-sm font-medium">Address</label>
+              <input
+                type="text"
+                name="address"
+                value={shippingAddress.address}
+                onChange={handleShippingAddressChange}
+                className="mt-1 p-2 border border-gray-300 rounded w-full"
+                placeholder="Enter any address"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium">City</label>
+              <input
+                type="text"
+                name="city"
+                value={shippingAddress.city}
+                onChange={handleShippingAddressChange}
+                className="mt-1 p-2 border border-gray-300 rounded w-full"
+                placeholder="Enter any city"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium">Postal Code</label>
+              <input
+                type="text"
+                name="postalCode"
+                value={shippingAddress.postalCode}
+                onChange={handleShippingAddressChange}
+                className="mt-1 p-2 border border-gray-300 rounded w-full"
+                placeholder="Enter any postal code"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium">Country</label>
+              <input
+                type="text"
+                name="country"
+                value={shippingAddress.country}
+                onChange={handleShippingAddressChange}
+                className="mt-1 p-2 border border-gray-300 rounded w-full"
+                placeholder="Enter any country"
+              />
+            </div>
+            <button type="submit" className="mt-4 bg-blue-500 text-white p-2 rounded mb-5">
+              Save Address
+            </button>
+          </form>
+        </div>
 
         {/* PayPal Integration */}
-        {paypalClientId && (
-         <PayPalScriptProvider options={{ 'client-id': paypalClientId, currency: 'USD' }}>
-        <PayPalButtons
-          style={{ shape: 'rect', layout: 'vertical', color: 'gold', label: 'paypal' }}
-          createOrder={async (data, actions) => {
-            return actions.order.create({
-              purchase_units: [{
-                amount: {
-                  currency_code: 'USD',
-                  value: totalPrice,
-                },
-              }],
-              application_context: {
-                shipping_preference: 'NO_SHIPPING', // Set shipping preference if needed
-              }
-            });
-          }}
-          onApprove={async (data, actions) => {
-            return actions.order.capture().then((details) => {
-              alert('Transaction completed by ' + details.payer.name.given_name);
-              // Handle post-payment processing here
-            });
-          }}
-          onError={(err) => {
-            console.error('PayPal error:', err);
-          }}
-        />
-      </PayPalScriptProvider>
+        {paypalClientId && shippingAddress.address && shippingAddress.city && shippingAddress.postalCode && shippingAddress.country && (
+          <PayPalScriptProvider options={{ 'client-id': paypalClientId, currency: 'USD' }}>
+            <PayPalButtons
+              style={{ shape: 'rect', layout: 'vertical', color: 'blue', label: 'paypal' }}
+              createOrder={async (data, actions) => {
+                return actions.order.create({
+                  purchase_units: [{
+                    amount: {
+                      currency_code: 'USD',
+                      value: totalPrice,
+                    },
+                    shipping: {
+                      address: {
+                        address_line_1: shippingAddress.address,
+                        admin_area_2: shippingAddress.city,  // City
+                        postal_code: shippingAddress.postalCode,  // Postal code
+                        country_code: shippingAddress.country.substring(0, 2).toUpperCase() || 'XX', // Default to 'XX' if unsupported
+                      },
+                    },
+                  }],
+                  application_context: {
+                    shipping_preference: 'SET_PROVIDED_ADDRESS',
+                  }
+                });
+              }}
+              onApprove={async (data, actions) => {
+                return actions.order.capture().then((details) => {
+                  alert('Transaction completed by ' + details.payer.name.given_name);
+                  // Handle post-payment processing here
+                });
+              }}
+              onError={(err) => {
+                console.error('PayPal error:', err);
+              }}
+            />
+          </PayPalScriptProvider>
         )}
 
         {message && <p className="mt-5 text-red-500">{message}</p>}
