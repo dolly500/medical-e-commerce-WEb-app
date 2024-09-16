@@ -148,7 +148,7 @@ const Header = ({ activeHeading, data }) => {
           <div className="mr-[0] 1200px:mr-[0] 800px:mr-[20px] w-[50%] relative">
             <input
               type="text"
-              placeholder="Search Product..."
+              placeholder="Search Medical Equipments..."
               value={searchTerm}
               onChange={handleSearchChange}
               className="h-[40px] w-full px-2 border-[#0000FF] border-[2px] rounded-md"
@@ -432,7 +432,7 @@ const Header = ({ activeHeading, data }) => {
               <div className="my-8 w-[92%] m-auto h-[40px relative]">
                 <input
                   type="search"
-                  placeholder="Search Product..."
+                  placeholder="Search Search Medical Equipments..."
                   className="h-[40px] w-full px-2 border-[#0000FF] border-[2px] rounded-md"
                   value={searchTerm}
                   onChange={handleSearchChange}

@@ -85,7 +85,7 @@ const Checkout = () => {
                 value={shippingAddress.address}
                 onChange={handleShippingAddressChange}
                 className="mt-1 p-2 border border-gray-300 rounded w-full"
-                placeholder="Enter any address"
+                placeholder="Enter address"
               />
             </div>
             <div>
@@ -96,7 +96,7 @@ const Checkout = () => {
                 value={shippingAddress.city}
                 onChange={handleShippingAddressChange}
                 className="mt-1 p-2 border border-gray-300 rounded w-full"
-                placeholder="Enter any city"
+                placeholder="Enter city"
               />
             </div>
             <div>
@@ -107,7 +107,7 @@ const Checkout = () => {
                 value={shippingAddress.postalCode}
                 onChange={handleShippingAddressChange}
                 className="mt-1 p-2 border border-gray-300 rounded w-full"
-                placeholder="Enter any postal code"
+                placeholder="Enter postal code"
               />
             </div>
             <div>
@@ -118,7 +118,7 @@ const Checkout = () => {
                 value={shippingAddress.country}
                 onChange={handleShippingAddressChange}
                 className="mt-1 p-2 border border-gray-300 rounded w-full"
-                placeholder="Enter any country"
+                placeholder="Enter country"
               />
             </div>
             <button type="submit" className="mt-4 bg-blue-500 text-white p-2 rounded mb-5">
@@ -145,7 +145,7 @@ const Checkout = () => {
                         admin_area_2: shippingAddress.city,  // City
                         postal_code: shippingAddress.postalCode,  // Postal code
                         country_code: shippingAddress.country.substring(0, 2).toUpperCase() || 'XX', // Default to 'XX' if unsupported
-                      },
+                      },    
                     },
                   }],
                   application_context: {
