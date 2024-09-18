@@ -128,8 +128,8 @@ const Checkout = () => {
         </div>
 
         {/* PayPal Integration */}
-        {paypalClientId && shippingAddress.address && shippingAddress.city && shippingAddress.postalCode && shippingAddress.country && (
-          <PayPalScriptProvider options={{ 'client-id': paypalClientId, currency: 'USD' }}>
+      
+          <PayPalScriptProvider options={{'client-id': 'AZ7RR3vamknNm726JI4Jz-lOlRWDvV6GtRxrEmAHWvM6cptl76diS78FHfUPw3dmzgLyUScPmZWVJ1gQ', currency: 'USD'}}>
             <PayPalButtons
               style={{ shape: 'rect', layout: 'vertical', color: 'blue', label: 'paypal' }}
               createOrder={async (data, actions) => {
@@ -164,7 +164,8 @@ const Checkout = () => {
               }}
             />
           </PayPalScriptProvider>
-        )}
+          
+              
 
         {message && <p className="mt-5 text-red-500">{message}</p>}
       </div>
