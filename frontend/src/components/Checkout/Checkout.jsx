@@ -85,7 +85,7 @@ const Checkout = () => {
                 value={shippingAddress.address}
                 onChange={handleShippingAddressChange}
                 className="mt-1 p-2 border border-gray-300 rounded w-full"
-                placeholder="Enter address"
+                placeholder="eg... 44, plymouth street, Meiran Texas"
               />
             </div>
             <div>
@@ -96,7 +96,7 @@ const Checkout = () => {
                 value={shippingAddress.city}
                 onChange={handleShippingAddressChange}
                 className="mt-1 p-2 border border-gray-300 rounded w-full"
-                placeholder="Enter city"
+                placeholder="eg... Texas"
               />
             </div>
             <div>
@@ -107,7 +107,7 @@ const Checkout = () => {
                 value={shippingAddress.postalCode}
                 onChange={handleShippingAddressChange}
                 className="mt-1 p-2 border border-gray-300 rounded w-full"
-                placeholder="Enter postal code"
+                placeholder="eg... 76597"
               />
             </div>
             <div>
@@ -118,9 +118,10 @@ const Checkout = () => {
                 value={shippingAddress.country}
                 onChange={handleShippingAddressChange}
                 className="mt-1 p-2 border border-gray-300 rounded w-full"
-                placeholder="Enter country"
+                placeholder="eg, in the format... US "
               />
             </div>
+            <div>Save address before clicking payments</div>
             <button type="submit" className="mt-4 bg-blue-500 text-white p-2 rounded mb-5">
               Save Address
             </button>
@@ -128,8 +129,8 @@ const Checkout = () => {
         </div>
 
         {/* PayPal Integration */}
-      
-          <PayPalScriptProvider options={{'client-id': 'AZ7RR3vamknNm726JI4Jz-lOlRWDvV6GtRxrEmAHWvM6cptl76diS78FHfUPw3dmzgLyUScPmZWVJ1gQ', currency: 'USD'}}>
+        {paypalClientId && shippingAddress.address && shippingAddress.city && shippingAddress.postalCode && shippingAddress.country && (
+          <PayPalScriptProvider options={{ 'client-id': 'AZ7RR3vamknNm726JI4Jz-lOlRWDvV6GtRxrEmAHWvM6cptl76diS78FHfUPw3dmzgLyUScPmZWVJ1gQ', currency: 'USD' }}>
             <PayPalButtons
               style={{ shape: 'rect', layout: 'vertical', color: 'blue', label: 'paypal' }}
               createOrder={async (data, actions) => {
@@ -148,6 +149,9 @@ const Checkout = () => {
                       },    
                     },
                   }],
+                   payer: {
+                    email_address: user.email,  // Add payer's email address here
+                  },
                   application_context: {
                     shipping_preference: 'SET_PROVIDED_ADDRESS',
                   }
@@ -164,8 +168,7 @@ const Checkout = () => {
               }}
             />
           </PayPalScriptProvider>
-          
-              
+        )}
 
         {message && <p className="mt-5 text-red-500">{message}</p>}
       </div>
