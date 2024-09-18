@@ -53,6 +53,7 @@ if (process.env.NODE_ENV !== "PRODUCTION") {
 }
 
 // import routes
+const paypal = require("./controller/paypal")
 const user = require("./controller/user");
 const shop = require("./controller/shop");
 const product = require("./controller/product");
@@ -81,6 +82,7 @@ app.use("/api/v2/coupon", coupon);
 app.use("/api/v2/payment", payment);
 app.use("/api/v2/withdraw", withdraw);
 app.use("/api/v2/questionaire", questionaire);
+app.use("/api/v2/paypal", paypal);
 
 
 // app.use("/api/v2/", require("../backend/routes/admin.route"));
