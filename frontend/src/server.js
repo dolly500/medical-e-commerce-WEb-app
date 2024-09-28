@@ -1,3 +1,3 @@
-export const server = "https://medical-e-commerce-web-app.onrender.com/api/v2";
+export const server = "gut";
 
-export const servercl = "https://medical-e-commerce-web-app.onrender.com"
+export const servercl = "https://medical-e-commerce-web-app-bqh6.onrender.com/"

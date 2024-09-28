@@ -17,6 +17,7 @@ const Checkout = () => {
     postalCode: '',
     country: '',
   });
+  const [paymentMethod, setPaymentMethod] = useState('paypal');
   const [message, setMessage] = useState('');
   const [paypalClientId, setPaypalClientId] = useState(null);
 
@@ -27,7 +28,6 @@ const Checkout = () => {
       navigate('/cart');
     }
 
-    // Fetch PayPal client ID from backend
     const fetchPaypalClientId = async () => {
       try {
         const { data } = await axios.get(`${servercl}/api/config/paypal`);
@@ -50,7 +50,41 @@ const Checkout = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setMessage('');
+    if (!shippingAddress.address || !shippingAddress.city || !shippingAddress.postalCode || !shippingAddress.country) {
+      setMessage('Please fill in all shipping fields.');
+      return;
+    }
+    setMessage('Shipping address saved successfully.');
+  };
+
+  const handleCoinbasePayment = async () => {
+    try {
+      const { data } = await axios.post(`${servercl}/api/payment/coinbase`, {
+        amount: totalPrice,
+        currency: 'USD',
+        email: user.email,
+        shippingAddress, // Pass the shipping address to Coinbase
+      });
+      window.location.href = data.url;
+    } catch (error) {
+      console.error('Error with Coinbase payment:', error);
+      setMessage('Failed to initiate Coinbase payment.');
+    }
+  };
+
+  const handlePayOnDelivery = async () => {
+    try {
+      await axios.post(`${servercl}/api/order/create`, {
+        shippingAddress,
+        paymentMethod: 'Pay on Delivery',
+        totalPrice,
+        user: user._id,
+      });
+      setMessage('Order placed successfully! You can pay upon delivery.');
+    } catch (error) {
+      console.error('Error with Pay on Delivery:', error);
+      setMessage('Failed to place order.');
+    }
   };
 
   return (
@@ -85,7 +119,6 @@ const Checkout = () => {
                 value={shippingAddress.address}
                 onChange={handleShippingAddressChange}
                 className="mt-1 p-2 border border-gray-300 rounded w-full"
-                placeholder="eg... 44, plymouth street, Meiran Texas"
               />
             </div>
             <div>
@@ -96,7 +129,6 @@ const Checkout = () => {
                 value={shippingAddress.city}
                 onChange={handleShippingAddressChange}
                 className="mt-1 p-2 border border-gray-300 rounded w-full"
-                placeholder="eg... Texas"
               />
             </div>
             <div>
@@ -107,7 +139,6 @@ const Checkout = () => {
                 value={shippingAddress.postalCode}
                 onChange={handleShippingAddressChange}
                 className="mt-1 p-2 border border-gray-300 rounded w-full"
-                placeholder="eg... 76597"
               />
             </div>
             <div>
@@ -118,21 +149,55 @@ const Checkout = () => {
                 value={shippingAddress.country}
                 onChange={handleShippingAddressChange}
                 className="mt-1 p-2 border border-gray-300 rounded w-full"
-                placeholder="eg, in the format... US "
               />
             </div>
-            <div>Save address before clicking payments</div>
-            <button type="submit" className="mt-4 bg-blue-500 text-white p-2 rounded mb-5">
+            <button type="submit" className="mt-4 bg-blue-500 text-white p-2 rounded">
               Save Address
             </button>
           </form>
         </div>
 
+        {/* Payment Method Selection */}
+        <div className="mt-5">
+          <h2 className="text-xl font-semibold mb-4">Select Payment Method</h2>
+          <div className="flex space-x-4">
+            <label>
+              <input
+                type="radio"
+                name="paymentMethod"
+                value="paypal"
+                checked={paymentMethod === 'paypal'}
+                onChange={() => setPaymentMethod('paypal')}
+              />
+              PayPal
+            </label>
+            <label>
+              <input
+                type="radio"
+                name="paymentMethod"
+                value="coinbase"
+                checked={paymentMethod === 'coinbase'}
+                onChange={() => setPaymentMethod('coinbase')}
+              />
+              Coinbase
+            </label>
+            <label>
+              <input
+                type="radio"
+                name="paymentMethod"
+                value="payondelivery"
+                checked={paymentMethod === 'payondelivery'}
+                onChange={() => setPaymentMethod('payondelivery')}
+              />
+              Pay on Delivery
+            </label> 
+          </div>
+        </div>
+
         {/* PayPal Integration */}
-        {paypalClientId && shippingAddress.address && shippingAddress.city && shippingAddress.postalCode && shippingAddress.country && (
+        {paymentMethod === 'paypal' && paypalClientId && shippingAddress.address && (
           <PayPalScriptProvider options={{ 'client-id': 'AZ7RR3vamknNm726JI4Jz-lOlRWDvV6GtRxrEmAHWvM6cptl76diS78FHfUPw3dmzgLyUScPmZWVJ1gQ', currency: 'USD' }}>
             <PayPalButtons
-              style={{ shape: 'rect', layout: 'vertical', color: 'blue', label: 'paypal' }}
               createOrder={async (data, actions) => {
                 return actions.order.create({
                   purchase_units: [{
@@ -143,24 +208,23 @@ const Checkout = () => {
                     shipping: {
                       address: {
                         address_line_1: shippingAddress.address,
-                        admin_area_2: shippingAddress.city,  // City
-                        postal_code: shippingAddress.postalCode,  // Postal code
-                        country_code: shippingAddress.country.substring(0, 2).toUpperCase() || 'XX', // Default to 'XX' if unsupported
-                      },    
+                        admin_area_2: shippingAddress.city,
+                        postal_code: shippingAddress.postalCode,
+                        country_code: shippingAddress.country.substring(0, 2).toUpperCase(),
+                      },
                     },
                   }],
-                   payer: {
-                    email_address: user.email,  // Add payer's email address here
+                  payer: {
+                    email_address: user.email,
                   },
                   application_context: {
                     shipping_preference: 'SET_PROVIDED_ADDRESS',
-                  }
+                  },
                 });
               }}
               onApprove={async (data, actions) => {
                 return actions.order.capture().then((details) => {
                   alert('Transaction completed by ' + details.payer.name.given_name);
-                  // Handle post-payment processing here
                 });
               }}
               onError={(err) => {
@@ -170,7 +234,28 @@ const Checkout = () => {
           </PayPalScriptProvider>
         )}
 
-        {message && <p className="mt-5 text-red-500">{message}</p>}
+        {/* Coinbase Integration */}
+        {paymentMethod === 'coinbase' && (
+          <button
+            onClick={handleCoinbasePayment}
+            className="mt-4 bg-yellow-500 text-white p-2 rounded"
+          >
+            Pay with Coinbase
+          </button>
+        )}
+
+        {/* Pay on Delivery */}
+        {paymentMethod === 'payondelivery' && (
+          <button
+            onClick={handlePayOnDelivery}
+            className="mt-4 bg-green-500 text-white p-2 rounded"
+          >
+            Place Order and Pay on Delivery
+          </button>
+        )}
+
+        {/* Message */}
+        {message && <p className="mt-4 text-red-500">{message}</p>}
       </div>
     </div>
   );
