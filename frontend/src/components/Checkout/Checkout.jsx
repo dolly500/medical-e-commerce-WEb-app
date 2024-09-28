@@ -196,7 +196,7 @@ const Checkout = () => {
 
         {/* PayPal Integration */}
         {paymentMethod === 'paypal' && paypalClientId && shippingAddress.address && (
-          <PayPalScriptProvider options={{ 'client-id': 'AZ7RR3vamknNm726JI4Jz-lOlRWDvV6GtRxrEmAHWvM6cptl76diS78FHfUPw3dmzgLyUScPmZWVJ1gQ', currency: 'USD' }}>
+          <PayPalScriptProvider options={{ 'client-id': paypalClientId, currency: 'USD' }}>
             <PayPalButtons
               createOrder={async (data, actions) => {
                 return actions.order.create({
