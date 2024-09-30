@@ -1,3 +1,4 @@
+// frontend/src/components/Checkout.jsx
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import axios from 'axios';
@@ -50,25 +51,36 @@ const Checkout = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!shippingAddress.address || !shippingAddress.city || !shippingAddress.postalCode || !shippingAddress.country) {
+    const { address, city, postalCode, country } = shippingAddress;
+    if (!address || !city || !postalCode || !country) {
       setMessage('Please fill in all shipping fields.');
       return;
     }
     setMessage('Shipping address saved successfully.');
   };
 
-  const handleCoinbasePayment = async () => {
+  const handleCoinPaymentsPayment = async () => {
     try {
-      const { data } = await axios.post(`${servercl}/api/payment/coinbase`, {
+      // Ensure shipping address is saved
+      const { address, city, postalCode, country } = shippingAddress;
+      if (!address || !city || !postalCode || !country) {
+        setMessage('Please fill in all shipping fields.');
+        return;
+      }
+
+      const response = await axios.post(`${servercl}/api/payment/coinpayments`, {
         amount: totalPrice,
-        currency: 'USD',
-        email: user.email,
-        shippingAddress, // Pass the shipping address to Coinbase
+        currency: 'BTC', // Choose desired cryptocurrency
+        buyerEmail: user.email,
+        shippingAddress,
+        cart,
       });
-      window.location.href = data.url;
+
+      // Redirect to CoinPayments payment URL
+      window.location.href = response.data.url;
     } catch (error) {
-      console.error('Error with Coinbase payment:', error);
-      setMessage('Failed to initiate Coinbase payment.');
+      console.error('CoinPayments Error:', error);
+      setMessage('Failed to initiate CoinPayments payment.');
     }
   };
 
@@ -79,10 +91,11 @@ const Checkout = () => {
         paymentMethod: 'Pay on Delivery',
         totalPrice,
         user: user._id,
+        cart,
       });
       setMessage('Order placed successfully! You can pay upon delivery.');
     } catch (error) {
-      console.error('Error with Pay on Delivery:', error);
+      console.error('Pay on Delivery Error:', error);
       setMessage('Failed to place order.');
     }
   };
@@ -91,6 +104,7 @@ const Checkout = () => {
     <div className="container mx-auto p-5">
       <h1 className="text-2xl font-bold mb-5">Checkout</h1>
       <div className="bg-white p-5 rounded shadow-sm">
+        {/* Order Summary */}
         <h2 className="text-xl font-semibold mb-4">Order Summary</h2>
         {cart.map((item, index) => (
           <div key={index} className="flex justify-between items-center mb-4">
@@ -119,6 +133,7 @@ const Checkout = () => {
                 value={shippingAddress.address}
                 onChange={handleShippingAddressChange}
                 className="mt-1 p-2 border border-gray-300 rounded w-full"
+                required
               />
             </div>
             <div>
@@ -129,6 +144,7 @@ const Checkout = () => {
                 value={shippingAddress.city}
                 onChange={handleShippingAddressChange}
                 className="mt-1 p-2 border border-gray-300 rounded w-full"
+                required
               />
             </div>
             <div>
@@ -139,6 +155,7 @@ const Checkout = () => {
                 value={shippingAddress.postalCode}
                 onChange={handleShippingAddressChange}
                 className="mt-1 p-2 border border-gray-300 rounded w-full"
+                required
               />
             </div>
             <div>
@@ -149,6 +166,7 @@ const Checkout = () => {
                 value={shippingAddress.country}
                 onChange={handleShippingAddressChange}
                 className="mt-1 p-2 border border-gray-300 rounded w-full"
+                required
               />
             </div>
             <button type="submit" className="mt-4 bg-blue-500 text-white p-2 rounded">
@@ -161,36 +179,39 @@ const Checkout = () => {
         <div className="mt-5">
           <h2 className="text-xl font-semibold mb-4">Select Payment Method</h2>
           <div className="flex space-x-4">
-            <label>
+            <label className="flex items-center">
               <input
                 type="radio"
                 name="paymentMethod"
                 value="paypal"
                 checked={paymentMethod === 'paypal'}
                 onChange={() => setPaymentMethod('paypal')}
+                className="mr-2"
               />
               PayPal
             </label>
-            <label>
+            <label className="flex items-center">
               <input
                 type="radio"
                 name="paymentMethod"
-                value="coinbase"
-                checked={paymentMethod === 'coinbase'}
-                onChange={() => setPaymentMethod('coinbase')}
+                value="coinpayments"
+                checked={paymentMethod === 'coinpayments'}
+                onChange={() => setPaymentMethod('coinpayments')}
+                className="mr-2"
               />
-              Coinbase
+              CoinPayments
             </label>
-            <label>
+            <label className="flex items-center">
               <input
                 type="radio"
                 name="paymentMethod"
                 value="payondelivery"
                 checked={paymentMethod === 'payondelivery'}
                 onChange={() => setPaymentMethod('payondelivery')}
+                className="mr-2"
               />
               Pay on Delivery
-            </label> 
+            </label>
           </div>
         </div>
 
@@ -198,7 +219,7 @@ const Checkout = () => {
         {paymentMethod === 'paypal' && paypalClientId && shippingAddress.address && (
           <PayPalScriptProvider options={{ 'client-id': paypalClientId, currency: 'USD' }}>
             <PayPalButtons
-              createOrder={async (data, actions) => {
+              createOrder={(data, actions) => {
                 return actions.order.create({
                   purchase_units: [{
                     amount: {
@@ -222,25 +243,27 @@ const Checkout = () => {
                   },
                 });
               }}
-              onApprove={async (data, actions) => {
+              onApprove={(data, actions) => {
                 return actions.order.capture().then((details) => {
                   alert('Transaction completed by ' + details.payer.name.given_name);
+                  // Optionally, handle post-transaction actions like updating the order status
                 });
               }}
               onError={(err) => {
-                console.error('PayPal error:', err);
+                console.error('PayPal Error:', err);
+                setMessage('PayPal payment failed.');
               }}
             />
           </PayPalScriptProvider>
         )}
 
-        {/* Coinbase Integration */}
-        {paymentMethod === 'coinbase' && (
+        {/* CoinPayments Integration */}
+        {paymentMethod === 'coinpayments' && (
           <button
-            onClick={handleCoinbasePayment}
+            onClick={handleCoinPaymentsPayment}
             className="mt-4 bg-yellow-500 text-white p-2 rounded"
           >
-            Pay with Coinbase
+            Pay with CoinPayments
           </button>
         )}
 
@@ -254,7 +277,7 @@ const Checkout = () => {
           </button>
         )}
 
-        {/* Message */}
+        {/* Display Message */}
         {message && <p className="mt-4 text-red-500">{message}</p>}
       </div>
     </div>
