@@ -1,0 +1,126 @@
+const express = require('express');
+const router = express.Router();
+const Coinpayments = require('coinpayments');
+const Coinpayment = require("../model/coinpayment");
+
+
+
+const client = new Coinpayments({
+  key: process.env.COINPAYMENTS_PUBLIC_KEY,
+  secret: process.env.COINPAYMENTS_PRIVATE_KEY
+});
+
+
+
+router.post('/create', async (req, res) => {
+  try {
+    const { amount, currency1, currency2, buyer_email, shippingAddress } = req.body;
+
+    const transaction = await client.createTransaction({
+      amount: amount,
+      currency1: currency1,
+      currency2: currency2,
+      buyer_email: buyer_email,
+      address: shippingAddress.address,
+      city: shippingAddress.city,
+      postal_code: shippingAddress.postalCode,
+      country: shippingAddress.country,
+    });
+
+    // Save transaction details to your database
+    const newTransaction = new CoinPaymentTransaction({
+      txn_id: transaction.txn_id,
+      amount: amount,
+      currency1: currency1,
+      currency2: currency2,
+      buyer_email: buyer_email,
+      address: shippingAddress.address,
+      city: shippingAddress.city,
+      postal_code: shippingAddress.postalCode,
+      country: shippingAddress.country,
+      status: 'pending',
+      checkout_url: transaction.checkout_url
+    });
+
+    await newTransaction.save();
+
+    res.json({ 
+      checkout_url: transaction.checkout_url,
+      txn_id: transaction.txn_id
+    });
+  } catch (error) {
+    console.error('CoinPayments error:', error);
+    res.status(500).json({ message: 'Failed to create CoinPayments transaction' });
+  }
+});
+
+// Handle IPN (Instant Payment Notifications)
+router.post('/ipn', async (req, res) => {
+  const hmac = req.get('HMAC');
+  const payload = JSON.stringify(req.body);
+  const calculatedHmac = require('crypto')
+    .createHmac('sha512', process.env.COINPAYMENTS_IPN_SECRET)
+    .update(payload)
+    .digest('hex');
+
+  if (hmac !== calculatedHmac) {
+    return res.status(401).send('Invalid HMAC');
+  }
+
+  const { txn_id, status, amount1, amount2, currency1, currency2 } = req.body;
+
+  // Update transaction status in your database
+  try {
+    await CoinPaymentTransaction.findOneAndUpdate(
+      { txn_id: txn_id },
+      { 
+        status: status,
+        updated_at: Date.now()
+      }
+    );
+
+    // Trigger any necessary actions based on the new status
+    // For example, if status is 'completed', you might want to fulfill the order
+
+    res.sendStatus(200);
+  } catch (error) {
+    console.error('Error updating transaction:', error);
+    res.status(500).send('Error updating transaction');
+  }
+});
+
+// Get transaction status
+router.get('/status/:txn_id', async (req, res) => {
+  try {
+    const { txn_id } = req.params;
+    
+    // First, check our database
+    const transaction = await CoinPaymentTransaction.findOne({ txn_id: txn_id });
+    
+    if (!transaction) {
+      return res.status(404).json({ message: 'Transaction not found' });
+    }
+
+    // If the transaction is not in a final state, check with CoinPayments
+    if (['pending', 'processing'].includes(transaction.status)) {
+      const cpResult = await client.getTx({ txid: txn_id });
+      
+      // Update our database if the status has changed
+      if (cpResult.status !== transaction.status) {
+        transaction.status = cpResult.status;
+        transaction.updated_at = Date.now();
+        await transaction.save();
+      }
+
+      res.json(cpResult);
+    } else {
+      // If the transaction is in a final state, just return our database info
+      res.json(transaction);
+    }
+  } catch (error) {
+    console.error('CoinPayments error:', error);
+    res.status(500).json({ message: 'Failed to get transaction status' });
+  }
+});
+
+module.exports = router;

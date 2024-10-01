@@ -67,6 +67,7 @@ const conversation = require("./controller/conversation");
 const message = require("./controller/message");
 const withdraw = require("./controller/withdraw");
 const questionaire = require("./controller/questionaire");
+const coinpayment = require("./controller/coinpayments");
 
 
 app.use("/api/v2/user", user);
@@ -83,7 +84,7 @@ app.use("/api/v2/payment", payment);
 app.use("/api/v2/withdraw", withdraw);
 app.use("/api/v2/questionaire", questionaire);
 app.use("/api/v2/paypal", paypal);
-
+app.use("/api/v2/payment/coinpayment", coinpayment);
 
 // app.use("/api/v2/", require("../backend/routes/admin.route"));
 
