@@ -11,7 +11,7 @@ const coinPaymentSchema = new mongoose.Schema({
   city: { type: String, required: true },
   postal_code: { type: String, required: true },
   country: { type: String, required: true },
-  status: { type: String, required: true, default: "pending" },
+  status: { type: String, default: "pending" },
   checkout_url: { type: String, required: true },
   created_at: { type: Date, default: Date.now },
   updated_at: { type: Date, default: Date.now },

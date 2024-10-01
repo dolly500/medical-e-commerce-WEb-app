@@ -1,15 +1,14 @@
 const express = require('express');
 const router = express.Router();
 const Coinpayments = require('coinpayments');
-const Coinpayment = require("../model/coinpayment");
+const CoinPaymentTransaction = require("../model/coinpayment");
 
-
+const validBitcoinAddress = '1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa';
 
 const client = new Coinpayments({
   key: process.env.COINPAYMENTS_PUBLIC_KEY,
   secret: process.env.COINPAYMENTS_PRIVATE_KEY
 });
-
 
 
 router.post('/create', async (req, res) => {
@@ -21,7 +20,7 @@ router.post('/create', async (req, res) => {
       currency1: currency1,
       currency2: currency2,
       buyer_email: buyer_email,
-      address: shippingAddress.address,
+      address: validBitcoinAddress, // Use a valid Bitcoin address here
       city: shippingAddress.city,
       postal_code: shippingAddress.postalCode,
       country: shippingAddress.country,
@@ -34,7 +33,7 @@ router.post('/create', async (req, res) => {
       currency1: currency1,
       currency2: currency2,
       buyer_email: buyer_email,
-      address: shippingAddress.address,
+      address: validBitcoinAddress,
       city: shippingAddress.city,
       postal_code: shippingAddress.postalCode,
       country: shippingAddress.country,
@@ -81,7 +80,6 @@ router.post('/ipn', async (req, res) => {
 
     // Trigger any necessary actions based on the new status
     // For example, if status is 'completed', you might want to fulfill the order
-
     res.sendStatus(200);
   } catch (error) {
     console.error('Error updating transaction:', error);
