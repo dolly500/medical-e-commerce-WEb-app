@@ -53,10 +53,8 @@ router.post("/create", async (req, res) => {
       txn_id: transaction.txn_id,
     });
   } catch (error) {
-    console.error("CoinPayments error:", error);
-    res
-      .status(500)
-      .json({ message: error.message});
+    console.log("CoinPayments error:", error);
+    res.status(500).json({ message: error.message });
   }
 });
 
