@@ -13,6 +13,7 @@ const client = new Coinpayments({
 });
 
 router.post("/create", async (req, res) => {
+  console.log(req.body, "body");
   try {
     const { amount, currency1, currency2, buyer_email, shippingAddress, cart } =
       req.body;
@@ -55,7 +56,7 @@ router.post("/create", async (req, res) => {
     console.error("CoinPayments error:", error);
     res
       .status(500)
-      .json({ message: "Failed to create CoinPayments transaction" });
+      .json({ message: error.message});
   }
 });
 
