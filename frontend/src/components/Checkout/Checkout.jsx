@@ -5,10 +5,12 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { PayPalScriptProvider, PayPalButtons } from '@paypal/react-paypal-js';
 import { servercl } from '../../server';
+import { server } from '../../server';
 
 const Checkout = () => {
   const { cart } = useSelector((state) => state.cart);
   const { user } = useSelector((state) => state.user);
+  const [orderDetails, setOrderDetails] = useState(null);
 
   const navigate = useNavigate();
 
@@ -68,16 +70,38 @@ const Checkout = () => {
         return;
       }
 
-      const response = await axios.post(`${servercl}/api/payment/coinpayments`, {
+      // Prepare the cart details (assuming 'cart' is available in your component state)
+      const cartDetails = cart.map(item => ({
+        productName: item.name,
+        quantity: item.qty,
+        discountPrice: item.discountPrice,
+        totalPriceForItem: item.qty * item.discountPrice
+      }));
+
+      const response = await axios.post(`${server}/payment/coinpayment/create`, {
         amount: totalPrice,
-        currency: 'BTC', // Choose desired cryptocurrency
-        buyerEmail: user.email,
+        currency1: 'USD',  // Your base currency
+        currency2: 'BTC',  // Target cryptocurrency (e.g., Bitcoin)
+        buyer_email: user.email,
         shippingAddress,
-        cart,
+        cart: cartDetails  // Send the cart details to the backend
       });
 
-      // Redirect to CoinPayments payment URL
-      window.location.href = response.data.url;
+      const { checkout_url, txn_id, order_id, address: dynamicAddress } = response.data;
+
+      console.log(`Order ID: ${order_id}`); // Log or use the Order ID
+      console.log(`Pay with this address: ${dynamicAddress}`); // For debug or display
+  
+      // Optionally store order details in local state or global state (e.g., Redux)
+      setOrderDetails({
+        txn_id,
+        order_id,        // Save the order ID in your state
+        checkout_url,
+        dynamicAddress
+      });
+  
+      // Redirect to the CoinPayments checkout URL
+      window.location.href = checkout_url;
     } catch (error) {
       console.error('CoinPayments Error:', error);
       setMessage('Failed to initiate CoinPayments payment.');
