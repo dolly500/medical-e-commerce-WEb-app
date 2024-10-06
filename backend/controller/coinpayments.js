@@ -2,6 +2,9 @@ const express = require("express");
 const router = express.Router();
 const Coinpayments = require("coinpayments");
 const CoinPaymentTransaction = require("../model/coinpayment");
+const crypto = require('crypto');
+const getRawBody = require("raw-body");
+const contentType = require("content-type");
 
 const validBitcoinAddress = "1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa";
 const success_url = "http://localhost:3000/success";
@@ -60,21 +63,32 @@ router.post("/create", async (req, res) => {
 
 // Handle IPN (Instant Payment Notifications)
 router.post("/ipn", async (req, res) => {
-  const hmac = req.get("HMAC");
-  const payload = JSON.stringify(req.body);
-  const calculatedHmac = require("crypto")
-    .createHmac("sha512", process.env.COINPAYMENTS_IPN_SECRET)
-    .update(payload)
-    .digest("hex");
-
-  if (hmac !== calculatedHmac) {
-    return res.status(401).send("Invalid HMAC");
-  }
-
-  const { txn_id, status, amount1, amount2, currency1, currency2 } = req.body;
-
-  // Update transaction status in your database
   try {
+    // Capture the raw body
+    const raw = await getRawBody(req, {
+      length: req.headers['content-length'],
+      limit: '1mb',
+      encoding: contentType.parse(req).parameters.charset || 'utf-8'
+    });
+
+    // Calculate HMAC using the raw body
+    const hmac = req.headers["hmac"];
+    const calculatedHmac = crypto
+      .createHmac("sha512", process.env.COINPAYMENTS_IPN_SECRET)
+      .update(raw)
+      .digest("hex");
+
+    if (hmac !== calculatedHmac) {
+      console.error("Invalid HMAC:", { received: hmac, calculated: calculatedHmac });
+      return res.status(401).send("Invalid HMAC");
+    }
+
+    // Parse the raw body as JSON
+    const parsedBody = JSON.parse(raw);
+
+    const { txn_id, status, amount1, amount2, currency1, currency2 } = parsedBody;
+
+    // Update transaction status in your database
     await CoinPaymentTransaction.findOneAndUpdate(
       { txn_id: txn_id },
       {
@@ -84,11 +98,10 @@ router.post("/ipn", async (req, res) => {
     );
 
     // Trigger any necessary actions based on the new status
-    // For example, if status is 'completed', you might want to fulfill the order
     res.sendStatus(200);
   } catch (error) {
-    console.error("Error updating transaction:", error);
-    res.status(500).send("Error updating transaction");
+    console.error("IPN Error:", error);
+    res.status(500).send("Error processing IPN");
   }
 });
 
