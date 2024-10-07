@@ -6,6 +6,8 @@ const { isAuthenticated, isSeller, isAdmin } = require("../middleware/auth");
 const Order = require("../model/order");
 const Shop = require("../model/shop");
 const Product = require("../model/product");
+const User = require("../model/user");
+const  sendOrderConfirmation  = require("../utils/mailcontent");
 
 // create new order
 router.post(
@@ -111,7 +113,7 @@ router.put(
       if (req.body.status === "Delivered") {
         order.deliveredAt = Date.now();
         order.paymentInfo.status = "Succeeded";
-        const serviceCharge = order.totalPrice * .10;
+        const serviceCharge = order.totalPrice * 0.1;
         await updateSellerInfo(order.totalPrice - serviceCharge);
       }
 
@@ -133,7 +135,7 @@ router.put(
 
       async function updateSellerInfo(amount) {
         const seller = await Shop.findById(req.seller.id);
-        
+
         seller.availableBalance = amount;
 
         await seller.save();
@@ -232,50 +234,38 @@ router.get(
   })
 );
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+// pay on delivery --- user
+router.post(
+  "/pay-on-delivery",
+  catchAsyncErrors(async (req, res, next) => {
+    try {
+      const { cart, shippingAddress, email, totalPrice } = req.body;
+      const userDetails = await User.find({ email });
+      if (!userDetails || userDetails.length === 0) {
+        return next(new ErrorHandler("User not found with this email", 400));
+      }
+      console.log(userDetails);
+      //generate tracking number
+      const trackingNumber = Math.floor(Math.random() * 1000000);
+      const order = await Order.create({
+        cart,
+        shippingAddress,
+        user: userDetails,
+        totalPrice,
+        status: "Pay-on-Delivery",
+        trackingNumber,
+      });
+      console.log(order);
+      await order.save();
+      await sendOrderConfirmation(order);
+      res.status(201).json({
+        success: true,
+        order,
+      });
+    } catch (error) {
+      return next(new ErrorHandler(error.message, 500));
+    }
+  })
+);
 
 module.exports = router;
