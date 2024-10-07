@@ -58,71 +58,94 @@ const Checkout = () => {
       setMessage('Please fill in all shipping fields.');
       return;
     }
+
+    if (!paymentMethod) {
+      setMessage('Please select a payment method.');
+      return;
+    }
     setMessage('Shipping address saved successfully.');
   };
 
-  const handleCoinPaymentsPayment = async () => {
-    try {
-      // Ensure shipping address is saved
-      const { address, city, postalCode, country } = shippingAddress;
-      if (!address || !city || !postalCode || !country) {
-        setMessage('Please fill in all shipping fields.');
-        return;
-      }
-
-      // Prepare the cart details (assuming 'cart' is available in your component state)
-      const cartDetails = cart.map(item => ({
-        productName: item.name,
-        quantity: item.qty,
-        discountPrice: item.discountPrice,
-        totalPriceForItem: item.qty * item.discountPrice
-      }));
-
-      const response = await axios.post(`${server}/payment/coinpayment/create`, {
-        amount: totalPrice,
-        currency1: 'USD',  // Your base currency
-        currency2: 'BTC',  // Target cryptocurrency (e.g., Bitcoin)
-        buyer_email: user.email,
-        shippingAddress,
-        cart: cartDetails  // Send the cart details to the backend
-      });
-
-      const { checkout_url, txn_id, order_id, address: dynamicAddress } = response.data;
-
-      console.log(`Order ID: ${order_id}`); // Log or use the Order ID
-      console.log(`Pay with this address: ${dynamicAddress}`); // For debug or display
+  const handleCoinPaymentsPayment = () => {
+    const { address, city, postalCode, country } = shippingAddress;
   
-      // Optionally store order details in local state or global state (e.g., Redux)
-      setOrderDetails({
-        txn_id,
-        order_id,        // Save the order ID in your state
-        checkout_url,
-        dynamicAddress
-      });
+    // Ensure shipping address is filled
+    if (!address || !city || !postalCode || !country) {
+      setMessage('Please fill in all shipping fields.');
+      return;
+    }
   
-      // Redirect to the CoinPayments checkout URL
-      window.location.href = checkout_url;
-    } catch (error) {
-      console.error('CoinPayments Error:', error);
-      setMessage('Failed to initiate CoinPayments payment.');
-    }
+    // Generate a unique invoice ID (ensure uniqueness to prevent conflicts)
+    const invoice = `ORDER_${Math.random().toString(36).substr(2, 9).toUpperCase()}`;
+  
+    // Define CoinPayments merchant ID and other constants
+    const merchantId = '74ee18106913738a4127a479f77c4fc4'; // Replace with your actual Merchant ID
+    const baseCurrency = 'USD'; // Your base currency
+    const targetCurrency = 'BTC'; // Target cryptocurrency
+    const amount = totalPrice; // Total amount in base currency (USD)
+    const itemName = 'Cart Payment';
+    const itemDesc = 'Payment for items in cart';
+    const successUrl = 'https://yourwebsite.com/success';
+    const cancelUrl = 'https://yourwebsite.com/cancel';
+  
+    // Create a form dynamically
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = 'https://www.coinpayments.net/index.php';
+  
+    // Define hidden input fields required by CoinPayments
+    const inputs = [
+      { name: 'cmd', value: '_pay_simple' },
+      { name: 'reset', value: '1' },
+      { name: 'merchant', value: merchantId },
+      { name: 'currency', value: baseCurrency }, // Base currency (USD)
+      { name: 'currency2', value: targetCurrency }, // Target cryptocurrency (BTC)
+      { name: 'amountf', value: amount },
+      { name: 'item_name', value: itemName },
+      { name: 'item_desc', value: itemDesc },
+      { name: 'email', value: user.email },
+      { name: 'first_name', value: user.firstName },
+      { name: 'last_name', value: user.lastName },
+      { name: 'address1', value: address },
+      { name: 'city', value: city },
+      { name: 'state', value: country },
+      { name: 'postal', value: postalCode },
+      { name: 'invoice', value: invoice },
+      { name: 'success_url', value: successUrl },
+      { name: 'cancel_url', value: cancelUrl },
+      // Optionally, add more fields like 'custom' for additional data
+    ];
+  
+    // Append hidden inputs to the form
+    inputs.forEach((input) => {
+      const hiddenField = document.createElement('input');
+      hiddenField.type = 'hidden';
+      hiddenField.name = input.name;
+      hiddenField.value = input.value;
+      form.appendChild(hiddenField);
+    });
+  
+    // Append the form to the body and submit it
+    document.body.appendChild(form);
+    form.submit();
   };
+  
 
-  const handlePayOnDelivery = async () => {
-    try {
-      await axios.post(`${servercl}/api/order/create`, {
-        shippingAddress,
-        paymentMethod: 'Pay on Delivery',
-        totalPrice,
-        user: user._id,
-        cart,
-      });
-      setMessage('Order placed successfully! You can pay upon delivery.');
-    } catch (error) {
-      console.error('Pay on Delivery Error:', error);
-      setMessage('Failed to place order.');
-    }
-  };
+const handlePayOnDelivery = async () => {
+  try {
+    await axios.post(`${servercl}/order/pay-on-delivery`, {
+      shippingAddress,
+      totalPrice,
+      user: user._id,
+      cart,
+      email: user.email, // Include the user's email in the request
+    });
+    setMessage('Order placed successfully! You can pay upon delivery.');
+  } catch (error) {
+    console.error('Pay on Delivery Error:', error);
+    setMessage('Failed to place order.');
+  }
+};
 
   return (
     <div className="container mx-auto p-5">
