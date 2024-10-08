@@ -203,13 +203,13 @@ const sendOrderConfirmation = async (order) => {
                         <tr>
                             <td>${item.name}</td>
                             <td>${item.qty}</td>
-                            <td>$${item.discountPrice}</td>
+                            <td><p>$</p>${item.discountPrice}</td>
                         </tr>`
                           )
                           .join("")}
                     </tbody>
                 </table>
-                <p class="total-price">Total Price: $${order.totalPrice}</p>
+                <p class="total-price">Total Price: <p>$</p>${order.totalPrice}</p>
             </div>
 
             <h2>Next Steps:</h2>
