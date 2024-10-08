@@ -99,7 +99,7 @@ const sendOrderConfirmation = async (order) => {
                             .join("")}
                       </tbody>
                   </table>
-                  <p class="total-price">Price: $${order.discountPrice}</p>
+                  <p class="total-price">Price: $${item.discountPrice}</p>
                   <p class="total-price">Shipping Fee: $${shippingFee}</p>
                   <p class="total-price">Total Price: ${order.totalPrice + shippingFee}</p>
               </div>
@@ -214,7 +214,7 @@ const sendOrderConfirmation = async (order) => {
                           .join("")}
                     </tbody>
                 </table>
-                <p class="total-price">Price: $${order.discountPrice}</p>
+                <p class="total-price">Price: $${item.discountPrice}</p>
                   <p class="total-price">Shipping Fee: $${shippingFee}</p>
                 <p class="total-price">Total Price: $${order.totalPrice}</p>
             </div>
