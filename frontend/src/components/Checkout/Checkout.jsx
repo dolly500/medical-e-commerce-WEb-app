@@ -10,7 +10,7 @@ import { server } from '../../server';
 const Checkout = () => {
   const { cart } = useSelector((state) => state.cart);
   const { user } = useSelector((state) => state.user);
-  const [orderDetails, setOrderDetails] = useState(null);
+
 
   const navigate = useNavigate();
 
@@ -79,7 +79,16 @@ const Checkout = () => {
     const invoice = `ORDER_${Math.random().toString(36).substr(2, 9).toUpperCase()}`;
   
     // Define CoinPayments merchant ID and other constants
-    const merchantId = '74ee18106913738a4127a479f77c4fc4'; // Replace with your actual Merchant ID
+    // Access the merchant ID from environment variables
+  const merchantId = process.env.REACT_APP_COINPAYMENTS_MERCHANT_ID;
+  console.log('Merchant ID:', merchantId);
+
+
+  if (!merchantId) {
+    setMessage('Merchant ID not available.');
+    return;
+  }
+    
     const baseCurrency = 'USD'; // Your base currency
     const targetCurrency = 'BTC'; // Target cryptocurrency
     const amount = totalPrice; // Total amount in base currency (USD)
@@ -133,14 +142,14 @@ const Checkout = () => {
 
 const handlePayOnDelivery = async () => {
   try {
-    await axios.post(`${servercl}/order/pay-on-delivery`, {
+    await axios.post(`${server}/order/pay-on-delivery`, {
       shippingAddress,
       totalPrice,
       user: user._id,
       cart,
       email: user.email, // Include the user's email in the request
     });
-    setMessage('Order placed successfully! You can pay upon delivery.');
+    setMessage('Order placed successfully! You can pay upon delivery. Check your Mail!');
   } catch (error) {
     console.error('Pay on Delivery Error:', error);
     setMessage('Failed to place order.');
