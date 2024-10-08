@@ -201,15 +201,15 @@ const sendOrderConfirmation = async (order) => {
                           .map(
                             (item) => `
                         <tr>
-                            <p>$<td>${item.name}</td></p>
-                            <p>$<td>${item.qty}</td></p>
-                            <p>$<td>${item.discountPrice}</td></p>
+                            <td>${item.name}</td>
+                            <td>${item.qty}</td>
+                            <td>${item.discountPrice}</td>
                         </tr>`
                           )
                           .join("")}
                     </tbody>
                 </table>
-                 <p>$<p class="total-price">Total Price: ${order.totalPrice}</p></p>
+                <p class="total-price">Total Price: ${order.totalPrice}</p>
             </div>
 
             <h2>Next Steps:</h2>
