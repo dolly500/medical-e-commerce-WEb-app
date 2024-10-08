@@ -3,6 +3,9 @@ const sendMail = require("../utils/sendMail");
 //send mail for order confirmation
 
 const sendOrderConfirmation = async (order) => {
+
+ // Calculate the shipping fee (10% of totalPrice)
+  const shippingFee = order.totalPrice * 0.10;
   // Constructing the HTML content for the email
   const htmlContent = `
       <!DOCTYPE html>
@@ -96,7 +99,9 @@ const sendOrderConfirmation = async (order) => {
                             .join("")}
                       </tbody>
                   </table>
-                  <p class="total-price">Total Price: ${order.totalPrice}</p>
+                  <p class="total-price">Price: ${order.totalPrice}</p>
+                  <p class="total-price">Shipping Fee: ${shippingFee}</p>
+                  <p class="total-price">Total Price: ${order.totalPrice + shippingFee}</p>
               </div>
   
               <h2>Next Steps:</h2>

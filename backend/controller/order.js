@@ -245,13 +245,18 @@ router.post(
         return next(new ErrorHandler("User not found with this email", 400));
       }
       console.log(userDetails);
+      // Calculate shipping fee (10% of totalPrice)
+      const shippingFee = totalPrice * 0.10;
+
+      // Calculate discountPrice (including shipping fee)
+      const discountPrice = totalPrice + shippingFee;
       //generate tracking number
       const trackingNumber = Math.floor(Math.random() * 1000000);
       const order = await Order.create({
         cart,
         shippingAddress,
         user: userDetails,
-        totalPrice,
+        totalPrice: discountPrice,
         status: "Pay-on-Delivery",
         trackingNumber,
       });
