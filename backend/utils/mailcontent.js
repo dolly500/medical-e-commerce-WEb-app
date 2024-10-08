@@ -201,7 +201,7 @@ const sendOrderConfirmation = async (order) => {
                           .map(
                             (item) => `
                         <tr>
-                            <td>${item.name}</td>
+                            <p><td>${item.name}</td></p>
                             <td>${item.qty}</td>
                             <td>${item.discountPrice}</td>
                         </tr>`
