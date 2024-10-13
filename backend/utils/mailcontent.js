@@ -297,6 +297,7 @@ const sendAdminNotifcation = async(order, shippingFee, TotalFees) => {
             <p>A new Pay on Delivery order has been successfully placed. Please find the details below:</p>
             <h2>Order Details:</h2>
              <p>Customer Name: ${order.user[0].name}</p>
+              <p>Customer Mail: ${order.user[0].email}</p>
             <p><strong>Tracking Number:</strong> ${order.trackingNumber}</p>
             <p><strong>Shipping Address:</strong><br>
                 ${order.user[0].name}<br>
@@ -413,6 +414,7 @@ const sendOnlineAdminNotifcation = async(order, platform, shippingFee, TotalFees
            <p>A new order has been successfully placed on <strong>${platform} </strong>. Please find the details below:</p>
            <h2>Order Details:</h2>
             <p>Customer Name: ${order.user[0].name}</p>
+             <p>Customer Mail: ${order.user[0].email}</p>
            <p><strong>Tracking Number:</strong> ${order.trackingNumber}</p>
            <p><strong>Shipping Address:</strong><br>
                ${order.user[0].name}<br>
