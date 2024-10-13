@@ -410,7 +410,7 @@ const sendOnlineAdminNotifcation = async(order, platform, shippingFee, TotalFees
    <body>
        <div class="container">
        <p><strong>Dear Admin,</strong></p>
-           <p>A new order has been successfully placed on ${platform}. Please find the details below:</p>
+           <p>A new order has been successfully placed on <strong>${platform} </strong>. Please find the details below:</p>
            <h2>Order Details:</h2>
             <p>Customer Name: ${order.user[0].name}</p>
            <p><strong>Tracking Number:</strong> ${order.trackingNumber}</p>
