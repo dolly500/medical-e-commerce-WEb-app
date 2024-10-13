@@ -303,7 +303,7 @@ router.post(
       console.log(order, shippingFee, TotalFees);
       await order.save();
       await sendOrderConfirmation(order, shippingFee, TotalFees);
-      await sendOnlineAdminNotifcation(order, shippingFee, TotalFees, platform);
+      await sendOnlineAdminNotifcation(order, platform, shippingFee, TotalFees);
       res.status(201).json({
         success: true,
         order,
