@@ -19,7 +19,7 @@ const AllEvents = () => {
   
 
   useEffect(() => {
-    dispatch(getAllEvents(JSON.parse(localStorage.getItem("user"))._id));
+    dispatch(getAllEvents(JSON.parse(localStorage.getItem("user"))?._id));
   }, [dispatch]);
 
   const handleDelete = async (id) => {

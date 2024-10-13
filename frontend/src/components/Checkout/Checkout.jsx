@@ -1,4 +1,3 @@
-// frontend/src/components/Checkout.jsx
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import axios from 'axios';
@@ -10,7 +9,6 @@ import { server } from '../../server';
 const Checkout = () => {
   const { cart } = useSelector((state) => state.cart);
   const { user } = useSelector((state) => state.user);
-  const [orderDetails, setOrderDetails] = useState(null);
 
   const navigate = useNavigate();
 
@@ -24,7 +22,12 @@ const Checkout = () => {
   const [message, setMessage] = useState('');
   const [paypalClientId, setPaypalClientId] = useState(null);
 
+  // Calculate total price
   const totalPrice = cart.reduce((acc, item) => acc + item.qty * item.discountPrice, 0);
+  // Calculate shipping fee (10% of totalPrice)
+  const shippingFee = (totalPrice * 0.1).toFixed(2);
+  // Total amount including shipping
+  const totalAmount = (totalPrice + parseFloat(shippingFee)).toFixed(2);
 
   useEffect(() => {
     if (!cart.length) {
@@ -58,66 +61,94 @@ const Checkout = () => {
       setMessage('Please fill in all shipping fields.');
       return;
     }
+
+    if (!paymentMethod) {
+      setMessage('Please select a payment method.');
+      return;
+    }
     setMessage('Shipping address saved successfully.');
   };
 
-  const handleCoinPaymentsPayment = async () => {
-    try {
-      // Ensure shipping address is saved
-      const { address, city, postalCode, country } = shippingAddress;
-      if (!address || !city || !postalCode || !country) {
-        setMessage('Please fill in all shipping fields.');
-        return;
-      }
+  const handleCoinPaymentsPayment = () => {
+    const { address, city, postalCode, country } = shippingAddress;
 
-      // Prepare the cart details (assuming 'cart' is available in your component state)
-      const cartDetails = cart.map(item => ({
-        productName: item.name,
-        quantity: item.qty,
-        discountPrice: item.discountPrice,
-        totalPriceForItem: item.qty * item.discountPrice
-      }));
-
-      const response = await axios.post(`${server}/payment/coinpayment/create`, {
-        amount: totalPrice,
-        currency1: 'USD',  // Your base currency
-        currency2: 'BTC',  // Target cryptocurrency (e.g., Bitcoin)
-        buyer_email: user.email,
-        shippingAddress,
-        cart: cartDetails  // Send the cart details to the backend
-      });
-
-      const { checkout_url, txn_id, order_id, address: dynamicAddress } = response.data;
-
-      console.log(`Order ID: ${order_id}`); // Log or use the Order ID
-      console.log(`Pay with this address: ${dynamicAddress}`); // For debug or display
-  
-      // Optionally store order details in local state or global state (e.g., Redux)
-      setOrderDetails({
-        txn_id,
-        order_id,        // Save the order ID in your state
-        checkout_url,
-        dynamicAddress
-      });
-  
-      // Redirect to the CoinPayments checkout URL
-      window.location.href = checkout_url;
-    } catch (error) {
-      console.error('CoinPayments Error:', error);
-      setMessage('Failed to initiate CoinPayments payment.');
+    // Ensure shipping address is filled
+    if (!address || !city || !postalCode || !country) {
+      setMessage('Please fill in all shipping fields.');
+      return;
     }
+
+    // Generate a unique invoice ID (ensure uniqueness to prevent conflicts)
+    const invoice = `ORDER_${Math.random().toString(36).substr(2, 9).toUpperCase()}`;
+
+    // Define CoinPayments merchant ID and other constants
+    const merchantId = process.env.REACT_APP_COINPAYMENTS_MERCHANT_ID;
+    console.log('Merchant ID:', merchantId);
+
+    if (!merchantId) {
+      setMessage('Merchant ID not available.');
+      return;
+    }
+
+    const baseCurrency = 'USD'; // Your base currency
+    const targetCurrency = 'BTC'; // Target cryptocurrency
+    const amount = totalAmount; // Total amount including shipping fee
+    const itemName = 'Cart Payment';
+    const itemDesc = 'Payment for items in cart';
+    const successUrl = 'https://yourwebsite.com/success';
+    const cancelUrl = 'https://yourwebsite.com/cancel';
+
+    // Create a form dynamically
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = 'https://www.coinpayments.net/index.php';
+
+    // Define hidden input fields required by CoinPayments
+    const inputs = [
+      { name: 'cmd', value: '_pay_simple' },
+      { name: 'reset', value: '1' },
+      { name: 'merchant', value: merchantId },
+      { name: 'currency', value: baseCurrency }, // Base currency (USD)
+      { name: 'currency2', value: targetCurrency }, // Target cryptocurrency (BTC)
+      { name: 'amountf', value: amount },
+      { name: 'item_name', value: itemName },
+      { name: 'item_desc', value: itemDesc },
+      { name: 'email', value: user.email },
+      { name: 'first_name', value: user.firstName },
+      { name: 'last_name', value: user.lastName },
+      { name: 'address1', value: address },
+      { name: 'city', value: city },
+      { name: 'state', value: country },
+      { name: 'postal', value: postalCode },
+      { name: 'invoice', value: invoice },
+      { name: 'success_url', value: successUrl },
+      { name: 'cancel_url', value: cancelUrl },
+    ];
+
+    // Append hidden inputs to the form
+    inputs.forEach((input) => {
+      const hiddenField = document.createElement('input');
+      hiddenField.type = 'hidden';
+      hiddenField.name = input.name;
+      hiddenField.value = input.value;
+      form.appendChild(hiddenField);
+    });
+
+    // Append the form to the body and submit it
+    document.body.appendChild(form);
+    form.submit();
   };
 
   const handlePayOnDelivery = async () => {
     try {
-      await axios.post(`${servercl}/api/order/create`, {
+      await axios.post(`${server}/order/pay-on-delivery`, {
         shippingAddress,
-        paymentMethod: 'Pay on Delivery',
-        totalPrice,
+        totalPrice, // Send the total amount including shipping
         user: user._id,
         cart,
+        email: user.email, // Include the user's email in the request
       });
-      setMessage('Order placed successfully! You can pay upon delivery.');
+      setMessage('Order placed successfully! You can pay upon delivery. Check your Mail!');
     } catch (error) {
       console.error('Pay on Delivery Error:', error);
       setMessage('Failed to place order.');
@@ -137,12 +168,20 @@ const Checkout = () => {
               <p>Quantity: {item.qty}</p>
               <p>Discount Price: ${item.discountPrice}</p>
             </div>
-            <p className="font-medium">${item.qty * item.discountPrice}</p>
+            <p className="font-medium">${(item.qty * item.discountPrice).toFixed(2)}</p>
           </div>
         ))}
         <div className="flex justify-between items-center font-semibold text-lg">
           <p>Total:</p>
           <p>${totalPrice}</p>
+        </div>
+        <div className="flex justify-between items-center font-semibold text-lg">
+          <p>Shipping Fee:</p>
+          <p>${shippingFee}</p>
+        </div>
+        <div className="flex justify-between items-center font-semibold text-lg">
+          <p className="text-lg font-bold">Total Amount:</p>
+          <p className="text-lg font-bold">${totalAmount}</p>
         </div>
 
         {/* Shipping Address Form */}
@@ -193,116 +232,93 @@ const Checkout = () => {
                 required
               />
             </div>
-            <button type="submit" className="mt-4 bg-blue-500 text-white p-2 rounded">
-              Save Address
+            <button type="submit" className="mt-4 bg-blue-600 text-white py-2 px-4 rounded">
+              Save Shipping Address
             </button>
+            {message && <p className="text-red-500 mt-2">{message}</p>}
           </form>
         </div>
 
-        {/* Payment Method Selection */}
+        {/* Payment Options */}
         <div className="mt-5">
-          <h2 className="text-xl font-semibold mb-4">Select Payment Method</h2>
-          <div className="flex space-x-4">
-            <label className="flex items-center">
+          <h2 className="text-xl font-semibold mb-4">Payment Method</h2>
+          <div>
+            <label>
               <input
                 type="radio"
-                name="paymentMethod"
                 value="paypal"
                 checked={paymentMethod === 'paypal'}
-                onChange={() => setPaymentMethod('paypal')}
-                className="mr-2"
+                onChange={(e) => setPaymentMethod(e.target.value)}
               />
               PayPal
             </label>
-            <label className="flex items-center">
+            <label className="ml-4">
               <input
                 type="radio"
-                name="paymentMethod"
                 value="coinpayments"
                 checked={paymentMethod === 'coinpayments'}
-                onChange={() => setPaymentMethod('coinpayments')}
-                className="mr-2"
+                onChange={(e) => setPaymentMethod(e.target.value)}
               />
               CoinPayments
             </label>
-            <label className="flex items-center">
+            <label className="ml-4">
               <input
                 type="radio"
-                name="paymentMethod"
                 value="payondelivery"
                 checked={paymentMethod === 'payondelivery'}
-                onChange={() => setPaymentMethod('payondelivery')}
-                className="mr-2"
+                onChange={(e) => setPaymentMethod(e.target.value)}
               />
               Pay on Delivery
             </label>
           </div>
         </div>
 
-        {/* PayPal Integration */}
-        {paymentMethod === 'paypal' && paypalClientId && shippingAddress.address && (
-          <PayPalScriptProvider options={{ 'client-id': paypalClientId, currency: 'USD' }}>
+        {/* PayPal Buttons */}
+        {paymentMethod === 'paypal' && paypalClientId && (
+          <PayPalScriptProvider options={{ 'client-id': paypalClientId }}>
             <PayPalButtons
               createOrder={(data, actions) => {
                 return actions.order.create({
-                  purchase_units: [{
-                    amount: {
-                      currency_code: 'USD',
-                      value: totalPrice,
-                    },
-                    shipping: {
-                      address: {
-                        address_line_1: shippingAddress.address,
-                        admin_area_2: shippingAddress.city,
-                        postal_code: shippingAddress.postalCode,
-                        country_code: shippingAddress.country.substring(0, 2).toUpperCase(),
+                  purchase_units: [
+                    {
+                      amount: {
+                        value: totalAmount,
                       },
                     },
-                  }],
-                  payer: {
-                    email_address: user.email,
-                  },
-                  application_context: {
-                    shipping_preference: 'SET_PROVIDED_ADDRESS',
-                  },
+                  ],
                 });
               }}
-              onApprove={(data, actions) => {
-                return actions.order.capture().then((details) => {
-                  alert('Transaction completed by ' + details.payer.name.given_name);
-                  // Optionally, handle post-transaction actions like updating the order status
-                });
+              onApprove={async (data, actions) => {
+                const details = await actions.order.capture();
+                console.log('Transaction completed by ' + details.payer.name.given_name);
+                // Here you can send details to your backend to save order
               }}
               onError={(err) => {
                 console.error('PayPal Error:', err);
-                setMessage('PayPal payment failed.');
               }}
             />
           </PayPalScriptProvider>
         )}
 
-        {/* CoinPayments Integration */}
+        {/* CoinPayments Button */}
         {paymentMethod === 'coinpayments' && (
           <button
             onClick={handleCoinPaymentsPayment}
-            className="mt-4 bg-yellow-500 text-white p-2 rounded"
+            className="mt-4 bg-green-600 text-white py-2 px-4 rounded"
           >
             Pay with CoinPayments
           </button>
         )}
 
-        {/* Pay on Delivery */}
+        {/* Pay on Delivery Button */}
         {paymentMethod === 'payondelivery' && (
           <button
             onClick={handlePayOnDelivery}
-            className="mt-4 bg-green-500 text-white p-2 rounded"
+            className="mt-4 bg-yellow-600 text-white py-2 px-4 rounded"
           >
-            Place Order and Pay on Delivery
+            Confirm Order (Pay on Delivery)
           </button>
         )}
-
-        {/* Display Message */}
-        {message && <p className="mt-4 text-red-500">{message}</p>}
       </div>
     </div>
   );

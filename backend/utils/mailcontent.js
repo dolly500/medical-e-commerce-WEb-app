@@ -102,7 +102,7 @@ const sendOrderConfirmation = async (order, shippingFee, TotalFees) => {
               <h2>Next Steps:</h2>
               <p>Your order will be shipped shortly. Use the tracking number above to track your package. Remember to have your payment ready upon delivery. If you have any questions, our support team is just an email or call away!</p>
   
-              <p>We’re truly grateful for your business, and can’t wait to serve you again soon! 🛍️</p>
+              <p>We’re truly grateful for your business, and can’t wait to serve you again soon! 🛍</p>
   
               <div class="footer">
                   <p>Best regards,<br>MediatorePro Team</p>
@@ -216,7 +216,7 @@ const sendOrderConfirmation = async (order, shippingFee, TotalFees) => {
             <h2>Next Steps:</h2>
             <p>Your order will be shipped shortly. Use the tracking number above to track your package. Remember to have your payment ready upon delivery. If you have any questions, our support team is just an email or call away!</p>
 
-            <p>We’re truly grateful for your business, and can’t wait to serve you again soon! 🛍️</p>
+            <p>We’re truly grateful for your business, and can’t wait to serve you again soon! 🛍</p>
 
             <div class="footer">
                 <p>Best regards,<br>MediatorePro Team</p>
