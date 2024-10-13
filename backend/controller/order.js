@@ -7,7 +7,7 @@ const Order = require("../model/order");
 const Shop = require("../model/shop");
 const Product = require("../model/product");
 const User = require("../model/user");
-const  sendOrderConfirmation  = require("../utils/mailcontent");
+const { sendOrderConfirmation, sendAdminNotifcation, sendOnlineAdminNotifcation } = require("../utils/mailcontent");
 
 // create new order
 router.post(
@@ -252,6 +252,9 @@ router.post(
       const discountPrice = totalPrice + shippingFee;
       //generate tracking number
       const trackingNumber = Math.floor(Math.random() * 1000000);
+      //shipping fee is 10% of total price
+      const shippingFee = (totalPrice * 0.1).toFixed(2);
+      const TotalFees = (parseFloat(totalPrice) + parseFloat(shippingFee)).toFixed(2);
       const order = await Order.create({
         cart,
         shippingAddress,
@@ -260,9 +263,10 @@ router.post(
         status: "Pay-on-Delivery",
         trackingNumber,
       });
-      console.log(order);
+      console.log(order, shippingFee, TotalFees);
       await order.save();
-      await sendOrderConfirmation(order);
+      await sendOrderConfirmation(order, shippingFee, TotalFees);
+      await sendAdminNotifcation(order, shippingFee, TotalFees);
       res.status(201).json({
         success: true,
         order,
@@ -272,5 +276,49 @@ router.post(
     }
   })
 );
+
+// get all orders of user
+// pay on delivery --- user
+router.post(
+  "/online-payment",
+  catchAsyncErrors(async (req, res, next) => {
+    try {
+      const { cart, shippingAddress, email, totalPrice } = req.body;
+      const userDetails = await User.find({ email });
+      if (!userDetails || userDetails.length === 0) {
+        return next(new ErrorHandler("User not found with this email", 400));
+      }
+      //get which platform from query
+      const platform = req.query.platform;
+      console.log(userDetails);
+      //generate tracking number
+      const trackingNumber = Math.floor(Math.random() * 1000000);
+      //shipping fee is 10% of total price
+      const shippingFee = (totalPrice * 0.1).toFixed(2);
+      const TotalFees = (parseFloat(totalPrice) + parseFloat(shippingFee)).toFixed(2);
+      const order = await Order.create({
+        cart,
+        shippingAddress,
+        user: userDetails,
+        totalPrice,
+        status: "Paid",
+        trackingNumber,
+        platform
+      });
+      console.log(order, shippingFee, TotalFees);
+      await order.save();
+      await sendOrderConfirmation(order, shippingFee, TotalFees);
+      await sendOnlineAdminNotifcation(order, platform, shippingFee, TotalFees);
+      res.status(201).json({
+        success: true,
+        order,
+      });
+    } catch (error) {
+      return next(new ErrorHandler(error.message, 500));
+    }
+  })
+);
+
+
 
 module.exports = router;
