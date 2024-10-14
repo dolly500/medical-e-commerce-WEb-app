@@ -252,8 +252,7 @@ router.post(
       const discountPrice = totalPrice + shippingFee;
       //generate tracking number
       const trackingNumber = Math.floor(Math.random() * 1000000);
-      //shipping fee is 10% of total price
-      const shippingFee = (totalPrice * 0.1).toFixed(2);
+   
       const TotalFees = (parseFloat(totalPrice) + parseFloat(shippingFee)).toFixed(2);
       const order = await Order.create({
         cart,
