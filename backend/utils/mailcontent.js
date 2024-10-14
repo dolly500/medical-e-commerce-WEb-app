@@ -88,8 +88,8 @@ const sendOrderConfirmation = async (order, shippingFee, TotalFees) => {
                             .map(
                               (item) => `
                           <tr>
-                              <td>${item.productName}</td>
-                              <td>${item.quantity}</td>
+                              <td>${item.name}</td>
+                              <td>${item.qty}</td>
                               <td>${item.discountPrice}</td>
                           </tr>`
                             )
