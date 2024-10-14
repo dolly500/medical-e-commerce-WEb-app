@@ -122,11 +122,11 @@ const ShopSettings = () => {
               type="name"
               placeholder={`${
                 seller?.description
-                  ? seller.description
+                  ? seller?.description
                   : "Enter your shop description"
               }`}
               value={description}
-              onChange={(e) => setDescription(e.target.value)}
+              onChange={(e) => setDescription(e?.target?.value)}
               className={`${styles.input} !w-[95%] mb-4 800px:mb-0`}
             />
           </div>
