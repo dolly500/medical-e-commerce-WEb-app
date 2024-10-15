@@ -634,7 +634,7 @@ const sendOnlineOrder = async (order, platform, shippingFee, TotalFees) => {
       <body>
           <div class="container">
               <h1>Thank you for shopping with us, ${order.user[0].name}!</h1>
-              <p>Your Pay on Delivery order has been successfully placed. Here are the details of your order:</p>
+              <p>Your order paid through ${platform} has been successfully placed. Here are the details of your order:</p>
               <h2>Order Details:</h2>
               <p><strong>Tracking Number:</strong> ${order.trackingNumber}</p>
               <p><strong>Shipping Address:</strong><br>
