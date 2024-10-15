@@ -7,7 +7,7 @@ const Order = require("../model/order");
 const Shop = require("../model/shop");
 const Product = require("../model/product");
 const User = require("../model/user");
-const { sendOrderConfirmation, sendAdminNotifcation, sendOnlineAdminNotifcation } = require("../utils/mailcontent");
+const { sendOrderConfirmation, sendAdminNotifcation, sendOnlineAdminNotifcation, sendOnlineOrder } = require("../utils/mailcontent");
 
 // create new order
 router.post(
@@ -306,7 +306,7 @@ router.post(
       });
       console.log(order, shippingFee, TotalFees);
       await order.save();
-      await sendOrderConfirmation(order, shippingFee, TotalFees);
+      await sendOnlineOrder(order, platform, shippingFee, TotalFees);
       await sendOnlineAdminNotifcation(order, platform, shippingFee, TotalFees);
       res.status(201).json({
         success: true,

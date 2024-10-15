@@ -95,8 +95,8 @@ const Checkout = () => {
     const amount = totalAmount; // Total amount including shipping fee
     const itemName = 'Cart Payment';
     const itemDesc = 'Payment for items in cart';
-    const successUrl = 'https://yourwebsite.com/success';
-    const cancelUrl = 'https://yourwebsite.com/cancel';
+    const successUrl = 'https://medical-e-app.vercel.app/success';
+    const cancelUrl = 'https://medical-e-app.vercel.app/cancel';
 
     // Create a form dynamically
     const form = document.createElement('form');
@@ -290,8 +290,19 @@ const Checkout = () => {
               }}
               onApprove={async (data, actions) => {
                 const details = await actions.order.capture();
+                
+                  await axios.post(`${server}/order/online-payment?platform=paypal`, {
+                    shippingAddress,
+                    totalPrice, // Send the total amount including shipping
+                    user: user._id,
+                    cart,
+                    email: user.email, // Include the user's email in the request
+                  });
+                  setMessage('Order placed successfully! You can pay upon delivery. Check your Mail!');
+               
                 console.log('Transaction completed by ' + details.payer.name.given_name);
                 // Here you can send details to your backend to save order
+           
               }}
               onError={(err) => {
                 console.error('PayPal Error:', err);
