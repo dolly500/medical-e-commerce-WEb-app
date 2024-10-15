@@ -51,7 +51,7 @@ import {
   UserInbox,
   QuestionnaireForm,
   ForgotPassword, 
-  CheckPassword
+  CheckPassword, SuccessPage
 } from "./routes/Routes.js";
 import SellerProtectedRoute from "./routes/SellerProtectedRoute";
 import {
@@ -77,6 +77,8 @@ import {
 } from "./routes/ShopRoutes";
 import { server } from "./server";
 import { getAllCategories } from "./redux/actions/category.js";
+
+
 
 
 const App = () => {
@@ -119,6 +121,7 @@ const App = () => {
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/check-password" element={<CheckPassword />} />
         <Route path="/sign-up" element={<SignupPage />} />
+        <Route path="/success" element={<SuccessPage />} />
         <Route
           path="/activation/:activation_token"
           element={<ActivationPage />}

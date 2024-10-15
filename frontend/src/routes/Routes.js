@@ -24,6 +24,7 @@ import TrackOrderPage from "../pages/TrackOrderPage";
 import UserInbox from "../pages/UserInbox.jsx";
 import QuestionnaireForm from "../pages/QuestionairePage.jsx";
 import CheckPassword from "../pages/CheckPassword.jsx"
+import SuccessPage from "../pages/SuccessPage.jsx";
 
 export { 
     QuestionnaireForm,
@@ -51,6 +52,7 @@ export {
     PostsPage,
     ShopCheckPassword,
     ShopForgotPassword,
-    LiveChat
+    LiveChat,
+    SuccessPage
 };
 
