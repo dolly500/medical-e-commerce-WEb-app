@@ -1,7 +1,10 @@
 import React from 'react';
 import { AiOutlineCheckCircle } from 'react-icons/ai';
+import { Link} from "react-router-dom";
+
 
 const SuccessPage = () => {
+ 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
       <div className="bg-white p-8 rounded-lg shadow-lg text-center">
@@ -10,9 +13,11 @@ const SuccessPage = () => {
         <p className="text-gray-600 mb-6">
           Thank you for your purchase! Your order has been successfully placed.
         </p>
-        <button className="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded transition duration-300">
+       <Link to='/'>
+       <button className="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded transition duration-300">
           Continue Shopping
         </button>
+       </Link>
       </div>
     </div>
   );
