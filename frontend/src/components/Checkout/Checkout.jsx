@@ -139,32 +139,7 @@ const Checkout = () => {
     form.submit();
   };
   
-  // Detect if the success URL is loaded and trigger the order notification
-  useEffect(() => {
-    const handleSuccessPageLoad = async () => {
-      const currentUrl = window.location.href;
-      
-      if (currentUrl.includes('success')) {
-        // Trigger the order notification
-        try {
-          await axios.post(`${server}/order/online-payment?platform=coinpayments`, {
-            shippingAddress,
-            totalPrice: totalAmount, // Send the total amount including shipping
-            user: user._id,
-            cart,
-            email: user.email, // Include the user's email in the request
-          });
   
-          setMessage('Order placed successfully! Check your email for confirmation.');
-        } catch (error) {
-          console.error('Error sending order notification:', error);
-          setMessage('Failed to send order notification.');
-        }
-      }
-    };
-  
-    handleSuccessPageLoad();
-  }, []); // Empty dependency array ensures this runs only once when the page loads
   
 
 
