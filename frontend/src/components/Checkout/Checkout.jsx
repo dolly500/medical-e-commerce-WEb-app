@@ -69,96 +69,103 @@ const Checkout = () => {
     setMessage('Shipping address saved successfully.');
   };
 
-const handleCoinPaymentsPayment = async () => {
-  const { address, city, postalCode, country } = shippingAddress;
-
-  // Ensure shipping address is filled
-  if (!address || !city || !postalCode || !country) {
-    setMessage('Please fill in all shipping fields.');
-    return;
-  }
-
-  // Generate a unique invoice ID (ensure uniqueness to prevent conflicts)
-  const invoice = `ORDER_${Math.random().toString(36).substr(2, 9).toUpperCase()}`;
-
-  // Define CoinPayments merchant ID and other constants
-  const merchantId = process.env.REACT_APP_COINPAYMENTS_MERCHANT_ID;
-  console.log('Merchant ID:', merchantId);
-
-  if (!merchantId) {
-    setMessage('Merchant ID not available.');
-    return;
-  }
-
-  const baseCurrency = 'USD'; // Your base currency
-  const targetCurrency = 'BTC'; // Target cryptocurrency
-  const amount = totalAmount; // Total amount including shipping fee
-  const itemName = 'Cart Payment';
-  const itemDesc = 'Payment for items in cart';
-  const successUrl = 'https://medical-e-app.vercel.app/success';
-  const cancelUrl = 'https://medical-e-app.vercel.app/cancel';
-
-  // Create a form dynamically
-  const form = document.createElement('form');
-  form.method = 'POST';
-  form.action = 'https://www.coinpayments.net/index.php';
-
-  // Define hidden input fields required by CoinPayments
-  const inputs = [
-    { name: 'cmd', value: '_pay_simple' },
-    { name: 'reset', value: '1' },
-    { name: 'merchant', value: merchantId },
-    { name: 'currency', value: baseCurrency }, // Base currency (USD)
-    { name: 'currency2', value: targetCurrency }, // Target cryptocurrency (BTC)
-    { name: 'amountf', value: amount },
-    { name: 'item_name', value: itemName },
-    { name: 'item_desc', value: itemDesc },
-    { name: 'email', value: user.email },
-    { name: 'first_name', value: user.firstName },
-    { name: 'last_name', value: user.lastName },
-    { name: 'address1', value: address },
-    { name: 'city', value: city },
-    { name: 'state', value: country },
-    { name: 'postal', value: postalCode },
-    { name: 'invoice', value: invoice },
-    { name: 'success_url', value: successUrl },
-    { name: 'cancel_url', value: cancelUrl },
-  ];
-
-  // Append hidden inputs to the form
-  inputs.forEach((input) => {
-    const hiddenField = document.createElement('input');
-    hiddenField.type = 'hidden';
-    hiddenField.name = input.name;
-    hiddenField.value = input.value;
-    form.appendChild(hiddenField);
-  });
-
-  // Append the form to the body and submit it
-  document.body.appendChild(form);
-  form.submit();
-
-  // After submitting the form, make an API request to save order details and send notification
-  try {
-    const server = 'https://your-api-server.com'; // Replace with your actual server URL
-
-    // Send the order details via axios
-    await axios.post(`${server}/order/online-payment?platform=coinpayments`, {
-      shippingAddress,
-      totalPrice: totalAmount, // Send the total amount including shipping
-      user: user._id,
-      cart,
-      email: user.email, // Include the user's email in the request
+  const handleCoinPaymentsPayment = async () => {
+    const { address, city, postalCode, country } = shippingAddress;
+  
+    // Ensure shipping address is filled
+    if (!address || !city || !postalCode || !country) {
+      setMessage('Please fill in all shipping fields.');
+      return;
+    }
+  
+    // Generate a unique invoice ID (ensure uniqueness to prevent conflicts)
+    const invoice = `ORDER_${Math.random().toString(36).substr(2, 9).toUpperCase()}`;
+  
+    // Define CoinPayments merchant ID and other constants
+    const merchantId = process.env.REACT_APP_COINPAYMENTS_MERCHANT_ID;
+    console.log('Merchant ID:', merchantId);
+  
+    if (!merchantId) {
+      setMessage('Merchant ID not available.');
+      return;
+    }
+  
+    const baseCurrency = 'USD'; // Your base currency
+    const targetCurrency = 'BTC'; // Target cryptocurrency
+    const amount = totalAmount; // Total amount including shipping fee
+    const itemName = 'Cart Payment';
+    const itemDesc = 'Payment for items in cart';
+    const successUrl = 'https://medical-e-app.vercel.app/success';
+    const cancelUrl = 'https://medical-e-app.vercel.app/cancel';
+  
+    // Create a form dynamically
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = 'https://www.coinpayments.net/index.php';
+  
+    // Define hidden input fields required by CoinPayments
+    const inputs = [
+      { name: 'cmd', value: '_pay_simple' },
+      { name: 'reset', value: '1' },
+      { name: 'merchant', value: merchantId },
+      { name: 'currency', value: baseCurrency }, // Base currency (USD)
+      { name: 'currency2', value: targetCurrency }, // Target cryptocurrency (BTC)
+      { name: 'amountf', value: amount },
+      { name: 'item_name', value: itemName },
+      { name: 'item_desc', value: itemDesc },
+      { name: 'email', value: user.email },
+      { name: 'first_name', value: user.firstName },
+      { name: 'last_name', value: user.lastName },
+      { name: 'address1', value: address },
+      { name: 'city', value: city },
+      { name: 'state', value: country },
+      { name: 'postal', value: postalCode },
+      { name: 'invoice', value: invoice },
+      { name: 'success_url', value: successUrl },
+      { name: 'cancel_url', value: cancelUrl },
+    ];
+  
+    // Append hidden inputs to the form
+    inputs.forEach((input) => {
+      const hiddenField = document.createElement('input');
+      hiddenField.type = 'hidden';
+      hiddenField.name = input.name;
+      hiddenField.value = input.value;
+      form.appendChild(hiddenField);
     });
-
-    // Set success message after order placement
-    setMessage('Order placed successfully! for CoinPayments Check your Mail!');
-  } catch (error) {
-    // Handle errors during the API request
-    console.error('Error placing order:', error);
-    setMessage('Failed to place the order. Please try again.');
-  }
-};
+  
+    // Append the form to the body and submit it
+    document.body.appendChild(form);
+    form.submit();
+  };
+  
+  // Detect if the success URL is loaded and trigger the order notification
+  useEffect(() => {
+    const handleSuccessPageLoad = async () => {
+      const currentUrl = window.location.href;
+      
+      if (currentUrl.includes('success')) {
+        // Trigger the order notification
+        try {
+          await axios.post(`${server}/order/online-payment?platform=coinpayments`, {
+            shippingAddress,
+            totalPrice: totalAmount, // Send the total amount including shipping
+            user: user._id,
+            cart,
+            email: user.email, // Include the user's email in the request
+          });
+  
+          setMessage('Order placed successfully! Check your email for confirmation.');
+        } catch (error) {
+          console.error('Error sending order notification:', error);
+          setMessage('Failed to send order notification.');
+        }
+      }
+    };
+  
+    handleSuccessPageLoad();
+  }, []); // Empty dependency array ensures this runs only once when the page loads
+  
 
 
 
