@@ -98,46 +98,62 @@ const Checkout = () => {
     const successUrl = 'https://medical-e-app.vercel.app/success';
     const cancelUrl = 'https://medical-e-app.vercel.app/cancel';
   
-    // Create a form dynamically
-    const form = document.createElement('form');
-    form.method = 'POST';
-    form.action = 'https://www.coinpayments.net/index.php';
+    try {
+      // Send the order data to the server before redirecting to CoinPayments
+      await axios.post(`${server}/order/online-payment?platform=coinpayments`, {
+        shippingAddress,
+        totalPrice: amount, // Send the total amount including shipping
+        user: user._id,
+        cart,
+        email: user.email, // Include the user's email in the request
+      });
+      setMessage('Order placed successfully! for CoinPayments. Check your Mail!');
+      
+      // Create a form dynamically
+      const form = document.createElement('form');
+      form.method = 'POST';
+      form.action = 'https://www.coinpayments.net/index.php';
   
-    // Define hidden input fields required by CoinPayments
-    const inputs = [
-      { name: 'cmd', value: '_pay_simple' },
-      { name: 'reset', value: '1' },
-      { name: 'merchant', value: merchantId },
-      { name: 'currency', value: baseCurrency }, // Base currency (USD)
-      { name: 'currency2', value: targetCurrency }, // Target cryptocurrency (BTC)
-      { name: 'amountf', value: amount },
-      { name: 'item_name', value: itemName },
-      { name: 'item_desc', value: itemDesc },
-      { name: 'email', value: user.email },
-      { name: 'first_name', value: user.firstName },
-      { name: 'last_name', value: user.lastName },
-      { name: 'address1', value: address },
-      { name: 'city', value: city },
-      { name: 'state', value: country },
-      { name: 'postal', value: postalCode },
-      { name: 'invoice', value: invoice },
-      { name: 'success_url', value: successUrl },
-      { name: 'cancel_url', value: cancelUrl },
-    ];
+      // Define hidden input fields required by CoinPayments
+      const inputs = [
+        { name: 'cmd', value: '_pay_simple' },
+        { name: 'reset', value: '1' },
+        { name: 'merchant', value: merchantId },
+        { name: 'currency', value: baseCurrency }, // Base currency (USD)
+        { name: 'currency2', value: targetCurrency }, // Target cryptocurrency (BTC)
+        { name: 'amountf', value: amount },
+        { name: 'item_name', value: itemName },
+        { name: 'item_desc', value: itemDesc },
+        { name: 'email', value: user.email },
+        { name: 'first_name', value: user.firstName },
+        { name: 'last_name', value: user.lastName },
+        { name: 'address1', value: address },
+        { name: 'city', value: city },
+        { name: 'state', value: country },
+        { name: 'postal', value: postalCode },
+        { name: 'invoice', value: invoice },
+        { name: 'success_url', value: successUrl },
+        { name: 'cancel_url', value: cancelUrl },
+      ];
   
-    // Append hidden inputs to the form
-    inputs.forEach((input) => {
-      const hiddenField = document.createElement('input');
-      hiddenField.type = 'hidden';
-      hiddenField.name = input.name;
-      hiddenField.value = input.value;
-      form.appendChild(hiddenField);
-    });
+      // Append hidden inputs to the form
+      inputs.forEach((input) => {
+        const hiddenField = document.createElement('input');
+        hiddenField.type = 'hidden';
+        hiddenField.name = input.name;
+        hiddenField.value = input.value;
+        form.appendChild(hiddenField);
+      });
   
-    // Append the form to the body and submit it
-    document.body.appendChild(form);
-    form.submit();
+      // Append the form to the body and submit it
+      document.body.appendChild(form);
+      form.submit();
+    } catch (error) {
+      setMessage('Failed to place order. Please try again.');
+      console.error('Error placing order:', error);
+    }
   };
+  
   
   
   
