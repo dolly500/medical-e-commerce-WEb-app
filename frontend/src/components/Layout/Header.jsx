@@ -118,7 +118,7 @@ const Header = ({ activeHeading, data }) => {
 
   return (
     <>
-      <div className={`${styles.section} lg:bg-white lg:h-19 lg:w-300 lg:p-1`} style={{ width: '100%' }} >
+      <div className={`${styles.section} lg:bg-transparent lg:h-19 lg:w-300 lg:p-1`} style={{ width: '100%' }} >
         <div className="hidden 800px:h-[50px] 800px:my-[20px] 800px:flex items-center justify-between">
           <div className="">
             <Link to="/">
@@ -162,14 +162,14 @@ const Header = ({ activeHeading, data }) => {
             ) : null}
           </div>
 
-          <div className={`${styles.button} mr-20`} style={{ display: 'none' }}>
+          {/* <div className={`${styles.button} mr-20`} style={{ display: 'none' }}>
             <Link to={`${isSeller ? "/dashboard" : "/shop-create"}`}>
               <h1 className="text-[#fff] flex items-center">
                 {isSeller ? "Become seller" : "Become Seller"}{" "}
                 <IoIosArrowForward className="ml-1" />
               </h1>
             </Link>
-          </div>
+          </div> */}
         </div>
       </div>
       <div
@@ -341,18 +341,19 @@ const Header = ({ activeHeading, data }) => {
       </div>
 
       {/* mobile header */}
-      <div
+      
+<div
+className={`w-full mb-6 h-[70px] z-50 top-0 left-0 ${
+  active ? "fixed shadow-sm" : "relative"
+} bg-white 800px:hidden`}
+>
 
-        className={`${active === true ? "shadow-sm fixed top-0 left-0 z-10 " : null
-          }
-      w-full h-[70px] bg-blue-700 z-50 top-0 left-0 shadow-sm 800px:hidden`}
-      >
         <div className="h-full w-full flex items-center justify-between">
           <div>
             <BiMenuAltLeft
               size={40}
               className="ml-4"
-              onClick={() => setOpen(true)} style={{ color: 'white' }}
+              onClick={() => setOpen(true)} style={{ color: 'blue' }}
             />
           </div>
           <div>
@@ -373,7 +374,7 @@ const Header = ({ activeHeading, data }) => {
               className="relative mr-[20px]"
               onClick={() => setOpenCart(true)}
             >
-              <AiOutlineShoppingCart size={30} style={{ color: 'white' }} onClick={() => setOpenCart(true)} />
+              <AiOutlineShoppingCart size={30} style={{ color: 'blue' }} onClick={() => setOpenCart(true)} />
               <span className="absolute left-0 top-0 rounded-full bg-[#5f3bc1] w-4 h-4 top right p-0 m-0 text-white font-mono text-[12px]  leading-tight text-center">
                 {cart && cart.length}
               </span>
@@ -387,6 +388,8 @@ const Header = ({ activeHeading, data }) => {
           {/* wishlist popup */}
           {openWishlist ? <Wishlist setOpenWishlist={setOpenWishlist} /> : null}
         </div>
+
+        
 
         {/* header sidebar */}
         {open && (

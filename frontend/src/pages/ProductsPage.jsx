@@ -14,50 +14,73 @@ const ProductsPage = () => {
   const categoryData = searchParams.get("category");
   const { allProducts, isLoading } = useSelector((state) => state.products);
   const [data, setData] = useState([]);
-  const [categoriesData, setCategoriesData] = useState([])
+  const [categoriesData, setCategoriesData] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const productsPerPage = 6;
 
   useEffect(() => {
-    axios.get(`${server}/category`, {withCredentials: true}).then((res) => {
+    axios.get(`${server}/category`, { withCredentials: true }).then((res) => {
       setCategoriesData(res.data.categorys);
-    })
-    if (categoryData === null) {
-      const d = allProducts;
-      setData(d);
-    } else {
-      const d =
-        allProducts && allProducts.filter((i) => i.category === categoryData);
-      setData(d);
-    }
-    //    window.scrollTo(0,0);
-  }, [allProducts]);
+    });
+
+    const filteredData = categoryData
+      ? allProducts.filter((i) => i.category === categoryData)
+      : allProducts;
+
+    setData(filteredData);
+  }, [allProducts, categoryData]);
+
+  // Pagination logic
+  const indexOfLastProduct = currentPage * productsPerPage;
+  const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
+  const currentProducts = data.slice(indexOfFirstProduct, indexOfLastProduct);
+  const totalPages = Math.ceil(data.length / productsPerPage);
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
 
   return (
     <>
-      {
-        isLoading ? (
-          <Loader />
-        ) : (
-          <div>
-            <Header activeHeading={3} categoriesData={categoriesData} />
-            <br />
-            <br />
-            <div className={`${styles.section}`}>
-              <div className={`${styles.heading}`}>
-                <h1 style={{color: 'black'}}>Shop</h1>
-              </div>
-              <div className="grid grid-cols-1 gap-[20px] md:grid-cols-2 md:gap-[25px] lg:grid-cols-4 lg:gap-[25px] xl:grid-cols-5 xl:gap-[30px] mb-12">
-                {data && data.map((i, index) => <ProductCard data={i} key={index} />)}
-              </div>
-              {data && data.length === 0 ? (
-                <h1 className="text-center w-full pb-[100px] text-[#000] text-[20px]">
-                  No products Found!
-                </h1>
-              ) : null}
+      {isLoading ? (
+        <Loader />
+      ) : (
+        <div>
+          <Header activeHeading={3} categoriesData={categoriesData} />
+          <br />
+          <br />
+          <div className={`${styles.section}`}>
+            <div className={`${styles.heading}`}>
+              <h1 style={{ color: "black" }}>Shop</h1>
             </div>
-            <Footer />
+            <div className="grid grid-cols-2 gap-[20px] md:grid-cols-2 md:gap-[25px] lg:grid-cols-4 lg:gap-[25px] xl:grid-cols-5 xl:gap-[30px] mb-12">
+              {currentProducts.map((i, index) => (
+                <ProductCard data={i} key={index} />
+              ))}
+            </div>
+            {data.length === 0 && (
+              <h1 className="text-center w-full pb-[100px] text-[#000] text-[20px]">
+                No products Found!
+              </h1>
+            )}
+            {/* Pagination */}
+            <div className="flex justify-center mt-4">
+              {Array.from({ length: totalPages }, (_, index) => (
+                <button
+                  key={index}
+                  onClick={() => handlePageChange(index + 1)}
+                  className={`rounded-full mx-1 px-3 py-1 border ${
+                    currentPage === index + 1 ? "bg-blue-500 text-white" : "bg-white text-black"
+                  }`}
+                >
+                  {index + 1}
+                </button>
+              ))}
+            </div>
           </div>
-        )
-      }
+          <Footer />
+        </div>
+      )}
     </>
   );
 };

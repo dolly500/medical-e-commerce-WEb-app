@@ -5,28 +5,49 @@ import ProductCard from "../ProductCard/ProductCard";
 
 const BestDeals = () => {
   const [data, setData] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 4; // Number of products per page
   const { allProducts } = useSelector((state) => state.products);
 
   useEffect(() => {
     const allProductsData = allProducts ? [...allProducts] : [];
     const sortedData = allProductsData.sort((a, b) => b.sold_out - a.sold_out);
-    const firstFive = sortedData.slice(0, 5);
-    setData(firstFive);
+    setData(sortedData); // Handle pagination here
   }, [allProducts]);
 
+  // Calculate pagination
+  const totalPages = Math.ceil(data.length / itemsPerPage);
+  const currentData = data.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
+
   return (
-    <div className={`${styles.section} background`}>
+    <div className={`${styles.section} bg-white`}> {/* Background is white for both mobile and desktop */}
       <div className={`${styles.heading}`}>
         <h1 className="text-3xl font-bold text-blue-600 shadow-lg">Best Deals</h1>
       </div>
-      <div className="flex space-x-2 overflow-x-auto scrollbar-hide mb-12">
-        {data && data.length !== 0 && (
-          data.map((item, index) => (
-            <div key={index} className="flex-shrink-0 w-[150px] md:w-[180px] lg:w-[200px]">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12"> {/* Two columns on mobile, four on larger screens */}
+        {currentData && currentData.length !== 0 && (
+          currentData.map((item, index) => (
+            <div key={index} className="flex-shrink-0">
               <ProductCard data={item} />
             </div>
           ))
         )}
+      </div>
+      {/* Pagination Controls */}
+      <div className="flex justify-center space-x-2 mt-4">
+        {Array.from({ length: totalPages }, (_, index) => (
+          <button
+            key={index}
+            onClick={() => handlePageChange(index + 1)}
+            className={`px-4 py-2 rounded-full ${currentPage === index + 1 ? "bg-blue-600 text-white" : "bg-gray-200"}`}
+          >
+            {index + 1}
+          </button>
+        ))}
       </div>
     </div>
   );

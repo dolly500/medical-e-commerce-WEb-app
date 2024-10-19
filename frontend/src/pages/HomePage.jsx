@@ -116,7 +116,7 @@ const HomePage = () => {
   }, [navigate]);
 
   return (
-    <div className="bg-gradient-to-r from-blue-50 to-blue-100 min-h-screen">
+    <div className="bg-gradient-to-r from-white-50 to-white-100 min-h-screen">
       {isLoading && <div className="text-blue">Verifying Transaction...</div>}
       <Header activeHeading={1} categoriesData={categoriesData} />
       <div className="container mx-auto px-4 py-6">
