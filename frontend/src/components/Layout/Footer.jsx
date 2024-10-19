@@ -42,7 +42,7 @@ const Footer = () => {
   };
 
   return (
-    <div className="bg-blue-800 text-white">
+    <div className="bg-white text-black">
       <div className="md:flex md:justify-between md:items-center sm:px-12 px-4 bg-blue-700 py-7">
         <h1 className="lg:text-4xl text-3xl md:mb-0 mb-6 lg:leading-normal font-bold md:w-2/5">
           <span className="text-white">Subscribe</span> to get news{" "}
@@ -75,21 +75,21 @@ const Footer = () => {
             alt="Logo"
           />
           <br />
-          <p className="font-bold text-white">Buy Online.</p>
+          <p className="font-bold text-black">Buy Online.</p>
           <div className="flex items-center mt-[15px]">
-            <AiFillFacebook size={25} className="text-white cursor-pointer" />
-            <AiOutlineTwitter size={25} className="text-white" style={{ marginLeft: "15px", cursor: "pointer" }} />
-            <AiFillInstagram size={25} className="text-white" style={{ marginLeft: "15px", cursor: "pointer" }} />
-            <AiFillYoutube size={25} className="text-white" style={{ marginLeft: "15px", cursor: "pointer" }} />
+            <AiFillFacebook size={25} className="text-black cursor-pointer" />
+            <AiOutlineTwitter size={25} className="text-black" style={{ marginLeft: "15px", cursor: "pointer" }} />
+            <AiFillInstagram size={25} className="text-black" style={{ marginLeft: "15px", cursor: "pointer" }} />
+            <AiFillYoutube size={25} className="text-black" style={{ marginLeft: "15px", cursor: "pointer" }} />
           </div>
         </ul>
 
         <ul className="text-center sm:text-start">
-          <h1 className="mb-1 font-bold text-white">Company</h1>
+          <h1 className="mb-1 font-bold text-black">Company</h1>
           {footerProductLinks.map((link, index) => (
             <li key={index}>
               <Link
-                className="text-white hover:text-teal-400 duration-300 text-sm cursor-pointer leading-6 font-semibold"
+                className="text-black hover:text-teal-400 duration-300 text-sm cursor-pointer leading-6 font-semibold"
                 to={link.link}
               >
                 {link.name}
@@ -99,11 +99,11 @@ const Footer = () => {
         </ul>
 
         <ul className="text-center sm:text-start">
-          <h1 className="mb-1 font-bold text-white">Shop</h1>
+          <h1 className="mb-1 font-bold text-black">Shop</h1>
           {footercompanyLinks.map((link, index) => (
             <li key={index}>
               <Link
-                className="text-white hover:text-teal-400 duration-300 text-sm cursor-pointer leading-6 font-semibold"
+                className="text-black hover:text-teal-400 duration-300 text-sm cursor-pointer leading-6 font-semibold"
                 to={link.link}
               >
                 {link.name}
@@ -113,11 +113,11 @@ const Footer = () => {
         </ul>
 
         <ul className="text-center sm:text-start">
-          <h1 className="mb-1 font-bold text-white">Support</h1>
+          <h1 className="mb-1 font-bold text-black">Support</h1>
           {footerSupportLinks.map((link, index) => (
             <li key={index}>
               <Link
-                className="text-white hover:text-teal-400 duration-300 text-sm cursor-pointer leading-6 font-semibold"
+                className="text-black hover:text-teal-400 duration-300 text-sm cursor-pointer leading-6 font-semibold"
                 to={link.link}
               >
                 {link.name}
@@ -128,7 +128,7 @@ const Footer = () => {
       </div>
 
       <div
-        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 text-center pt-2 text-white text-sm pb-8"
+        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 text-center pt-2 text-black text-sm pb-8"
       >
         <span className="font-bold">© 2024. All rights reserved.</span>
         <span className="font-bold">Terms · Privacy Policy</span>

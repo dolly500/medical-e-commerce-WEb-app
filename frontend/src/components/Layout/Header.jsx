@@ -419,7 +419,7 @@ className={`w-full mb-6 h-[70px] z-50 top-0 left-0 ${
               <div className="my-8 w-[92%] m-auto h-[40px relative]">
                 <input
                   type="search"
-                  placeholder="Search Search Medical Equipments..."
+                  placeholder="Search Medical Equipments..."
                   className="h-[40px] w-full px-2 border-[#0000FF] border-[2px] rounded-md"
                   value={searchTerm}
                   onChange={handleSearchChange}
