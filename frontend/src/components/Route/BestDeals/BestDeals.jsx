@@ -17,7 +17,7 @@ const BestDeals = () => {
   return (
     <div className={`${styles.section} background`}>
       <div className={`${styles.heading}`}>
-        <h1 className="text-2xl font-bold text-gray-800">Best Deals</h1>
+        <h1 className="text-3xl font-bold text-blue-600 shadow-lg">Best Deals</h1>
       </div>
       <div className="flex space-x-2 overflow-x-auto scrollbar-hide mb-12">
         {data && data.length !== 0 && (
