@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { brandingData } from "../../../static/data";
 import styles from "../../../styles/styles";
@@ -10,14 +10,14 @@ const Categories = () => {
   const [data, setData] = useState([]);
 
   useEffect(() => {
-    axios.get(`${server}/category`, {withCredentials: true}).then((res) => {
-        setData(res.data.categorys);
-        console.log('category frontend', res.data.categorys);
+    axios.get(`${server}/category`, { withCredentials: true }).then((res) => {
+      setData(res.data.categorys);
     });
   }, []);
 
   return (
     <>
+      {/* Branding Section */}
       <div className={`${styles.section} hidden sm:block`}>
         <div className="branding my-12 flex justify-between w-full shadow-sm bg-white p-5 rounded-md">
           {brandingData &&
@@ -33,13 +33,14 @@ const Categories = () => {
         </div>
       </div>
 
-      <div className={`${styles.section} bg-white p-6 rounded-lg mb-12`} id="categories">
-        <div className={`${styles.heading}`}>
-          <h1 style={{color: 'black'}}>All Categories</h1>
+      {/* Categories Section without Background */}
+      <div className="p-6 rounded-lg mb-12">
+        <div className={`${styles.heading} mb-6`}>
+          <h1 className="text-gray-800 text-3xl font-extrabold text-center">Discover All Categories</h1>
         </div>
 
-        {/* Slider Container */}
-        <div className="overflow-x-scroll flex whitespace-nowrap space-x-4">
+        {/* Mobile-Responsive Category Slider with Scroll */}
+        <div className="overflow-x-auto flex snap-x snap-mandatory scrollbar-hide"> {/* Ensure scrollbar is hidden */}
           {data &&
             data.map((i) => {
               const handleSubmit = (i) => {
@@ -47,21 +48,20 @@ const Categories = () => {
               };
               return (
                 <div
-                  className="flex-shrink-0 w-56 max-w-xs bg-white border border-white-200 rounded-lg shadow dark:bg-gray-200 dark:border-gray-700 cursor-pointer"
+                  className="category-card flex-shrink-0 w-40 max-w-xs bg-white border border-gray-200 rounded-lg shadow-md cursor-pointer transition-transform transform hover:scale-105 snap-start mx-2"
                   key={i?._id}
                   onClick={() => handleSubmit(i)}
                 >
                   <img
                     src={i?.images?.[0]?.url}
-                    className="w-full h-36 object-cover"
-                    alt=""
+                    className="w-full h-28 object-cover rounded-t-lg"
+                    alt={i.name}
                   />
-                  <div className="p-4">
-                    <h5 className="mb-2 text-xl font-bold tracking-tight text-blue dark:text-blue-900">{i.name}</h5>
-                    {/* <p className="mb-3 font-normal text-gray-700 dark:text-black">{i.description}</p> */}
-                    <Link to="/products" className="inline-block">
-                      <div className={`${styles.button} mt-4`}>
-                        <span className="text-[#fff] text-[16px]">Shop Now</span>
+                  <div className="p-2 text-center">
+                    <h5 className="mb-1 text-lg font-semibold text-gray-800">{i.name}</h5>
+                    <Link to={`/products?category=${i.name}`} className="inline-block">
+                      <div className="mt-2 bg-blue-600 hover:bg-blue-500 transition rounded text-center py-1 px-3">
+                        <span className="text-white text-sm font-semibold">Shop Now</span>
                       </div>
                     </Link>
                   </div>
@@ -69,7 +69,6 @@ const Categories = () => {
               );
             })}
         </div>
-
       </div>
     </>
   );

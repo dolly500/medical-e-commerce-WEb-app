@@ -13,82 +13,78 @@ const Hero = () => {
     autoplay: true,
     autoplaySpeed: 5000,
     slidesToShow: 1,
-    slidesToScroll: 1
+    slidesToScroll: 1,
   };
 
-  
-
-
   return (
-    <div style={{ overflow: 'hidden' }}>
-    <Slider {...settings}>
-    <div
-      className={`relative min-h-[70vh] 800px:min-h-[80vh] w-full bg-cover bg-center bg-no-repeat bg-center bg-[url(https://img.freepik.com/free-photo/metal-treatment-device-background-diagnostic_1232-4186.jpg?size=626&ext=jpg&ga=GA1.2.39547238.1724736152&semt=ais_hybrid)] bg-blend-darken ${styles.noramlFlex}`}
-    >
-      <div className={`${styles.section}  w-[90%] 800px:w-[60%]`} style={{marginTop: '100px'}}>
-        <h1
-          className={`text-[45px] leading-[1.2] 800px:text-[80px] 1200px:text-[80px] text-blue-700 font-[700] capitalize`}
+    <div style={{ overflow: "hidden" }}>
+      <Slider {...settings}>
+        {/* Slide 1 */}
+        <div
+          className={`relative min-h-[70vh] 800px:min-h-[80vh] w-full bg-cover bg-center bg-no-repeat bg-[url(https://img.freepik.com/free-photo/metal-treatment-device-background-diagnostic_1232-4186.jpg?size=626&ext=jpg&ga=GA1.2.39547238.1724736152&semt=ais_hybrid)]`}
         >
-          Best Collection Of <br /> Medical Equipments
-        </h1>
-        <p className="pt-5 text-[16px] 800px:text-[16px] 1200px:text-[20px] font-[400] text-black">
-        Our range of medical equipment is designed to meet the highest standards of safety, accuracy, and reliability.
-        </p>
-        <Link to="/products" className="inline-block">
-          <div className={`${styles.button} mt-5`}>
-            <span className="text-[#fff] text-[18px]">
-              Shop Now
-            </span>
-          </div>
-        </Link>
-      </div>
-    </div>
-    <div
-        className={`relative min-h-[83.5vh] 800px:min-h-[80vh] w-full bg-cover bg-center bg-no-repeat bg-center bg-[url(https://img.freepik.com/premium-photo/high-angle-view-drink-table_1048944-11933435.jpg?size=626&ext=jpg&ga=GA1.1.39547238.1724736152&semt=ais_hybrid)] bg-blend-darken ${styles.noramlFlex}`}
-      >
-        {/* Slide 2 content */}
-        <div className={`${styles.section}  w-[90%] 800px:w-[60%]`} style={{marginTop: '100px'}}>
-        <h1
-          className={`text-[45px] leading-[1.2] 800px:text-[80px] 1200px:text-[80px] text-blue-700 font-[700] capitalize`}
-        >
-          Shop your Medical Equipment here anytime
-        </h1>
-        <p className="pt-5 text-[16px] 800px:text-[16px] 1200px:text-[20px] font-[400] text-black   ">
-        Our equipment is manufactured using top-grade materials and cutting-edge technology to ensure durability and precision.
-        </p>
-        <Link to="/sign-up" className="inline-block">
-          <div className={`${styles.button} mt-5`}>
-            <span className="text-[#fff] text-[18px]">
-              Register Now
-            </span>
-          </div>
-        </Link>
-        </div>
-    </div>
-
-    <div
-        className={`relative min-h-[83.5vh] 800px:min-h-[80vh] w-full bg-cover bg-center bg-no-repeat bg-center bg-[url(https://img.freepik.com/free-photo/medical-equipments-report-pills-isolated-white-background_23-2147941693.jpg?size=626&ext=jpg)] bg-blend-darken ${styles.noramlFlex}`}
-      >
-        {/* Slide 3 content */}
-        <div className={`${styles.section}  w-[90%] 800px:w-[60%]`} style={{marginTop: '100px'}}>
-            <h1
-              className={`text-[45px] leading-[1.2] 800px:text-[80px] 1200px:text-[80px] text-blue-700 font-[700] capitalize`}
-            >
-              Affordable quality products of Medical Equipments
+          <div
+            className={`relative z-10 ${styles.section} w-[90%] 800px:w-[60%] text-white`}
+            style={{ marginTop: "80px", textAlign: "center" }}
+          >
+            <h1 className="text-[35px] 800px:text-[65px] font-extrabold leading-tight text-blue-700">
+              Best Collection Of <br /> Medical Equipments
             </h1>
-            <p className="pt-5 text-[16px] 800px:text-[16px] 1200px:text-[20px] font-[400] text-[#000]">
-            Affordable compared to other providers.
+            <p className="pt-5 text-[18px] 800px:text-[22px] font-bold text-black">
+              Explore medical equipment that meets top safety and reliability standards.
             </p>
-            <Link to="/products" className="inline-block">
-          <div className={`${styles.button} mt-5`}>
-            <span className="text-[#fff] text-[18px]">
-              Shop Now
-            </span>
+            <Link to="/products" className="inline-block mt-5">
+              <div className="px-8 py-4 bg-blue-600 rounded-full font-bold text-[20px] hover:bg-blue-700 transition duration-300">
+                Shop Now
+              </div>
+            </Link>
           </div>
-        </Link>
         </div>
-    </div>
-    </Slider>
+
+        {/* Slide 2 */}
+        <div
+          className={`relative min-h-[70vh] 800px:min-h-[80vh] w-full bg-cover bg-center bg-no-repeat bg-[url(https://img.freepik.com/premium-photo/high-angle-view-drink-table_1048944-11933435.jpg?size=626&ext=jpg&ga=GA1.1.39547238.1724736152&semt=ais_hybrid)]`}
+        >
+          <div
+            className={`relative z-10 ${styles.section} w-[90%] 800px:w-[60%] text-white`}
+            style={{ marginTop: "80px", textAlign: "center" }}
+          >
+            <h1 className="text-[35px] 800px:text-[65px] font-extrabold leading-tight text-blue-700">
+              Shop Anytime, Anywhere
+            </h1>
+            <p className="pt-5 text-[18px] 800px:text-[22px] font-bold text-black">
+              Get high-quality medical equipment designed for durability and precision.
+            </p>
+            <Link to="/sign-up" className="inline-block mt-5">
+              <div className="px-8 py-4 bg-blue-600 rounded-full font-bold text-[20px] hover:bg-blue-700 transition duration-300">
+                Register Now
+              </div>
+            </Link>
+          </div>
+        </div>
+
+        {/* Slide 3 */}
+        <div
+          className={`relative min-h-[70vh] 800px:min-h-[80vh] w-full bg-cover bg-center bg-no-repeat bg-[url(https://img.freepik.com/free-photo/medical-equipments-report-pills-isolated-white-background_23-2147941693.jpg?size=626&ext=jpg)]`}
+        >
+          <div
+            className={`relative z-10 ${styles.section} w-[90%] 800px:w-[60%] text-white`}
+            style={{ marginTop: "80px", textAlign: "center" }}
+          >
+            <h1 className="text-[35px] 800px:text-[65px] font-extrabold leading-tight text-blue-700">
+              Affordable, Quality Products
+            </h1>
+            <p className="pt-5 text-[18px] 800px:text-[22px] font-bold text-black">
+              Affordable and high-quality equipment tailored to your needs.
+            </p>
+            <Link to="/products" className="inline-block mt-5">
+              <div className="px-8 py-4 bg-blue-600 rounded-full font-bold text-[20px] hover:bg-blue-700 transition duration-300">
+                Shop Now
+              </div>
+            </Link>
+          </div>
+        </div>
+      </Slider>
     </div>
   );
 };

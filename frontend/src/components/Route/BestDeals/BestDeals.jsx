@@ -9,25 +9,23 @@ const BestDeals = () => {
 
   useEffect(() => {
     const allProductsData = allProducts ? [...allProducts] : [];
-    const sortedData = allProductsData?.sort((a, b) => b.sold_out - a.sold_out); 
-    const firstFive = sortedData && sortedData.slice(0, 5);
+    const sortedData = allProductsData.sort((a, b) => b.sold_out - a.sold_out);
+    const firstFive = sortedData.slice(0, 5);
     setData(firstFive);
   }, [allProducts]);
 
   return (
-    <div className={`${styles.section}`}>
+    <div className={`${styles.section} background`}>
       <div className={`${styles.heading}`}>
-        <h1 style={{ color: 'black' }}>Best Deals</h1>
+        <h1 className="text-2xl font-bold text-gray-800">Best Deals</h1>
       </div>
-      <div className="flex space-x-[10px] overflow-x-auto scrollbar-hide mb-12 border-0">
+      <div className="flex space-x-2 overflow-x-auto scrollbar-hide mb-12">
         {data && data.length !== 0 && (
-          <>
-            {data.map((i, index) => (
-              <div key={index} className="min-w-[200px]"> {/* Adjust width as needed */}
-                <ProductCard data={i} />
-              </div>
-            ))}
-          </>
+          data.map((item, index) => (
+            <div key={index} className="flex-shrink-0 w-[150px] md:w-[180px] lg:w-[200px]">
+              <ProductCard data={item} />
+            </div>
+          ))
         )}
       </div>
     </div>
