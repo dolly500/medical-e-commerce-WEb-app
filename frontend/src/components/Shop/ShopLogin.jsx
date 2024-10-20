@@ -37,16 +37,15 @@ const ShopLogin = () => {
         window.location.reload(true);
       })
       .catch((err) => {
-        const errorMessage = err.response.data.message;
-        
-        // Check for specific error messages and handle them accordingly
-        if (errorMessage.includes("Incorrect password")) {
-          toast.error("The password you entered is incorrect. Please try again.");
-        } else if (errorMessage.includes("User not found")) {
-          toast.error("No account found with this email.");
+        if (err.response && err.response.status === 401) {
+          // For unauthorized (incorrect password)
+          toast.error("Incorrect email or password. Please try again.");
+        } else if (err.response && err.response.status === 400) {
+          // For other bad requests like missing fields
+          toast.error(err.response.data.message || "incorrect email or password. Please try again.");
         } else {
-          // Handle general errors
-          toast.error(errorMessage || "An error occurred. Please try again.");
+          // For other errors like network issues
+          toast.error("An error occurred. Please try again later.");
         }
       });
   };
