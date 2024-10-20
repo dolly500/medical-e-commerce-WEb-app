@@ -367,9 +367,15 @@ className={`w-full mb-6 h-[70px] z-50 top-0 left-0 ${
             </Link>
           </div>
           <div className="flex">
-            <div className="relative mr-[20px]" onClick={handleMessageSubmit}>
-              {/* <IoChatbubbleEllipses size={30} style={{ color: 'white' }} /> */}
-            </div>
+                <div
+                    className="relative mr-[15px]"
+                    onClick={() => setOpenWishlist(true) || setOpen(false)}
+                  >
+                    <AiOutlineHeart size={30} style={{ color: 'blue' }} />
+                    <span className="absolute right-0 top-0 rounded-full bg-blue-700 w-4 h-4 top right p-0 m-0 text-black font-mono text-[12px]  leading-tight text-center">
+                      {wishlist && wishlist.length}
+                    </span>
+                  </div>
             <div
               className="relative mr-[20px]"
               onClick={() => setOpenCart(true)}
@@ -398,7 +404,7 @@ className={`w-full mb-6 h-[70px] z-50 top-0 left-0 ${
           >
             <div className="fixed w-[70%] bg-[#fff] h-screen top-0 left-0 z-10 overflow-y-scroll">
               <div className="w-full justify-between flex pr-3">
-                <div>
+                {/* <div>
                   <div
                     className="relative mr-[15px]"
                     onClick={() => setOpenWishlist(true) || setOpen(false)}
@@ -408,7 +414,7 @@ className={`w-full mb-6 h-[70px] z-50 top-0 left-0 ${
                       {wishlist && wishlist.length}
                     </span>
                   </div>
-                </div>
+                </div> */}
                 <RxCross1
                   size={30}
                   className="ml-4 mt-5" style={{ color: 'black' }}

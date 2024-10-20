@@ -125,7 +125,7 @@ const CartSingle = ({ data, quantityChangeHandler, removeFromCartHandler }) => {
           >
             <HiPlus size={16} color="#fff" />
           </div>
-          <span className="px-2 text-sm">{value}</span>
+          <span className="px-2 text-sm font-bold">{value}</span>
           <div
             className="bg-[#a7abb14f] rounded-full w-[20px] h-[20px] flex items-center justify-center cursor-pointer"
             onClick={decrement}
@@ -142,11 +142,11 @@ const CartSingle = ({ data, quantityChangeHandler, removeFromCartHandler }) => {
       </div>
 
       <div className="flex flex-col items-end">
-        <h1 className="text-sm sm:text-base font-medium">{data.name}</h1>
-        <h4 className="text-xs sm:text-sm text-[#00000082]">
+        <h1 className="text-sm sm:text-base font-bold">{data.name}</h1>
+        <h4 className="text-xs sm:text-sm text-[#00000082] font-semibold">
           ${data.discountPrice} * {value}
         </h4>
-        <h4 className="text-sm sm:text-base font-semibold text-[#d02222]">
+        <h4 className="text-sm sm:text-base font-extrabold text-[#d02222]">
           ${totalPrice}
         </h4>
       </div>
