@@ -78,9 +78,9 @@ const Footer = () => {
           <p className="font-bold text-black">Buy Online.</p>
           <div className="flex items-center mt-[15px]">
             <AiFillFacebook size={25} className="text-black cursor-pointer" />
-            <AiOutlineTwitter size={25} className="text-black" style={{ marginLeft: "15px", cursor: "pointer" }} />
-            <AiFillInstagram size={25} className="text-black" style={{ marginLeft: "15px", cursor: "pointer" }} />
-            <AiFillYoutube size={25} className="text-black" style={{ marginLeft: "15px", cursor: "pointer" }} />
+            <AiOutlineTwitter size={25} className="text-blue" style={{ marginLeft: "15px", cursor: "pointer" }} />
+            <AiFillInstagram size={25} className="text-blue" style={{ marginLeft: "15px", cursor: "pointer" }} />
+            <AiFillYoutube size={25} className="text-blue" style={{ marginLeft: "15px", cursor: "pointer" }} />
           </div>
         </ul>
 
