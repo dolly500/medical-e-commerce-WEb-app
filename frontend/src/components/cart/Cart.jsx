@@ -116,44 +116,49 @@ const CartSingle = ({ data, quantityChangeHandler, removeFromCartHandler }) => {
   };
 
   return (
-    <div className="border-b p-4">
-      <div className="w-full flex items-center">
-        <div>
+    <div className="border-b p-3 sm:p-4 flex items-center justify-between">
+      <div className="flex items-center space-x-2 sm:space-x-4">
+        <div className="flex items-center">
           <div
-            className={`bg-[#e44343] border border-[#e4434373] rounded-full w-[25px] h-[25px] ${styles.noramlFlex} justify-center cursor-pointer`}
+            className="bg-[#e44343] rounded-full w-[20px] h-[20px] flex items-center justify-center cursor-pointer"
             onClick={increment}
           >
-            <HiPlus size={18} color="#fff" />
+            <HiPlus size={16} color="#fff" />
           </div>
-          <span className="pl-[10px]">{value}</span>
+          <span className="px-2 text-sm">{value}</span>
           <div
-            className="bg-[#a7abb14f] rounded-full w-[25px] h-[25px] flex items-center justify-center cursor-pointer"
+            className="bg-[#a7abb14f] rounded-full w-[20px] h-[20px] flex items-center justify-center cursor-pointer"
             onClick={decrement}
           >
             <HiOutlineMinus size={16} color="#7d879c" />
           </div>
         </div>
+
         <img
           src={`${data?.images[0]?.url}`}
-          alt=""
-          className="w-[130px] h-min ml-2 mr-2 rounded-[5px]"
-        />
-        <div className="pl-[5px]">
-          <h1>{data.name}</h1>
-          <h4 className="font-[400] text-[15px] text-[#00000082]">
-          ${data.discountPrice} * {value}
-          </h4>
-          <h4 className="font-[600] text-[17px] pt-[3px] text-[#d02222] font-Roboto">
-          ${totalPrice}
-          </h4>
-        </div>
-        <RxCross1
-          className="cursor-pointer"
-          onClick={() => removeFromCartHandler(data)}
+          alt={data.name}
+          className="w-[60px] h-[60px] sm:w-[80px] sm:h-[80px] object-cover rounded-[5px]"
         />
       </div>
+
+      <div className="flex flex-col items-end">
+        <h1 className="text-sm sm:text-base font-medium">{data.name}</h1>
+        <h4 className="text-xs sm:text-sm text-[#00000082]">
+          ${data.discountPrice} * {value}
+        </h4>
+        <h4 className="text-sm sm:text-base font-semibold text-[#d02222]">
+          ${totalPrice}
+        </h4>
+      </div>
+
+      <RxCross1
+        className="cursor-pointer text-[#d02222]"
+        size={20}
+        onClick={() => removeFromCartHandler(data)}
+      />
     </div>
   );
 };
+
 
 export default Cart;
