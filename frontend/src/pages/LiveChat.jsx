@@ -18,9 +18,6 @@ const FAQPage = ({ categoriesData }) => {
         <SlideInOnScroll>
           <Faq />
         </SlideInOnScroll>
-        <SlideInOnScroll>
-          <TermsAndConditions />
-        </SlideInOnScroll>
       </div>
       <SlideInOnScroll>
         <Footer />
@@ -360,9 +357,10 @@ const AboutUs = () => {
         </div>
 
         <div className="pt-14">
-          <h3 className="text-5xl font-bold mb-10">Our Services</h3>
+          <h3 className="text-4xl font-bold mb-10">Our Services</h3>
+
           <div className="md:flex md:items-center md:justify-center">
-            <div className="rounded-sm p-4 md:p-10 mb-6 md:w-1/2 md:mr-10 bg-[#1D4ED8] text-white">
+            <div className="rounded-sm p-4 md:p-10 mb-6 md:w-1/2 md:mr-10 bg-white text-black">
               <h4 className="font-bold mb-2">What We Offer</h4>
               <ul className="list-disc pl-6">
                 <li>Comprehensive primary care services</li>
@@ -376,8 +374,9 @@ const AboutUs = () => {
               </ul>
             </div>
 
-            <div className="rounded-sm p-4 md:p-10 mb-6 md:w-1/2 text-[#000] bg-[#E0F2FE]">
-              <h4 className="font-bold mb-2">Our Commitment</h4>
+            <div className="rounded-sm p-4 md:p-10 mb-6 md:w-1/2 text-black bg-white">
+            <h3 className="text-3xl font-bold mb-10">Our Commitment</h3>
+
               <ul className="list-disc pl-6">
                 <li>Patient-centered approach to healthcare</li>
                 <li>Confidential and personalized care</li>
@@ -386,41 +385,6 @@ const AboutUs = () => {
               </ul>
             </div>
           </div>
-        </div>
-
-        <div className="mb-6">
-          <p className="text-xl font-bold">Our Mission: Providing quality healthcare, dedicated to your well-being.</p>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-
-
-
-const TermsAndConditions = () => {
-  return (
-    <div className="bg-blue-700 text-white mb-10">
-      <div className="container mx-auto space-y-4 md:p-12">
-        <h2 className="text-3xl font-bold mb-6">Terms and Conditions</h2>
-        <div className="prose">
-          <h3 className="text-xl font-bold my-4">Introduction</h3>
-          <p>
-            - These terms and conditions outline the rules and regulations for the use of AllSexToys, located at www.allsextoys.online.
-          </p>
-
-          <h3 className="text-xl font-bold my-4"> Intellectual Property Rights</h3>
-          <p>
-            - Other than the content you own, under these terms, AllSexToys and/or its licensors own all the intellectual property rights and materials contained in this Website.
-          </p>
-
-          <h3 className="text-xl font-bold my-4"> Disclaimer</h3>
-          <p>
-            - To the maximum extent permitted by applicable law, we exclude all representations, warranties, and conditions relating to AllSexToys
-          </p>
-
-          {/* Add more sections such as Privacy Policy, Limitations, Governing Law, etc. */}
         </div>
       </div>
     </div>
