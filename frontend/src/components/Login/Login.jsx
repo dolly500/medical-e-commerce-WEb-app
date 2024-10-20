@@ -29,15 +29,24 @@ const Login = () => {
         { withCredentials: true }
       )
       .then((res) => {
-        //Set token gotten as response in localstorage
-        setLocalStorage("auth-token", res.data?.token, 4 * 60 * 60) //Set Timeout of 4hours
+        // Set token gotten as response in local storage
+        setLocalStorage("auth-token", res.data?.token, 4 * 60 * 60); // Set Timeout of 4 hours
 
         toast.success("Login Success!");
         navigate("/");
         window.location.reload(true);
       })
       .catch((err) => {
-        toast.error(err.response.data.message);
+        if (err.response && err.response.status === 401) {
+          // For unauthorized (incorrect password)
+          toast.error("Incorrect email or password. Please try again.");
+        } else if (err.response && err.response.status === 400) {
+          // For other bad requests like missing fields
+          toast.error(err.response.data.message || "incorrect email or password. Please try again.");
+        } else {
+          // For other errors like network issues
+          toast.error("An error occurred. Please try again later.");
+        }
       });
   };
 

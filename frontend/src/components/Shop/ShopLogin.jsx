@@ -19,7 +19,7 @@ const ShopLogin = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     await axios
       .post(
         `${server}/shop/login-shop`,
@@ -30,16 +30,27 @@ const ShopLogin = () => {
         { withCredentials: true }
       )
       .then((res) => {
-        //Set token gotten as response in localstorage
-        setLocalStorage("auth-token", res.data?.token, 4 * 60 * 60)
+        // Set token in local storage on successful login
+        setLocalStorage("auth-token", res.data?.token, 4 * 60 * 60);
         toast.success("Login Success!");
         navigate("/dashboard");
         window.location.reload(true);
       })
       .catch((err) => {
-        toast.error(err.response.data.message);
+        const errorMessage = err.response.data.message;
+        
+        // Check for specific error messages and handle them accordingly
+        if (errorMessage.includes("Incorrect password")) {
+          toast.error("The password you entered is incorrect. Please try again.");
+        } else if (errorMessage.includes("User not found")) {
+          toast.error("No account found with this email.");
+        } else {
+          // Handle general errors
+          toast.error(errorMessage || "An error occurred. Please try again.");
+        }
       });
   };
+  
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8 ">
