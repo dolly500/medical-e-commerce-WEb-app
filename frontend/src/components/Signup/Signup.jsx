@@ -21,24 +21,31 @@ const Signup = () => {
 
     reader.onload = () => {
       if (reader.readyState === 2) {
-        setAvatar(reader.result);
+        setAvatar(reader.result); // Set the avatar to the Base64 string
       }
     };
 
-    reader.readAsDataURL(e.target.files[0]);
+    reader.readAsDataURL(e.target.files[0]); // Read the image as a Base64 string
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // Default avatar image URL if no image is uploaded
+    const defaultAvatarUrl = "https://gravatar.com/avatar/95ff202ce9742c49d7ebbaaef6515af8?s=400&d=robohash&r=x";
+
+    // If no avatar is uploaded, use the default avatar URL
+    const avatarToUpload = avatar || defaultAvatarUrl;
+
+    // Send the user data including the avatar (either uploaded or default)
     axios
-      .post(`${server}/user/create-user`, { name, email, password, avatar })
+      .post(`${server}/user/create-user`, { name, email, password, avatar: avatarToUpload })
       .then((res) => {
         toast.success(res.data.message);
         setName("");
         setEmail("");
         setPassword("");
-        setAvatar();
+        setAvatar(null); // Reset the avatar after submission
       })
       .catch((error) => {
         toast.error(error.response.data.message);
@@ -48,20 +55,18 @@ const Signup = () => {
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
-      <Link to="/">
-          {/* Home Icon Button */}
+        <Link to="/">
           <button className="absolute top-4 right-4 text-blue-600">
             <FaHome size={24} />
           </button>
-      </Link>
-      <Link to="/">
-              <img
-                src= {logo}
-                alt=""
-
-                style={{ height: '60px', width: '140px', display: 'flex', margin: '0 auto'}} 
-              />
-      </Link>
+        </Link>
+        <Link to="/">
+          <img
+            src={logo}
+            alt=""
+            style={{ height: "60px", width: "140px", display: "flex", margin: "0 auto" }}
+          />
+        </Link>
         <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
           Register as a new user
         </h2>
@@ -70,16 +75,13 @@ const Signup = () => {
         <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
           <form className="space-y-6" onSubmit={handleSubmit}>
             <div>
-              <label
-                htmlFor="email"
-                className="block text-sm font-medium text-gray-700"
-              >
+              <label htmlFor="name" className="block text-sm font-medium text-gray-700">
                 Full Name
               </label>
               <div className="mt-1">
                 <input
                   type="text"
-                  name="text"
+                  name="name"
                   autoComplete="name"
                   required
                   value={name}
@@ -90,10 +92,7 @@ const Signup = () => {
             </div>
 
             <div>
-              <label
-                htmlFor="email"
-                className="block text-sm font-medium text-gray-700"
-              >
+              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
                 Email address
               </label>
               <div className="mt-1">
@@ -110,10 +109,7 @@ const Signup = () => {
             </div>
 
             <div>
-              <label
-                htmlFor="password"
-                className="block text-sm font-medium text-gray-700"
-              >
+              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
                 Password
               </label>
               <div className="mt-1 relative">
@@ -143,10 +139,7 @@ const Signup = () => {
             </div>
 
             <div>
-              <label
-                htmlFor="avatar"
-                className="block text-sm font-medium text-pink-700"
-              ></label>
+              <label htmlFor="avatar" className="block text-sm font-medium text-pink-700"></label>
               <div className="mt-2 flex items-center">
                 <span className="inline-block h-8 w-8 rounded-full overflow-hidden">
                   {avatar ? (
