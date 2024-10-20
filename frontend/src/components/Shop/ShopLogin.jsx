@@ -45,13 +45,13 @@ const ShopLogin = () => {
     <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8 ">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <Link to="/">
-          <img src={logo} alt='' style={{ height: '130px', width: '120px', display: 'flex', margin: '0 auto' }}
+          <img src={logo} alt='' style={{ height: '60px', width: '140px', display: 'flex', margin: '0 auto' }}
           />
         </Link>
 
         <Link to="/">
           {/* Home Icon Button */}
-          <button className="absolute top-4 right-4 text-pink-600">
+          <button className="absolute top-4 right-4 text-blue-600">
             <FaHome size={24} />
           </button>
         </Link>

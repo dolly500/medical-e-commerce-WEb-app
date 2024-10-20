@@ -115,6 +115,19 @@ const HomePage = () => {
     handleBackButtonClick();
   }, [navigate]);
 
+  // Add Tidio LiveChat script
+  useEffect(() => {
+    const script = document.createElement('script');
+    script.src = '//code.tidio.co/jixrjaohqp6dcq85zcobusr92zkk7frg.js'; // Replace 'your-unique-id' with your Tidio public key
+    script.async = true;
+    document.body.appendChild(script);
+
+    return () => {
+      // Clean up script when component unmounts
+      document.body.removeChild(script);
+    };
+  }, []);
+
   return (
     <div className="bg-gradient-to-r from-white-50 to-white-100 min-h-screen">
       {isLoading && <div className="text-blue">Verifying Transaction...</div>}

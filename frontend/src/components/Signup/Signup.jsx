@@ -59,7 +59,7 @@ const Signup = () => {
                 src= {logo}
                 alt=""
 
-                style={{ height: '130px', width: '120px', display: 'flex', margin: '0 auto'}} 
+                style={{ height: '60px', width: '140px', display: 'flex', margin: '0 auto'}} 
               />
       </Link>
         <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
