@@ -11,7 +11,7 @@ const Events = () => {
       {!isLoading && (
         <div className={`${styles.section}`}>
           <div className={`${styles.heading} text-black text-center mb-6`}>
-            <h1 className="text-3xl font-bold text-gray-800">Popular Events</h1>
+            <h1 className="text-3xl font-bold text-black">Popular Events</h1>
           </div>
 
           <div className="w-full grid gap-4">
