@@ -634,11 +634,11 @@ export const productData = [
 export const footerProductLinks = [
   {
     name: "About us",
-    link: "/faq"
+    link: "/about"
   },
   {
     name: "Contact Us",
-    link: "/livechat"
+    link: "/contact"
   },
   {
     name: "Shop",
@@ -646,50 +646,60 @@ export const footerProductLinks = [
   },
   {
     name: "Offers And Events",
+    link: "/events"
   },
   {
     name: "Our Blog",
-  },
-  {
-    name: "Reviews",
+    link: "/posts"
   },
 ];
 
 export const footercompanyLinks = [
   {
     name: "Stethoscope",
+    link: "/products"
   },
   {
     name: "Thermometer",
+    link: "/products"
   },
   {
     name: "X-ray Machine",
+    link: "/products"
   },
   {
     name: "ECG Machine",
+    link: "/products"
   },
   {
     name: "Ophthalmoscope",
+    link: "/products"
   },
   {
     name: "Nebulizer",
+    link: "/products"
   },
   {
     name: "Cardiac Monitor",
+    link: "/products"
   },
   {
     name: "Wheelchair",
+    link: "/products"
   },
   {
     name: "Others",
+    link: "/products"
   }
 ];
 
 export const footerSupportLinks = [
   {
     name: "FAQ",
+    link: "/about"
   },
   {
     name: "Contact Us",
+    link: "/contact"
   },
 ];

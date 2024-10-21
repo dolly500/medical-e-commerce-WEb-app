@@ -1,6 +1,5 @@
 import React from "react";
 import { AiOutlineGift } from "react-icons/ai";
-import { BiMessageSquareDetail } from "react-icons/bi";
 import { FiPackage, FiShoppingBag } from "react-icons/fi";
 import { MdOutlineLocalOffer } from "react-icons/md";
 import { useSelector } from "react-redux";

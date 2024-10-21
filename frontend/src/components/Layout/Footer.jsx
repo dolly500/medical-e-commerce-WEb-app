@@ -20,29 +20,25 @@ const Footer = () => {
   const sendEmail = (e) => {
     e.preventDefault();
 
-    // Replace these with your actual EmailJS IDs
     const serviceId = 'service_ris2vwj';
     const templateId = 'template_alo301e';
     const userId = 'Qr40OaloluqTkfltN';
 
     const emailContent = {
-      email: emailInputRef.current.value // Capture the email content from the input field
+      email: emailInputRef.current.value 
     };
 
     emailjs.send(serviceId, templateId, emailContent, userId)
       .then((response) => {
         console.log('Email sent!', response);
-        // Handle success, e.g., show a success message, clear form fields, etc.
-        // emailInputRef.current.value = '';
       })
       .catch((error) => {
         console.error('Error sending email:', error);
-        // Handle error, e.g., show an error message to the user
       });
   };
 
   return (
-    <div className="bg-white text-black">
+    <div className="bg-gray-600 text-white"> {/* Updated to grey background */}
       <div className="md:flex md:justify-between md:items-center sm:px-12 px-4 bg-blue-700 py-7">
         <h1 className="lg:text-4xl text-3xl md:mb-0 mb-6 lg:leading-normal font-bold md:w-2/5">
           <span className="text-white">Subscribe</span> to get news{" "}
@@ -69,27 +65,23 @@ const Footer = () => {
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-6 sm:px-8 px-5 py-16 sm:text-center">
         <ul className="px-5 text-center sm:text-start flex sm:block flex-col items-center">
-          <img
-            className="h-15 w-3/5"
-            src={logo}
-            alt="Logo"
-          />
+          <img className="h-15 w-3/5" src={logo} alt="Logo" />
           <br />
-          <p className="font-bold text-black">Buy Online.</p>
+          <p className="font-bold text-white">Buy Online.</p> {/* Updated text color */}
           <div className="flex items-center mt-[15px]">
-            <AiFillFacebook size={25} className="text-black cursor-pointer" />
-            <AiOutlineTwitter size={25} className="text-blue" style={{ marginLeft: "15px", cursor: "pointer" }} />
-            <AiFillInstagram size={25} className="text-blue" style={{ marginLeft: "15px", cursor: "pointer" }} />
-            <AiFillYoutube size={25} className="text-blue" style={{ marginLeft: "15px", cursor: "pointer" }} />
+            <AiFillFacebook size={25} className="text-white cursor-pointer" />
+            <AiOutlineTwitter size={25} className="text-white ml-4 cursor-pointer" />
+            <AiFillInstagram size={25} className="text-white ml-4 cursor-pointer" />
+            <AiFillYoutube size={25} className="text-white ml-4 cursor-pointer" />
           </div>
         </ul>
 
         <ul className="text-center sm:text-start">
-          <h1 className="mb-1 font-bold text-black">Company</h1>
+          <h1 className="mb-1 font-bold text-white">Company</h1> {/* Updated text color */}
           {footerProductLinks.map((link, index) => (
             <li key={index}>
               <Link
-                className="text-black hover:text-teal-400 duration-300 text-sm cursor-pointer leading-6 font-semibold"
+                className="text-gray-400 hover:text-teal-400 duration-300 text-sm cursor-pointer leading-6 font-semibold"
                 to={link.link}
               >
                 {link.name}
@@ -99,11 +91,11 @@ const Footer = () => {
         </ul>
 
         <ul className="text-center sm:text-start">
-          <h1 className="mb-1 font-bold text-black">Shop</h1>
+          <h1 className="mb-1 font-bold text-white">Shop</h1>
           {footercompanyLinks.map((link, index) => (
             <li key={index}>
               <Link
-                className="text-black hover:text-teal-400 duration-300 text-sm cursor-pointer leading-6 font-semibold"
+                className="text-gray-400 hover:text-teal-400 duration-300 text-sm cursor-pointer leading-6 font-semibold"
                 to={link.link}
               >
                 {link.name}
@@ -113,11 +105,11 @@ const Footer = () => {
         </ul>
 
         <ul className="text-center sm:text-start">
-          <h1 className="mb-1 font-bold text-black">Support</h1>
+          <h1 className="mb-1 font-bold text-white">Support</h1>
           {footerSupportLinks.map((link, index) => (
             <li key={index}>
               <Link
-                className="text-black hover:text-teal-400 duration-300 text-sm cursor-pointer leading-6 font-semibold"
+                className="text-gray-400 hover:text-teal-400 duration-300 text-sm cursor-pointer leading-6 font-semibold"
                 to={link.link}
               >
                 {link.name}
@@ -127,9 +119,7 @@ const Footer = () => {
         </ul>
       </div>
 
-      <div
-        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 text-center pt-2 text-black text-sm pb-8"
-      >
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 text-center pt-2 text-gray-400 text-sm pb-8">
         <span className="font-bold">© 2024. All rights reserved.</span>
         <span className="font-bold">Terms · Privacy Policy</span>
         <div className="sm:block flex items-center justify-center w-full">
