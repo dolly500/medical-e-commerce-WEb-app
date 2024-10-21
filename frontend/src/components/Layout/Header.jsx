@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   AiOutlineHeart,
   AiOutlineSearch,
@@ -39,6 +39,26 @@ const Header = ({ activeHeading, data }) => {
   const [openWishlist, setOpenWishlist] = useState(false);
   const [open, setOpen] = useState(false);
   const [paystackApiKey, setPaystackApiKey] = useState('');
+  const sidebarRef = useRef(null);
+
+   // Close sidebar when clicking outside
+   useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (sidebarRef.current && !sidebarRef.current.contains(event.target)) {
+        setOpen(false); // Close the sidebar if the click is outside
+      }
+    };
+
+    if (open) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [open]);
 
   const handleSearchChange = (e) => {
     const term = e.target.value;
@@ -161,15 +181,6 @@ const Header = ({ activeHeading, data }) => {
               </div>
             ) : null}
           </div>
-
-          {/* <div className={`${styles.button} mr-20`} style={{ display: 'none' }}>
-            <Link to={`${isSeller ? "/dashboard" : "/shop-create"}`}>
-              <h1 className="text-[#fff] flex items-center">
-                {isSeller ? "Become seller" : "Become Seller"}{" "}
-                <IoIosArrowForward className="ml-1" />
-              </h1>
-            </Link>
-          </div> */}
         </div>
       </div>
       <div
@@ -207,83 +218,6 @@ const Header = ({ activeHeading, data }) => {
           </div>
 
           <div className="flex">
-            <div className={`${styles.noramlFlex}`}>
-
-              <div className="relative cursor-pointer mr-[15px]" onClick={handleMessageSubmit}>
-                {/* <IoChatbubbleEllipses size={30} color="rgb(255 255 255 / 83%)" /> */}
-              </div>
-
-
-              <Modal
-                isOpen={isModalOpen}
-                onRequestClose={closeModal}
-                contentLabel="Login Modal"
-                style={{
-                  overlay: {
-                    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-                  },
-                  content: {
-                    width: '400px',
-                    margin: 'auto',
-                    borderRadius: '8px',
-                    position: 'relative',
-                  },
-                }}
-              >
-                <div>
-                  {/* Cancel icon at the right top */}
-                  <button
-                    style={{
-                      position: 'absolute',
-                      top: '10px',
-                      right: '10px',
-                      background: 'none',
-                      border: 'none',
-                      cursor: 'pointer',
-                      fontSize: '20px',
-                      color: '#333',
-                    }}
-                    onClick={closeModal}
-                  >
-                    &#10006; {/* Unicode for 'x' symbol */}
-                  </button>
-
-                  <p>Buy Your Talk Time Unit To Access Assigned Therapists</p>
-
-                  <br />
-
-                  {/* Cancel button styling */}
-                  <button
-                    style={{
-                      background: '#ddd',
-                      color: '#333',
-                      padding: '8px 16px',
-                      borderRadius: '4px',
-                      marginRight: '10px',
-                      cursor: 'pointer',
-                    }}
-                    onClick={closeModal}
-                  >
-                    Cancel
-                  </button>
-
-                  {/* Pay Here button styling */}
-                  <button
-                    style={{
-                      background: '#483bc1',
-                      color: '#fff',
-                      padding: '8px 16px',
-                      borderRadius: '4px',
-                      cursor: 'pointer',
-                    }}
-                    onClick={handlePayment}
-                  >
-                    Pay Here
-                  </button>
-                </div>
-              </Modal>
-
-            </div>
             <div className={`${styles.noramlFlex}`}>
               <div
                 className="relative cursor-pointer mr-[15px]"
@@ -350,7 +284,7 @@ className={`w-full mb-6 h-[70px] z-50 top-0 left-0 ${
 
         <div className="h-full w-full flex items-center justify-between">
           <div>
-            <BiMenuAltLeft
+            <BiMenuAltLeft 
               size={40}
               className="ml-4"
               onClick={() => setOpen(true)} style={{ color: 'blue' }}
@@ -368,10 +302,10 @@ className={`w-full mb-6 h-[70px] z-50 top-0 left-0 ${
           </div>
           <div className="flex">
                 <div
-                    className="relative mr-[15px]"
+                    className="relative mr-[15px]" 
                     onClick={() => setOpenWishlist(true) || setOpen(false)}
                   >
-                    <AiOutlineHeart size={30} style={{ color: 'blue' }} />
+                    <AiOutlineHeart  size={30} style={{ color: 'blue' }} />
                     <span className="absolute right-0 top-0 rounded-full bg-blue-700 w-4 h-4 top right p-0 m-0 text-black font-mono text-[12px]  leading-tight text-center">
                       {wishlist && wishlist.length}
                     </span>
@@ -402,19 +336,8 @@ className={`w-full mb-6 h-[70px] z-50 top-0 left-0 ${
           <div
             className={`fixed w-full bg-[#0000005f] z-20 h-full top-0 left-0`}
           >
-            <div className="fixed w-[70%] bg-[#fff] h-screen top-0 left-0 z-10 overflow-y-scroll">
+            <div ref={sidebarRef} className="fixed w-[70%] bg-[#fff] h-screen top-0 left-0 z-10 overflow-y-scroll">
               <div className="w-full justify-between flex pr-3">
-                {/* <div>
-                  <div
-                    className="relative mr-[15px]"
-                    onClick={() => setOpenWishlist(true) || setOpen(false)}
-                  >
-                    <AiOutlineHeart size={30} className="mt-5 ml-3" style={{ color: 'black' }} />
-                    <span className="absolute right-0 top-0 rounded-full bg-blue-700 w-4 h-4 top right p-0 m-0 text-black font-mono text-[12px]  leading-tight text-center">
-                      {wishlist && wishlist.length}
-                    </span>
-                  </div>
-                </div> */}
                 <RxCross1
                   size={30}
                   className="ml-4 mt-5" style={{ color: 'black' }}

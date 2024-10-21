@@ -69,36 +69,47 @@ const Wishlist = ({ setOpenWishlist }) => {
   );
 };
 
-const CartSingle = ({ data,removeFromWishlistHandler,addToCartHandler }) => {
+const CartSingle = ({ data, removeFromWishlistHandler, addToCartHandler }) => {
   const [value, setValue] = useState(1);
   const totalPrice = data.discountPrice * value;
 
   return (
-    <div className="border-b p-4">
-      <div className="w-full 800px:flex items-center">
-        <RxCross1 className="cursor-pointer 800px:mb-['unset'] 800px:ml-['unset'] mb-2 ml-2"
-        onClick={() => removeFromWishlistHandler(data)}
+    <div className="border-b p-2 800px:p-3">
+      <div className="w-full flex items-center justify-between">
+        {/* Remove from wishlist */}
+        <RxCross1
+          className="cursor-pointer mb-2 ml-2 800px:ml-0"
+          onClick={() => removeFromWishlistHandler(data)}
         />
+
+        {/* Product Image */}
         <img
           src={`${data?.images[0]?.url}`}
           alt=""
-          className="w-[130px] h-min ml-2 mr-2 rounded-[5px]"
+          className="w-[80px] h-[80px] 800px:w-[100px] 800px:h-[100px] rounded-[5px] ml-2 mr-2"
         />
 
-        <div className="pl-[5px]">
-          <h1>{data.name}</h1>
-          <h4 className="font-[600] pt-3 800px:pt-[3px] text-[17px] text-[#d02222] font-Roboto">
-          ${totalPrice}
+        {/* Product Details */}
+        <div className="flex flex-col justify-between pl-[5px] w-full">
+          <h1 className="text-[14px] 800px:text-[16px]">{data.name}</h1>
+          <h4 className="font-[600] text-[14px] text-[#d02222] font-Roboto pt-2 800px:pt-[3px]">
+            ${totalPrice}
           </h4>
         </div>
-        <div>
-          <BsCartPlus size={20} className="cursor-pointer" tile="Add to cart"
-           onClick={() => addToCartHandler(data)}
+
+        {/* Add to Cart Icon */}
+        <div className="ml-2">
+          <BsCartPlus
+            size={20}
+            className="cursor-pointer"
+            title="Add to cart"
+            onClick={() => addToCartHandler(data)}
           />
         </div>
       </div>
     </div>
   );
 };
+
 
 export default Wishlist;
