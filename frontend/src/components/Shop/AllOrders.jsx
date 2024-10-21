@@ -14,7 +14,7 @@ const AllOrders = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getAllOrdersOfShop(seller._id));
+    dispatch(getAllOrdersOfShop(JSON.parse(localStorage.getItem("user"))?._id));
   }, [dispatch]);
 
   const columns = [

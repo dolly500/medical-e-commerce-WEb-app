@@ -14,7 +14,7 @@ const AllProducts = () => {
 
   const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(getAllProductsShop(JSON.parse(localStorage.getItem("user"))._id));
+    dispatch(getAllProductsShop(JSON.parse(localStorage.getItem("user"))?._id));
   }, [dispatch]);
 
   console.log("After API call, products:", products);
