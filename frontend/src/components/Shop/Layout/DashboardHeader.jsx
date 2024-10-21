@@ -48,16 +48,16 @@ const DashboardHeader = () => {
           <Link to="/dashboard-orders" className="800px:block hidden">
             <FiPackage color="#555" size={30} className="mx-5 cursor-pointer" />
           </Link>
-          <Link to="/dashboard-messages" className="800px:block hidden">
+          {/* <Link to="/dashboard-messages" className="800px:block hidden">
             <BiMessageSquareDetail
               // color="#555"
               size={30}
               className="mx-5 cursor-pointer text-[#555] hover:text-[#8E376A]"
             />
-          </Link>
+          </Link> */}
           <Link to={`/shop/${seller._id}`}>
             <img
-              src={`${seller.avatar}}`}
+              src={`${seller?.avatar}}`}
               alt=""
               className="w-[50px] h-[50px] rounded-full object-cover"
             />
