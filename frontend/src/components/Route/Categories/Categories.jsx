@@ -81,7 +81,7 @@ const Categories = () => {
         </div>
 
         {/* Pagination */}
-        <div className="flex justify-center mt-6">
+        <div className="flex justify-center mt-6 mb-14">
           <ul className="inline-flex space-x-2">
             {Array.from({ length: totalPages }, (_, index) => (
               <li key={index} className={`${currentPage === index + 1 ? "bg-blue-600 text-white" : "bg-gray-300 text-gray-800"} rounded-full`}>
