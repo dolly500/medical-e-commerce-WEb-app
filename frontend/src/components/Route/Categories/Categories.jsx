@@ -64,11 +64,11 @@ const Categories = () => {
                 key={i?._id}
                 onClick={() => handleSubmit(i)}
               >
-                <img
+                {/* <img
                   src={i?.images?.[0]?.url}
                   className="w-full h-28 object-cover rounded-t-lg mb-2"
                   alt={i.name}
-                />
+                /> */}
                 <h5 className="mb-1 text-lg font-semibold text-gray-800">{i.name}</h5>
                 <Link to={`/products?category=${i.name}`} className="inline-block">
                   <div className="mt-2 bg-blue-600 hover:bg-blue-500 transition rounded text-center py-1 px-3">
