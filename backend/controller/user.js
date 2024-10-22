@@ -60,9 +60,29 @@ router.post("/create-user", async (req, res, next) => {
     try {
       await sendMail({
         email: user.email,
-        subject: "Activate your account",
-        message: `Hello ${user.name}, please click on the link to activate your account: ${activationUrl}`,
-      });
+        subject: "Activate Your Account",
+        message: `
+          <div style="font-family: Arial, sans-serif; color: #333;">
+            <div style="text-align: center;">
+              <img src="https://medical-e-app.vercel.app/static/imgs/logo.png" alt="Company Logo" style="width: 150px; margin-bottom: 20px;">
+            </div>
+            <h2 style="text-align: center; color: #007BFF;">Activate Your Account</h2>
+            <p>Hello ${user.name},</p>
+            <p>Thank you for registering with us! To complete your registration and activate your account, please click the button below:</p>
+            <div style="text-align: center; margin: 20px 0;">
+              <a href="${activationUrl}" style="background-color: #007BFF; color: white; padding: 10px 20px; text-decoration: none; font-size: 16px; border-radius: 5px;">
+                Activate Account
+              </a>
+            </div>
+            <p>If the button doesn't work, you can also copy and paste the following link into your browser:</p>
+            <p><a href="${activationUrl}" style="color: #007BFF;">${activationUrl}</a></p>
+            <p>Best regards,</p>
+            <p>The [Your Company Name] Team</p>
+            <hr />
+            <p style="font-size: 12px; color: #999;">If you did not sign up for an account, please ignore this email.</p>
+          </div>
+        `,
+      });      
 
       // Include user data in the response
       res.status(201).json({
