@@ -61,7 +61,7 @@ router.post("/create-user", async (req, res, next) => {
       await sendMail({
         email: user.email,
         subject: "Activate Your Account",
-        message: `
+        html: `
           <div style="font-family: Arial, sans-serif; color: #333;">
             <div style="text-align: center;">
               <img src="https://medical-e-app.vercel.app/static/imgs/logo.png" alt="Company Logo" style="width: 150px; margin-bottom: 20px;">
