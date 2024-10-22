@@ -128,7 +128,7 @@ const ProductDetails = ({ data }) => {
                 />
                 <div className="w-full flex">
                   {data &&
-                    data.images.map((i, index) => (
+                    data?.images?.map((i, index) => (
                       <div
                         key={index}
                         className={`${
@@ -311,7 +311,7 @@ const ProductDetailsInfo = ({
       {active === 2 ? (
         <div className="w-full min-h-[40vh] flex flex-col items-center py-3 overflow-y-scroll">
           {data &&
-            data.reviews.map((item, index) => (
+            data?.reviews?.map((item, index) => (
               <div key={index} className="w-full flex my-2">
                 <img
                   src={`${item?.user?.avatar?.url}`}
@@ -329,8 +329,8 @@ const ProductDetailsInfo = ({
             ))}
 
           <div className="w-full flex justify-center text-black">
-            {data && data.reviews.length === 0 && (
-              <h5>No Reviews have for this product!</h5>
+            {data && data?.reviews?.length === 0 && (
+              <h5 style={{color: 'black'}}>No Reviews have for this product!</h5>
             )}
           </div>
         </div>
