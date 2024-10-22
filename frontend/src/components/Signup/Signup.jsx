@@ -28,16 +28,29 @@ const Signup = () => {
     reader.readAsDataURL(e.target.files[0]); // Read the image as a Base64 string
   };
 
+  const checkEmailExists = async (email) => {
+    try {
+      const res = await axios.post(`${server}/user/check-email`, { email });
+      return res.data.exists; // Backend should return a boolean 'exists' to indicate if the email is registered
+    } catch (error) {
+      toast.error("Error checking email");
+      return false;
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Default avatar image URL if no image is uploaded
-    const defaultAvatarUrl = "https://gravatar.com/avatar/95ff202ce9742c49d7ebbaaef6515af8?s=400&d=robohash&r=x";
+    const emailExists = await checkEmailExists(email);
 
-    // If no avatar is uploaded, use the default avatar URL
+    if (emailExists) {
+      toast.error("Email has already been registered");
+      return;
+    }
+
+    const defaultAvatarUrl = "https://gravatar.com/avatar/95ff202ce9742c49d7ebbaaef6515af8?s=400&d=robohash&r=x";
     const avatarToUpload = avatar || defaultAvatarUrl;
 
-    // Send the user data including the avatar (either uploaded or default)
     axios
       .post(`${server}/user/create-user`, { name, email, password, avatar: avatarToUpload })
       .then((res) => {

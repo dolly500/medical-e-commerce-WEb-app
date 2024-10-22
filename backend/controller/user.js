@@ -78,6 +78,18 @@ router.post("/create-user", async (req, res, next) => {
   }
 });
 
+// Checks Email
+router.post('/check-email', async (req, res) => {
+  const { email } = req.body;
+
+  const user = await User.findOne({ email }); // Adjust based on your DB
+  if (user) {
+    return res.json({ exists: true });
+  }
+  return res.json({ exists: false });
+});
+
+
 // create activation token
 const createActivationToken = (user) => {
   return jwt.sign(user, process.env.ACTIVATION_SECRET, {
