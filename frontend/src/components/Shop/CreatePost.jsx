@@ -86,6 +86,7 @@ const handleCategoryChange = (e) => {
    try {
       await dispatch(createpost(data));
       toast.success("Post added successfully");
+      window.location.reload();
     } catch (error) {
       toast.error("Failed to add post");
     }

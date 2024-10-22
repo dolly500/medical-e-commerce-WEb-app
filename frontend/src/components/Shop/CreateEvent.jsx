@@ -117,6 +117,7 @@ const CreateEvent = () => {
     try {
       await dispatch(createevent(data));
       toast.success("Event added successfully");
+      window.location.reload();
   
     } catch (error) {
       toast.error("Failed to add Event");
