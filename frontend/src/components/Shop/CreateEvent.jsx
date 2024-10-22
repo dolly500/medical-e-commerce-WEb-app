@@ -109,7 +109,7 @@ const CreateEvent = () => {
       discountPrice,
       stock,
       images,
-      shopId: JSON.parse(localStorage.getItem("user"))?._id,
+      shopId: seller._id,
       start_Date: startDate?.toISOString(),
       Finish_Date: endDate?.toISOString(),
     };

@@ -79,7 +79,7 @@ const handleCategoryChange = (e) => {
       category,
       tags,
       images,
-      shopId: JSON.parse(localStorage.getItem("user"))._id,
+      shopId: seller._id,
       shopToys: "",
     
     };

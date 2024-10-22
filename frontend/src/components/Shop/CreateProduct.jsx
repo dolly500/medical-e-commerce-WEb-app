@@ -86,7 +86,7 @@ const CreateProduct = () => {
       discountPrice,
       stock,
       images,
-      shopId: JSON.parse(localStorage.getItem("user"))?._id,
+      shopId: seller._id,
     }
 
      try {
