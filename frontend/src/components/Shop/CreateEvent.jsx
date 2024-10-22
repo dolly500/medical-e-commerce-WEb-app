@@ -71,8 +71,7 @@ const CreateEvent = () => {
     }
     if (success) {
       toast.success("Event created successfully!");
-      navigate("/dashboard-events");
-      window.location.reload();
+      navigate("/dashboard");
     }
   }, [dispatch, error, success]);
 
@@ -110,7 +109,7 @@ const CreateEvent = () => {
       discountPrice,
       stock,
       images,
-      shopId: JSON.parse(localStorage.getItem("user"))._id,
+      shopId: JSON.parse(localStorage.getItem("user"))?._id,
       start_Date: startDate?.toISOString(),
       Finish_Date: endDate?.toISOString(),
     };
@@ -118,6 +117,7 @@ const CreateEvent = () => {
     try {
       await dispatch(createevent(data));
       toast.success("Event added successfully");
+  
     } catch (error) {
       toast.error("Failed to add Event");
     }

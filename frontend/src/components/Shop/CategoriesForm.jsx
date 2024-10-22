@@ -23,6 +23,7 @@ const CategoryForm = () => {
     }
     if (success) {
       toast.success("Category created successfully!");
+      window.location.reload()
     }
     axios.get(`${server}/category`, {withCredentials: true}).then((res) => {
       setCategories(res.data.categorys);

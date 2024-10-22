@@ -92,6 +92,7 @@ const CreateProduct = () => {
      try {
       await dispatch(createProduct(data));
       toast.success("Product added successfully");
+      window.location.reload();
     } catch (error) {
       toast.error("Failed to add product");
     }
