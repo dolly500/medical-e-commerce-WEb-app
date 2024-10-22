@@ -86,13 +86,13 @@ const CreateProduct = () => {
       discountPrice,
       stock,
       images,
-      shopId: JSON.parse(localStorage.getItem("user"))._id,
+      shopId: JSON.parse(localStorage.getItem("user"))?._id,
     }
 
      try {
       await dispatch(createProduct(data));
       toast.success("Product added successfully");
-      window.location.reload();
+      // window.location.reload();
     } catch (error) {
       toast.error("Failed to add product");
     }
