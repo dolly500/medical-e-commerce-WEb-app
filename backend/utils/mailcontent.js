@@ -63,7 +63,7 @@ const sendOrderConfirmation = async (order, shippingFee, TotalFees) => {
       <body>
           <div class="container">
             <div style="text-align: center;">
-              <img src="https://medical-e-app.vercel.app/static/imgs/logo.png" alt="Company Logo" style="width: 150px; margin-bottom: 20px;">
+              <img src="https://res.cloudinary.com/diztvrcsi/image/upload/v1729612560/xqji1qegbgekg6me4rjl.png" alt="Company Logo" style="width: 150px; margin-bottom: 20px;">
             </div>
               <h1>Thank you for shopping with us, ${order.user[0].name}!</h1>
               <p>Your Pay on Delivery order has been successfully placed. Here are the details of your order:</p>
@@ -179,7 +179,7 @@ const sendOrderConfirmation = async (order, shippingFee, TotalFees) => {
     <body>
         <div class="container">
         <div style="text-align: center;">
-              <img src="https://medical-e-app.vercel.app/static/imgs/logo.png" alt="Company Logo" style="width: 150px; margin-bottom: 20px;">
+              <img src="https://res.cloudinary.com/diztvrcsi/image/upload/v1729612560/xqji1qegbgekg6me4rjl.png" alt="Company Logo" style="width: 150px; margin-bottom: 20px;">
             </div>
             <h1>Thank you for shopping with us, ${order.user[0].name}!</h1>
             <p>Your Pay on Delivery order has been successfully placed. Here are the details of your order:</p>
@@ -300,7 +300,7 @@ const sendAdminNotifcation = async(order, shippingFee, TotalFees) => {
     <body>
         <div class="container">
         <div style="text-align: center;">
-              <img src="https://medical-e-app.vercel.app/static/imgs/logo.png" alt="Company Logo" style="width: 150px; margin-bottom: 20px;">
+              <img src="https://res.cloudinary.com/diztvrcsi/image/upload/v1729612560/xqji1qegbgekg6me4rjl.png" alt="Company Logo" style="width: 150px; margin-bottom: 20px;">
             </div>
         <p><strong>Dear Admin,</strong></p>
             <p>A new Pay on Delivery order has been successfully placed. Please find the details below:</p>
@@ -419,7 +419,7 @@ const sendOnlineAdminNotifcation = async(order, platform, shippingFee, TotalFees
    <body>
        <div class="container">
        <div style="text-align: center;">
-              <img src="https://medical-e-app.vercel.app/static/imgs/logo.png" alt="Company Logo" style="width: 150px; margin-bottom: 20px;">
+              <img src="https://res.cloudinary.com/diztvrcsi/image/upload/v1729612560/xqji1qegbgekg6me4rjl.png" alt="Company Logo" style="width: 150px; margin-bottom: 20px;">
             </div>
        <p><strong>Dear Admin,</strong></p>
            <p>A new order has been successfully placed on <strong>${platform} </strong>. Please find the details below:</p>
@@ -533,7 +533,7 @@ const sendOnlineOrder = async (order, platform, shippingFee, TotalFees) => {
         <body>
             <div class="container">
             <div style="text-align: center;">
-              <img src="https://medical-e-app.vercel.app/static/imgs/logo.png" alt="Company Logo" style="width: 150px; margin-bottom: 20px;">
+              <img src="https://res.cloudinary.com/diztvrcsi/image/upload/v1729612560/xqji1qegbgekg6me4rjl.png" alt="Company Logo" style="width: 150px; margin-bottom: 20px;">
             </div>
                 <h1>Thank you for shopping with us, ${order.user[0].name}!</h1>
                 <p>Your order on ${platform} has been successfully placed. Here are the details of your order:</p>
@@ -649,7 +649,7 @@ const sendOnlineOrder = async (order, platform, shippingFee, TotalFees) => {
       <body>
           <div class="container">
             <div style="text-align: center;">
-              <img src="https://medical-e-app.vercel.app/static/imgs/logo.png" alt="Company Logo" style="width: 150px; margin-bottom: 20px;">
+              <img src="https://res.cloudinary.com/diztvrcsi/image/upload/v1729612560/xqji1qegbgekg6me4rjl.png" alt="Company Logo" style="width: 150px; margin-bottom: 20px;">
             </div>
               <h1>Thank you for shopping with us, ${order.user[0].name}!</h1>
               <p>Your order paid through ${platform} has been successfully placed. Here are the details of your order:</p>
