@@ -56,7 +56,7 @@ const Login = () => {
         <img
           src={logo}
           alt=""
-          style={{ height: '60px', width: '140px', display: 'flex', margin: '0 auto' }}
+          style={{ height: '60px', width: '190px', display: 'flex', margin: '0 auto' }}
         />
       </Link>
       <div className="sm:mx-auto sm:w-full sm:max-w-md">

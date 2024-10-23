@@ -55,7 +55,7 @@ const ShopLogin = () => {
     <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8 ">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <Link to="/">
-          <img src={logo} alt='' style={{ height: '60px', width: '140px', display: 'flex', margin: '0 auto' }}
+          <img src={logo} alt='' style={{ height: '60px', width: '190px', display: 'flex', margin: '0 auto' }}
           />
         </Link>
 
