@@ -260,43 +260,36 @@ const Checkout = () => {
           </form>
         </div>
 
-        {/* Payment Options */}
-        <div className="mt-5">
-          <h2 className="text-xl font-semibold mb-4">Payment Method</h2>
-          <div>
-            <label>
-              <input
-                type="radio"
-                value="paypal"
-                checked={paymentMethod === 'paypal'}
-                onChange={(e) => setPaymentMethod(e.target.value)}
-              />
-              PayPal
-            </label>
-            <label className="ml-4">
-              <input
-                type="radio"
-                value="coinpayments"
-                checked={paymentMethod === 'coinpayments'}
-                onChange={(e) => setPaymentMethod(e.target.value)}
-              />
-              CoinPayments
-            </label>
-            <label className="ml-4">
-              <input
-                type="radio"
-                value="payondelivery"
-                checked={paymentMethod === 'payondelivery'}
-                onChange={(e) => setPaymentMethod(e.target.value)}
-              />
-              Pay on Delivery
-            </label>
-          </div>
-        </div>
+     {/* Payment Options */}
+<div className="mt-5 mb-5">
+  <h2 className="text-xl font-semibold mb-4">Select Payment Method</h2>
+  <div className="flex gap-4">
+    <button
+      onClick={() => setPaymentMethod('paypal')}
+      className={`px-4 py-2 rounded ${paymentMethod === 'paypal' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-black'}`}
+    >
+      PayPal
+    </button>
+    <button
+      onClick={() => setPaymentMethod('coinpayments')}
+      className={`px-4 py-2 rounded ${paymentMethod === 'coinpayments' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-black'}`}
+    >
+      CoinPayments
+    </button>
+    <button
+      onClick={() => setPaymentMethod('payondelivery')}
+      className={`px-4 py-2 rounded ${paymentMethod === 'payondelivery' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-black'}`}
+    >
+      Pay on Delivery
+    </button>
+  </div>
+</div>
+
 
         {/* PayPal Buttons */}
         {paymentMethod === 'paypal' && paypalClientId && (
           <PayPalScriptProvider options={{ 'client-id': paypalClientId }}>
+            <p className='mb-5'>Transfer with PayPal Below: </p>
             <PayPalButtons
               createOrder={(data, actions) => {
                 return actions.order.create({
@@ -334,6 +327,7 @@ const Checkout = () => {
 
         {/* CoinPayments Button */}
         {paymentMethod === 'coinpayments' && (
+          
           <button
             onClick={handleCoinPaymentsPayment}
             className="mt-4 bg-green-600 text-white py-2 px-4 rounded"
