@@ -8,7 +8,7 @@ const PAYPAL_API = 'https://api-m.sandbox.paypal.com'; // Use sandbox for testin
 
 const API_KEY = process.env.TREASURY_PRIME_API_KEY;
 const API_SECRET = process.env.TREASURY_PRIME_API_SECRET;
-const BASE_URL = 'https://api.treasuryprime.com';
+const BASE_URL = 'https://api.sandbox.treasuryprime.com';
 
 // // Route to get PayPal Client ID
 // router.get('/api/config/paypal', (req, res) => {
@@ -101,7 +101,6 @@ router.post("/generate-account", async (req, res) => {
         account_type: "checking",
         user_id: userId, // Adjust this based on the API requirements
         currency: "USD",
-        // Additional data may be required based on your use case
       },
       {
         headers: {
@@ -116,9 +115,9 @@ router.post("/generate-account", async (req, res) => {
 
     res.json({ account_number, routing_number });
   } catch (error) {
-    console.error("Error generating account:", error.response.data);
+    console.error("Error generating account:", error.response ? error.response.data : error.message);
     res.status(500).send("Error generating account");
-  }
+  }  
 });
 
 module.exports = router;
