@@ -97,7 +97,7 @@ router.post("/generate-account", async (req, res) => {
   try {
     // Make a request to Treasury Prime to create a new account
     const response = await axios.post(
-      `${BASE_URL}/v1/accounts`,
+      `${BASE_URL}/accounts`,
       {
         account_type: "savings", // or "checking", based on your use case
         user_id: userId,
