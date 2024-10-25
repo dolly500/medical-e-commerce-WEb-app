@@ -90,34 +90,50 @@ async function getPayPalAccessToken() {
   return response.data.access_token;
 }
 
+
 router.post("/generate-account", async (req, res) => {
   const { userId } = req.body;
 
   try {
-    // Make a request to Treasury Prime to create a virtual account
+    // Make a request to Treasury Prime to create a new account
     const response = await axios.post(
-      `${BASE_URL}/accounts`, // Adjust the endpoint based on Treasury Prime documentation
+      `${BASE_URL}/accounts`,
       {
-        account_type: "checking",
-        user_id: userId, // Adjust this based on the API requirements
-        currency: "USD",
+        account_type: "savings", // or "checking", based on your use case
+        user_id: userId,
+        currency: null, // You can set this to a specific currency if needed
       },
       {
         headers: {
           Authorization: `Bearer ${API_KEY}`,
-          "TP-API-SECRET": API_SECRET, // Add secret key to the request headers
+          "TP-API-SECRET": API_SECRET,
           "Content-Type": "application/json",
         },
       }
     );
 
-    const { account_number, routing_number } = response.data;
+    // Get relevant account details from the response
+    const accountDetails = response.data; // Ensure this matches the structure returned by the API
 
-    res.json({ account_number, routing_number });
+    // Create a response object that matches the required format
+    const formattedResponse = {
+      account_type: accountDetails.account_type || "savings", // default to "savings"
+      bank_id: "bank_treasuryprime", // Hardcoded as per your requirement
+      updated_at: accountDetails.updated_at || new Date().toISOString(),
+      currency: accountDetails.currency || null,
+      routing_number: accountDetails.routing_number,
+      account_number: accountDetails.account_number,
+      id: accountDetails.id,
+      created_at: accountDetails.created_at || new Date().toISOString(),
+      userdata: accountDetails.userdata || null,
+    };
+
+    // Return the formatted response
+    res.json(formattedResponse);
   } catch (error) {
-    console.error("Error generating account:", error.response ? error.response.data : error.message);
+    console.error("Error generating account:", error.response?.data || error.message);
     res.status(500).send("Error generating account");
-  }  
+  }
 });
 
 module.exports = router;
