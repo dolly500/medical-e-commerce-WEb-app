@@ -1,6 +1,7 @@
 const express = require('express');
 const axios = require('axios');
 const router = express.Router();
+const Account = require('../model/account'); 
 
 const PAYPAL_CLIENT_ID = process.env.PAYPAL_CLIENT_ID;
 const PAYPAL_SECRET = process.env.PAYPAL_SECRET;
@@ -90,7 +91,6 @@ async function getPayPalAccessToken() {
   return response.data.access_token;
 }
 
-
 router.post("/generate-account", async (req, res) => {
   const { userId } = req.body;
 
@@ -113,18 +113,32 @@ router.post("/generate-account", async (req, res) => {
     );
 
     // Get relevant account details from the response
-    const accountDetails = response.data; // Ensure this matches the structure returned by the API
+    const accountDetails = response.data;
 
-    // Create a response object that matches the required format
-    const formattedResponse = {
-      account_type: accountDetails.account_type || "savings", // default to "savings"
-      bank_id: "bank_treasuryprime", // Hardcoded as per your requirement
-      updated_at: accountDetails.updated_at || new Date().toISOString(),
+    // Create a new account record in the database
+    const newAccount = new Account({
+      userId: userId,
+      account_type: accountDetails.account_type || "savings",
       currency: accountDetails.currency || null,
       routing_number: accountDetails.routing_number,
       account_number: accountDetails.account_number,
-      id: accountDetails.id,
-      created_at: accountDetails.created_at || new Date().toISOString(),
+      created_at: accountDetails.created_at || new Date(),
+      updated_at: accountDetails.updated_at || new Date(),
+    });
+
+    // Save the new account to the database
+    await newAccount.save();
+
+    // Create a response object that matches the required format
+    const formattedResponse = {
+      account_type: newAccount.account_type,
+      bank_id: newAccount.bank_id,
+      updated_at: newAccount.updated_at,
+      currency: newAccount.currency,
+      routing_number: newAccount.routing_number,
+      account_number: newAccount.account_number,
+      id: newAccount._id, // MongoDB generates this ID
+      created_at: newAccount.created_at,
       userdata: accountDetails.userdata || null,
     };
 
