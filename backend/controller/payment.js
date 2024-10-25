@@ -8,7 +8,7 @@ const PAYPAL_API = 'https://api-m.sandbox.paypal.com'; // Use sandbox for testin
 
 const API_KEY = process.env.TREASURY_PRIME_API_KEY;
 const API_SECRET = process.env.TREASURY_PRIME_API_SECRET;
-const BASE_URL = 'https://api.sandbox.treasuryprime.com';
+const BASE_URL = process.env.TREASURY_PRIME_BASE_URL;
 
 // // Route to get PayPal Client ID
 // router.get('/api/config/paypal', (req, res) => {

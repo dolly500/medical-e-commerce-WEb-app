@@ -66,6 +66,7 @@ const Checkout = () => {
       setMessage('Please select a payment method.');
       return;
     }
+    
     setMessage('Shipping address saved successfully.');
   };
 
@@ -260,10 +261,10 @@ const Checkout = () => {
           </form>
         </div>
 
-     {/* Payment Options */}
+{/* Payment Options */}
 <div className="mt-5 mb-5">
-  <h2 className="text-xl font-semibold mb-4">Select Payment Method</h2>
-  <div className="flex gap-4">
+  <h2 className="text-xl font-semibold mb-4">Select Payment Method:</h2>
+  <div className="flex flex-col sm:flex-row gap-4">
     <button
       onClick={() => setPaymentMethod('paypal')}
       className={`px-4 py-2 rounded ${paymentMethod === 'paypal' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-black'}`}
@@ -286,10 +287,10 @@ const Checkout = () => {
 </div>
 
 
+
         {/* PayPal Buttons */}
         {paymentMethod === 'paypal' && paypalClientId && (
           <PayPalScriptProvider options={{ 'client-id': paypalClientId }}>
-            <p className='mb-5'>Transfer with PayPal Below: </p>
             <PayPalButtons
               createOrder={(data, actions) => {
                 return actions.order.create({
