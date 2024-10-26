@@ -22,6 +22,23 @@ const Checkout = () => {
   const [message, setMessage] = useState('');
   const [paypalClientId, setPaypalClientId] = useState(null);
 
+  const [selectedAccount, setSelectedAccount] = useState(null);
+
+  // Array of account details
+  const accountDetails = [
+    { name: 'John Doe', bank: 'Bank A', accountNumber: '1234567890' },
+    { name: 'Jane Smith', bank: 'Bank B', accountNumber: '9876543210' },
+    { name: 'Alice Johnson', bank: 'Bank C', accountNumber: '1122334455' },
+    { name: 'Bob Brown', bank: 'Bank D', accountNumber: '5566778899' },
+    { name: 'Charlie Davis', bank: 'Bank E', accountNumber: '2233445566' },
+  ];
+
+  // Function to randomly select an account
+  const showRandomAccount = () => {
+    const randomIndex = Math.floor(Math.random() * accountDetails.length);
+    setSelectedAccount(accountDetails[randomIndex]);
+  };
+
   // Calculate total price
   const totalPrice = cart.reduce((acc, item) => acc + item.qty * item.discountPrice, 0);
   // Calculate shipping fee (10% of totalPrice)
@@ -279,6 +296,9 @@ const Checkout = () => {
     >
       Pay on Delivery
     </button>
+    <button onClick={() => { showRandomAccount(); setPaymentMethod('accountDetails'); }} className={`px-4 py-2 rounded ${paymentMethod === 'accountDetails' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-black'}`}>
+      Bank Transfer
+    </button>
   </div>
 </div>
 
@@ -342,6 +362,29 @@ const Checkout = () => {
             Confirm Order (Pay on Delivery)
           </button>
         )}
+
+        {paymentMethod === 'accountDetails' && selectedAccount && (
+          <div className="mt-6 p-5 bg-white shadow-lg rounded-lg border border-gray-200">
+            <h3 className="text-xl font-semibold text-gray-800 mb-3">Bank Transfer Details</h3>
+            <div className="space-y-2">
+              <div className="flex justify-between items-center">
+                <span className="text-gray-600 font-medium">Account Holder:</span>
+                <span className="text-gray-800 font-semibold">{selectedAccount.name}</span>
+              </div>
+              <hr className="my-2 border-gray-300" />
+              <div className="flex justify-between items-center">
+                <span className="text-gray-600 font-medium">Bank Name:</span>
+                <span className="text-gray-800 font-semibold">{selectedAccount.bank}</span>
+              </div>
+              <hr className="my-2 border-gray-300" />
+              <div className="flex justify-between items-center">
+                <span className="text-gray-600 font-medium">Account Number:</span>
+                <span className="text-gray-800 font-semibold">{selectedAccount.accountNumber}</span>
+              </div>
+            </div>
+          </div>
+        )}
+
       </div>
     </div>
   );
