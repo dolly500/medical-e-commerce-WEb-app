@@ -7,7 +7,10 @@ const Order = require("../model/order");
 const Shop = require("../model/shop");
 const Product = require("../model/product");
 const User = require("../model/user");
+const Stripe = require('stripe');
 const { sendOrderConfirmation, sendAdminNotifcation, sendOnlineAdminNotifcation, sendOnlineOrder } = require("../utils/mailcontent");
+
+const stripe = new Stripe('your-secret-key'); 
 
 // create new order
 router.post(

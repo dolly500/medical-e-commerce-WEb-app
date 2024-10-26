@@ -155,10 +155,6 @@ const Checkout = () => {
     }
   };
   
-  
-  
-  
-
 
 
   const handlePayOnDelivery = async () => {
