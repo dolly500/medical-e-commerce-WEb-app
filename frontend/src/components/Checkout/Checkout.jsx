@@ -5,10 +5,13 @@ import { useNavigate } from 'react-router-dom';
 import { PayPalScriptProvider, PayPalButtons } from '@paypal/react-paypal-js';
 import { servercl } from '../../server';
 import { server } from '../../server';
+import Loading from '../Layout/Loader'
 
 const Checkout = () => {
   const { cart } = useSelector((state) => state.cart);
   const { user } = useSelector((state) => state.user);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
 
@@ -43,7 +46,7 @@ const Checkout = () => {
   const totalPrice = cart.reduce((acc, item) => acc + item.qty * item.discountPrice, 0);
   // Calculate shipping fee (10% of totalPrice)
   const shippingFee = (totalPrice * 0.1).toFixed(2);
-  // Total amount including shipping
+  // Total amount including shipping  
   const totalAmount = (totalPrice + parseFloat(shippingFee)).toFixed(2);
 
   useEffect(() => {
@@ -70,6 +73,28 @@ const Checkout = () => {
       [e.target.name]: e.target.value,
     });
   };
+
+  const handleConfirmPayment = async () => {
+    setLoading(true);
+    try {
+      await axios.post(`${server}/order/online-payment?platform=banktransfer`, {
+        shippingAddress,
+        totalPrice,
+        user: user._id,
+        cart,
+        email: user.email,
+      });
+      setMessage('Order placed successfully! for bank transfer. Check your Mail!');
+      setIsModalOpen(false); // Close the modal after confirming
+    } catch (error) {
+      console.error('Payment error:', error);
+      setMessage('Failed to place the order. Please try again.');
+    }finally{
+      setLoading(false);
+    }
+  };
+
+  
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -115,7 +140,6 @@ const Checkout = () => {
     const itemDesc = 'Payment for items in cart';
     const successUrl = 'https://medical-e-app.vercel.app/success';
     const cancelUrl = 'https://medical-e-app.vercel.app/cancel';
-  
     try {
       // Send the order data to the server before redirecting to CoinPayments
       await axios.post(`${server}/order/online-payment?platform=coinpayments`, {
@@ -126,7 +150,6 @@ const Checkout = () => {
         email: user.email, // Include the user's email in the request
       });
       setMessage('Order placed successfully! for CoinPayments. Check your Mail!');
-      
       // Create a form dynamically
       const form = document.createElement('form');
       form.method = 'POST';
@@ -175,6 +198,7 @@ const Checkout = () => {
 
 
   const handlePayOnDelivery = async () => {
+    setLoading(true);
     try {
       await axios.post(`${server}/order/pay-on-delivery`, {
         shippingAddress,
@@ -187,12 +211,15 @@ const Checkout = () => {
     } catch (error) {
       console.error('Pay on Delivery Error:', error);
       setMessage('Failed to place order.');
+    }finally{
+      setLoading(false);
     }
   };
 
   return (
     <div className="container mx-auto p-5">
       <h1 className="text-2xl font-bold mb-5">Checkout</h1>
+      {loading ? <Loading /> : null}
       <div className="bg-white p-5 rounded shadow-sm">
         {/* Order Summary */}
         <h2 className="text-xl font-semibold mb-4">Order Summary</h2>
@@ -320,6 +347,7 @@ const Checkout = () => {
                 });
               }}
               onApprove={async (data, actions) => {
+                setLoading(true);
                 const details = await actions.order.capture();
                 
                   await axios.post(`${server}/order/online-payment?platform=paypal`, {
@@ -330,7 +358,7 @@ const Checkout = () => {
                     email: user.email, // Include the user's email in the request
                   });
                   setMessage('Order placed successfully! for PayPal. Check your Mail!');
-               
+                  setLoading(false);
                 console.log('Transaction completed by ' + details.payer.name.given_name);
                 // Here you can send details to your backend to save order
            
@@ -363,27 +391,68 @@ const Checkout = () => {
           </button>
         )}
 
-        {paymentMethod === 'accountDetails' && selectedAccount && (
-          <div className="mt-6 p-5 bg-white shadow-lg rounded-lg border border-gray-200">
-            <h3 className="text-xl font-semibold text-gray-800 mb-3">Bank Transfer Details</h3>
-            <div className="space-y-2">
-              <div className="flex justify-between items-center">
-                <span className="text-gray-600 font-medium">Account Holder:</span>
-                <span className="text-gray-800 font-semibold">{selectedAccount.name}</span>
-              </div>
-              <hr className="my-2 border-gray-300" />
-              <div className="flex justify-between items-center">
-                <span className="text-gray-600 font-medium">Bank Name:</span>
-                <span className="text-gray-800 font-semibold">{selectedAccount.bank}</span>
-              </div>
-              <hr className="my-2 border-gray-300" />
-              <div className="flex justify-between items-center">
-                <span className="text-gray-600 font-medium">Account Number:</span>
-                <span className="text-gray-800 font-semibold">{selectedAccount.accountNumber}</span>
-              </div>
-            </div>
+{paymentMethod === 'accountDetails' && selectedAccount && (
+  <div className="mt-6 p-5 bg-white shadow-lg rounded-lg border border-gray-200">
+    <h3 className="text-xl font-semibold text-gray-800 mb-3">Bank Transfer Details</h3>
+    <div className="space-y-2">
+      <div className="flex justify-between items-center">
+        <span className="text-gray-600 font-medium">Account Holder:</span>
+        <span className="text-gray-800 font-semibold">{selectedAccount.name}</span>
+      </div>
+      <hr className="my-2 border-gray-300" />
+      <div className="flex justify-between items-center">
+        <span className="text-gray-600 font-medium">Bank Name:</span>
+        <span className="text-gray-800 font-semibold">{selectedAccount.bank}</span>
+      </div>
+      <hr className="my-2 border-gray-300" />
+      <div className="flex justify-between items-center">
+        <span className="text-gray-600 font-medium">Account Number:</span>
+        <span className="text-gray-800 font-semibold">{selectedAccount.accountNumber}</span>
+      </div>
+    </div>
+
+    {/* Additional Content */}
+    <div className="mt-8">
+      <p>
+        Send receipt of payment to <a href="mailto:mgtfireman@gmail.com" className="text-blue-500">mgtfireman@gmail.com</a>, after payments, then click on confirm payment to check mail!
+      </p>
+    </div>
+    <button
+      className="mt-4 bg-green-600 text-white py-2 px-4 rounded"
+      onClick={() => setIsModalOpen(true)}
+    >
+      Confirm Payment
+    </button>
+
+    {/* Modal */}
+    {isModalOpen && (
+      <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+        <div className="bg-white p-6 rounded shadow-lg">
+          <h2 className="text-lg font-bold mb-4">
+            Click confirm to get your order notification and confirm payment!
+          </h2>
+          <div className="flex justify-end">
+            <button
+              className="bg-red-600 text-white py-1 px-3 rounded mr-2"
+              onClick={() => setIsModalOpen(false)}
+            >
+              Cancel
+            </button>
+            <button
+              className="bg-green-600 text-white py-1 px-3 rounded"
+              onClick={handleConfirmPayment}
+            >
+              Confirm
+            </button>
           </div>
-        )}
+        </div>
+      </div>
+    )}
+
+    {/* Display message if exists */}
+    {message && <p className="mt-4 text-center text-red-600">{message}</p>}
+  </div>
+)}
 
       </div>
     </div>
