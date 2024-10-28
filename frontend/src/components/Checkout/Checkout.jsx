@@ -44,7 +44,7 @@ const Checkout = () => {
   // Calculate total price
   const totalPrice = cart.reduce((acc, item) => acc + item.qty * item.discountPrice, 0);
   // Calculate shipping fee (10% of totalPrice)
-  const shippingFee = (totalPrice * 0.1).toFixed(2);
+  const shippingFee = (totalPrice * 0.3).toFixed(2);
   // Total amount including shipping  
   const totalAmount = (totalPrice + parseFloat(shippingFee)).toFixed(2);
 
