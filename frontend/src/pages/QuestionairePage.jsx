@@ -20,7 +20,7 @@ const QuestionnaireForm = () => {
 
     try {
       await dispatch(createQuestionaire({ email, trackingNumber }));
-      toast.success("Tracking Details submitted successfully, Check your mail!");
+      toast.success("Tracking Details submitted successfully, you'll receive your mail shortly!");
       navigate('/');
     } catch (error) {
       toast.error("Failed to submit details");
