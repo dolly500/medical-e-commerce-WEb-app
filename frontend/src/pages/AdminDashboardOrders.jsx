@@ -14,7 +14,7 @@ const AdminDashboardOrders = () => {
 
   useEffect(() => {
     dispatch(getAllOrdersOfAdmin());
-  }, []);
+  }, [dispatch]);
 
   const columns = [
     { field: "id", headerName: "Order ID", minWidth: 150, flex: 0.7 },
@@ -60,7 +60,7 @@ const AdminDashboardOrders = () => {
       row.push({
         id: item._id,
         itemsQty: item?.cart?.reduce((acc, item) => acc + item.qty, 0),
-        total: " ₦" + item?.totalPrice,
+        total: " $" + item?.totalPrice,
         status: item?.status,
         createdAt: item?.createdAt.slice(0,10),
       });

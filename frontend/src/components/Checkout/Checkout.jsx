@@ -1,17 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { PayPalScriptProvider, PayPalButtons } from '@paypal/react-paypal-js';
 import { servercl } from '../../server';
 import { server } from '../../server';
 import Loading from '../Layout/Loader'
+import { getAllOrdersOfAdmin } from '../../redux/actions/order';
+
 
 const Checkout = () => {
   const { cart } = useSelector((state) => state.cart);
   const { user } = useSelector((state) => state.user);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch()
 
   const navigate = useNavigate();
 
@@ -85,6 +88,7 @@ const Checkout = () => {
         email: user.email,
       });
       setMessage('Order placed successfully! for bank transfer. Check your Mail!');
+      dispatch(getAllOrdersOfAdmin()); 
       setIsModalOpen(false); // Close the modal after confirming
     } catch (error) {
       console.error('Payment error:', error);
@@ -150,6 +154,7 @@ const Checkout = () => {
         email: user.email, // Include the user's email in the request
       });
       setMessage('Order placed successfully! for CoinPayments. Check your Mail!');
+      dispatch(getAllOrdersOfAdmin()); 
       // Create a form dynamically
       const form = document.createElement('form');
       form.method = 'POST';
@@ -358,6 +363,7 @@ const Checkout = () => {
                     email: user.email, // Include the user's email in the request
                   });
                   setMessage('Order placed successfully! for PayPal. Check your Mail!');
+                  dispatch(getAllOrdersOfAdmin()); 
                   setLoading(false);
                 console.log('Transaction completed by ' + details.payer.name.given_name);
                 // Here you can send details to your backend to save order

@@ -321,6 +321,33 @@ router.post(
   })
 );
 
+// track order by tracking number
+router.get(
+  "/track-order/:trackingNumber",
+  catchAsyncErrors(async (req, res, next) => {
+    try {
+      const { trackingNumber } = req.params;
+      
+      // Find the order with the provided tracking number
+      const order = await Order.findOne({ trackingNumber });
+      
+      // Check if the order was found
+      if (!order) {
+        return next(new ErrorHandler("Order not found with this tracking number", 404));
+      }
+
+      // Return the order details
+      res.status(200).json({
+        success: true,
+        order,
+      });
+    } catch (error) {
+      return next(new ErrorHandler(error.message, 500));
+    }
+  })
+);
+
+
 
 
 module.exports = router;

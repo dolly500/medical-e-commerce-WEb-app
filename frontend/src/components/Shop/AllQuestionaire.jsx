@@ -25,13 +25,8 @@ const AllQuestionaire = () => {
     if (questionaires) {
       const updatedRows = questionaires.map((item) => ({
         id: item._id,
-        religion: item.religion,
-        gender: item.gender.join(", "),
-        relationshipStatus: item.relationshipStatus.join(", "),
-        helpReason: item.helpReason,
-        optionsAvailable: item.optionsAvailable.join(", "),
-        consultationFee: item.consultationFee,
-        therapyType: item.therapyType.join(", "),
+        trackingNumber: item.trackingNumber,
+        email: item.email,
       }));
       setRows(updatedRows);
     }
@@ -43,43 +38,13 @@ const AllQuestionaire = () => {
   };
 
   const columns = [
-    { field: "id", headerName: "Questionaire Id", minWidth: 150, flex: 0.7 },
-    { field: "religion", headerName: "Religion", minWidth: 180, flex: 1.4 },
-    { field: "gender", headerName: "Gender", minWidth: 100, flex: 0.6 },
-    {
-      field: "relationshipStatus",
-      headerName: "Relationship Status",
-      minWidth: 130,
-      flex: 0.8,
-    },
-    {
-      field: "helpReason",
-      headerName: "Help Reason",
-      minWidth: 150,
-      flex: 0.8,
-    },
-    {
-      field: "optionsAvailable",
-      headerName: "Options Available",
-      minWidth: 180,
-      flex: 1.4,
-    },
-    {
-      field: "consultationFee",
-      headerName: "Consultation Fee",
-      minWidth: 130,
-      flex: 0.8,
-    },
-    {
-      field: "therapyType",
-      headerName: "Therapy Type",
-      minWidth: 120,
-      flex: 0.8,
-    },
+    { field: "id", headerName: "Tracking Id", minWidth: 150, flex: 0.7 },
+    { field: "trackingNumber", headerName: "Tracking Number", minWidth: 180, flex: 1 },
+    { field: "email", headerName: "Email", minWidth: 180, flex: 1.2 },
     {
       field: "Preview",
       headerName: "",
-      flex: 0.8,
+      flex: 0.5,
       minWidth: 100,
       sortable: false,
       renderCell: (params) => {
@@ -96,8 +61,8 @@ const AllQuestionaire = () => {
     {
       field: "Delete",
       headerName: "",
-      flex: 0.8,
-      minWidth: 120,
+      flex: 0.5,
+      minWidth: 100,
       sortable: false,
       renderCell: (params) => {
         return (

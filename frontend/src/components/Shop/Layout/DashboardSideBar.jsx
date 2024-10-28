@@ -142,7 +142,7 @@ const DashboardSideBar = ({ active }) => {
         </Link>
       </div>
 
-      {/* <div className="w-full flex items-center p-4">
+      <div className="w-full flex items-center p-4">
         <Link to="/dashboard-questionaire" className="w-full flex items-center">
           <FaQuestionCircle
             size={30}
@@ -153,10 +153,10 @@ const DashboardSideBar = ({ active }) => {
               active === 5 ? "text-[#8E376A]" : "text-[#555]"
             }`}
           >
-            All Questionaire
+            Tracking Numbers & Mails
           </h5>
         </Link>
-      </div> */}
+      </div>
 
 
 
