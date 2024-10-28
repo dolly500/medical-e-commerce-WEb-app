@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { Link } from "react-router-dom";
 import logo from '../static/imgs/logo.png';
+import { FaHome } from "react-icons/fa";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from 'react-toastify';
@@ -37,6 +38,12 @@ const QuestionnaireForm = () => {
           />
         </Link>
         <div className="sm:mx-auto sm:w-full sm:max-w-md">
+        <Link to="/">
+          {/* Home Icon Button */}
+          <button className="absolute top-4 right-4 text-blue-600">
+            <FaHome size={24} />
+          </button>
+        </Link>
           <h2 className="mb-6 text-center text-3xl font-extrabold text-gray-900">
             Fill in Tracking Details
           </h2>

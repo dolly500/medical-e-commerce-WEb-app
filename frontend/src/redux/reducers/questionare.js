@@ -19,7 +19,7 @@ export const questionaireReducer = createReducer(initialState, {
       state.success = false;
     },
  
-   // get all questionaire of the shop by id
+   // get all tracking of the shop by id
 
   getAllQuestionaireShopRequest: (state) => {
     state.isLoading = true; 
@@ -37,7 +37,7 @@ export const questionaireReducer = createReducer(initialState, {
 
 
 
-  // get all questionaire
+  // get all tracking
   getAllQuestionaireRequest: (state) => {
     state.isLoading = true;
   },
@@ -57,7 +57,7 @@ export const questionaireReducer = createReducer(initialState, {
 
 
 
-     // delete questionaire
+     // delete tracking
      deleteQuestionaireRequest: (state) => {
       state.isLoading = true;
     },

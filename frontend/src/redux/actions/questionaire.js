@@ -1,7 +1,7 @@
 import axios from "axios";
 import { server } from "../../server";
 
-// create questionaire
+// create tracking
 export const createQuestionaire = (data) => async (dispatch) => {
     console.log("Request Payload:", data);
     try {
@@ -25,7 +25,7 @@ export const createQuestionaire = (data) => async (dispatch) => {
     }
   };
 
-  // get all questionaire of the shop by id
+  // get all tracking of the shop by id
 
 export const getAllQuestionaireShop = (id) => async (dispatch) => {
     
@@ -52,7 +52,7 @@ export const getAllQuestionaireShop = (id) => async (dispatch) => {
     }
   };
 
-  // get all questionaire
+  // get all tracking
 export const getAllQuestionaire= () => async (dispatch) => {
     try {
       dispatch({
@@ -75,7 +75,7 @@ export const getAllQuestionaire= () => async (dispatch) => {
     }
   };
   
-  // delete questionaire
+  // delete tracking
   export const deleteQuestionaire = (id) => async (dispatch) => {
     try {
       dispatch({
