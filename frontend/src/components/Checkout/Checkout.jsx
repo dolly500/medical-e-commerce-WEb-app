@@ -32,11 +32,7 @@ const Checkout = () => {
 
   // Array of account details
   const accountDetails = [
-    { name: 'John Doe', bank: 'Bank A', accountNumber: '1234567890' },
-    { name: 'Jane Smith', bank: 'Bank B', accountNumber: '9876543210' },
-    { name: 'Alice Johnson', bank: 'Bank C', accountNumber: '1122334455' },
-    { name: 'Bob Brown', bank: 'Bank D', accountNumber: '5566778899' },
-    { name: 'Charlie Davis', bank: 'Bank E', accountNumber: '2233445566' },
+    { name: 'Charla Purtle', bank: 'Bank Midwest', accountNumber: '1101383171', routineNumber: '101006699' },
   ];
 
   // Function to randomly select an account
@@ -414,6 +410,11 @@ const Checkout = () => {
       <div className="flex justify-between items-center">
         <span className="text-gray-600 font-medium">Account Number:</span>
         <span className="text-gray-800 font-semibold">{selectedAccount.accountNumber}</span>
+      </div>
+      <hr className="my-2 border-gray-300" />
+      <div className="flex justify-between items-center">
+        <span className="text-gray-600 font-medium">Routine Number:</span>
+        <span className="text-gray-800 font-semibold">{selectedAccount.routineNumber}</span>
       </div>
     </div>
 
