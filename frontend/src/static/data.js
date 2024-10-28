@@ -39,6 +39,11 @@ export const navItems = [
     title: "Contact Us",
     url: "/contact",
   },
+  {
+    id: 8,
+    title: "Track Order",
+    url: "/tracking",
+  },
 ];
 
 // branding data
