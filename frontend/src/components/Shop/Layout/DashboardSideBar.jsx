@@ -211,8 +211,8 @@ const DashboardSideBar = ({ active }) => {
         </Link>
       </div> */}
 
-      {/* <div className="w-full flex items-center p-4">
-        <Link to="/dashboard-refunds" className="w-full flex items-center">
+      <div className="w-full flex items-center p-4">
+        <Link to="/dashboard-allbanktransfer" className="w-full flex items-center">
           <HiOutlineReceiptRefund
             size={30}
             color={`${active === 10 ? "#8E376A" : "#555"}`}
@@ -222,10 +222,10 @@ const DashboardSideBar = ({ active }) => {
               active === 10 ? "text-[#8E376A]" : "text-[#555]"
             }`}
           >
-            Refunds
+            Bank Transfers
           </h5>
         </Link>
-      </div> */}
+      </div>
 
       <div className="w-full flex items-center p-4">
         <Link to="/settings" className="w-full flex items-center">

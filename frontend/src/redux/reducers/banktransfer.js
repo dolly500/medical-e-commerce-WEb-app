@@ -25,7 +25,7 @@ export const bankTransferReducer = createReducer(initialState, {
     },
     getAllBankTransfersShopSuccess: (state, action) => {
         state.isLoading = false;
-        state.bankTransfers = action.payload;
+        state.bankTransfer = action.payload;
     },
     getAllBankTransfersShopFailed: (state, action) => {
         state.isLoading = false;

@@ -18,7 +18,7 @@ const upload = multer({ storage });
 // Create a new Bank Transfer
 router.post(
   "/create-bank-transfer",
-  upload.single('file'), // expecting a single file with the field name 'file'
+  upload.single('image'), // expecting a single file with the field name 'file'
   catchAsyncErrors(async (req, res) => {
     try {
       const { email } = req.body;

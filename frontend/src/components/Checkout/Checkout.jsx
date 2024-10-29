@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { PayPalScriptProvider, PayPalButtons } from '@paypal/react-paypal-js';
 import { servercl } from '../../server';
 import { server } from '../../server';
 import Loading from '../Layout/Loader'
+import { toast } from 'react-toastify';
 import { getAllOrdersOfAdmin } from '../../redux/actions/order';
 import { AiOutlineCopy, AiOutlineCheck } from "react-icons/ai";
+import { createBankTransfer } from '../../redux/actions/banktransfer'; // Adjust the action as necessary
+
 
 
 const Checkout = () => {
@@ -18,6 +21,27 @@ const Checkout = () => {
   const dispatch = useDispatch()
 
   const navigate = useNavigate();
+
+  const [email, setEmail] = useState("");
+  const [image, setImage] = useState(null);
+
+  const handleSubmited = async (e) => {
+    e.preventDefault();
+
+    // Prepare form data for image upload
+    const formData = new FormData();
+    formData.append("email", email);
+    formData.append("image", image);
+
+    try {
+      await dispatch(createBankTransfer(formData)); // Dispatching the action with FormData
+      toast.success("Bank transfer details submitted successfully!");
+      navigate('/');
+    } catch (error) {
+      toast.error("Failed to submit details");
+    }
+  };
+
 
   const [shippingAddress, setShippingAddress] = useState({
     address: '',
@@ -518,8 +542,8 @@ const Checkout = () => {
           <h2 className="text-lg font-bold mb-4">
             Upload Evidence of payment in the form below:
           </h2>
-          <form className="space-y-4">
-  {/* Email Field */}
+          <form onSubmit={handleSubmited} className="space-y-4">
+          {/* Email Field */}
           <div>
             <label className="block text-sm font-medium text-gray-700" htmlFor="email">
               Email:
@@ -528,41 +552,47 @@ const Checkout = () => {
               type="email"
               id="email"
               name="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               className="mt-1 p-2 block w-full border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
               placeholder="Enter your email"
               required
             />
           </div>
 
-  {/* Image Upload Field */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700" htmlFor="image">
-                Upload Image:
-              </label>
-              <input
-                type="file"
-                id="image"
-                name="image"
-                accept="image/*"
-                className="mt-1 p-2 block w-full border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                required
-              />
-            </div>
-        </form>
-          <div className="flex justify-end">
+          {/* Image Upload Field */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700" htmlFor="image">
+              Upload Image:
+            </label>
+            <input
+              type="file"
+              id="image"
+              name="image"
+              accept="image/*"
+              onChange={(e) => setImage(e.target.files[0])}
+              className="mt-1 p-2 block w-full border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+              required
+            />
+          </div>
+
+          <div className="flex justify-end mt-4">
+            <Link to="/">
+              <button
+                type="button"
+                className="bg-red-600 text-white py-1 px-3 rounded mr-2"
+              >
+                Cancel
+              </button>
+            </Link>
             <button
-              className="bg-red-600 text-white py-1 px-3 rounded mr-2"
-              onClick={() => setIsModalOpen(false)}
-            >
-              Cancel
-            </button>
-            <button
+              type="submit"
               className="bg-green-600 text-white py-1 px-3 rounded"
-              onClick={handleConfirmPayment}
             >
-              Confirm
+              Submit
             </button>
           </div>
+        </form>
         </div>
       </div>
     )}
