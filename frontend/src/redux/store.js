@@ -9,6 +9,7 @@ import { userReducer } from "./reducers/user";
 import { wishlistReducer } from "./reducers/wishlist";
 import { categoryReducer } from "./reducers/category";
 import { questionaireReducer } from "./reducers/questionare";
+import { bankTransferReducer } from "./reducers/banktransfer";
 
 const Store = configureStore({
   reducer: {
@@ -22,6 +23,7 @@ const Store = configureStore({
     order: orderReducer,
     category: categoryReducer,
     questionaire: questionaireReducer,
+    banktranfer: bankTransferReducer,
   },
 });
 

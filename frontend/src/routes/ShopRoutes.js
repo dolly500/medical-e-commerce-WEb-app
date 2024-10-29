@@ -16,12 +16,13 @@ import ShopWithDrawMoneyPage from "../pages/Shop/ShopWithDrawMoneyPage";
 import ShopCreateCategory from "../pages/Shop/ShopCreateCategory";
 import ShopAllCategory from "../pages/Shop/ShopAllCategory"
 import ShopAllQuestionaire from "../pages/Shop/ShopAllQuestionaire";
+import ShopAllBankTransfers from "../pages/Shop/ShopAllBankTransfers"
 import ShopInfo from "../components/Shop/ShopInfo";
 
 
 
 export {
-    ShopAllCoupouns, ShopAllEvents, ShopAllOrders, ShopAllPosts, ShopAllProducts, ShopAllRefunds, ShopCreateEvents,
+    ShopAllCoupouns, ShopAllBankTransfers, ShopAllEvents, ShopAllOrders, ShopAllPosts, ShopAllProducts, ShopAllRefunds, ShopCreateEvents,
     ShopCreatePosts, ShopCreateProduct, ShopDashboardPage, ShopInboxPage, ShopOrderDetails, ShopPreviewPage, ShopSettingsPage,
     ShopWithDrawMoneyPage, ShopCreateCategory, ShopAllCategory, ShopAllQuestionaire, ShopInfo
 };

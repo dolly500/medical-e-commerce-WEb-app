@@ -7,6 +7,7 @@ import { servercl } from '../../server';
 import { server } from '../../server';
 import Loading from '../Layout/Loader'
 import { getAllOrdersOfAdmin } from '../../redux/actions/order';
+import { AiOutlineCopy, AiOutlineCheck } from "react-icons/ai";
 
 
 const Checkout = () => {
@@ -43,7 +44,7 @@ const Checkout = () => {
 
   // Calculate total price
   const totalPrice = cart.reduce((acc, item) => acc + item.qty * item.discountPrice, 0);
-  // Calculate shipping fee (10% of totalPrice)
+  // Calculate shipping fee (30% of totalPrice)
   const shippingFee = (totalPrice * 0.3).toFixed(2);
   // Total amount including shipping  
   const totalAmount = (totalPrice + parseFloat(shippingFee)).toFixed(2);
@@ -215,6 +216,37 @@ const Checkout = () => {
     }finally{
       setLoading(false);
     }
+  };
+
+
+  const [timeLeft, setTimeLeft] = useState(200);
+
+  useEffect(() => {
+    if (timeLeft <= 0) return; // Stop if time is up
+
+    const timerInterval = setInterval(() => {
+      setTimeLeft((prevTime) => prevTime - 1);
+    }, 1000);
+
+    // Clear interval on component unmount
+    return () => clearInterval(timerInterval);
+  }, [timeLeft]);
+
+  // Format timeLeft as MM:SS
+  const formatTime = (seconds) => {
+    const minutes = Math.floor(seconds / 60);
+    const secondsLeft = seconds % 60;
+    return `${String(minutes).padStart(2, '0')}:${String(secondsLeft).padStart(2, '0')}`;
+  };
+
+
+  const [copiedText, setCopiedText] = useState("");
+
+  const copyToClipboard = (text) => {
+    navigator.clipboard.writeText(text).then(() => {
+      setCopiedText(text);
+      setTimeout(() => setCopiedText(""), 2000); // Reset after 2 seconds
+    });
   };
 
   return (
@@ -395,35 +427,83 @@ const Checkout = () => {
 
 {paymentMethod === 'accountDetails' && selectedAccount && (
   <div className="mt-6 p-5 bg-white shadow-lg rounded-lg border border-gray-200">
+      <div>
+      <div style={{ fontSize: '1.4rem', margin: '20px 0', color: 'red' }}>
+        {timeLeft > 0 ? formatTime(timeLeft) : "00:00"}
+      </div>
+    </div>
     <h3 className="text-xl font-semibold text-gray-800 mb-3">Bank Transfer Details</h3>
     <div className="space-y-2">
       <div className="flex justify-between items-center">
         <span className="text-gray-600 font-medium">Account Holder:</span>
         <span className="text-gray-800 font-semibold">{selectedAccount.name}</span>
+        <button
+          onClick={() => copyToClipboard(selectedAccount.name)}
+          className="ml-2 text-gray-600 hover:text-blue-500"
+        >
+          {copiedText === selectedAccount.name ? (
+            <AiOutlineCheck />
+          ) : (
+            <AiOutlineCopy />
+          )}
+        </button>
       </div>
       <hr className="my-2 border-gray-300" />
       <div className="flex justify-between items-center">
         <span className="text-gray-600 font-medium">Bank Name:</span>
         <span className="text-gray-800 font-semibold">{selectedAccount.bank}</span>
+        <button
+          onClick={() => copyToClipboard(selectedAccount.bank)}
+          className="ml-2 text-gray-600 hover:text-blue-500"
+        >
+          {copiedText === selectedAccount.bank ? (
+            <AiOutlineCheck />
+          ) : (
+            <AiOutlineCopy />
+          )}
+        </button>
       </div>
       <hr className="my-2 border-gray-300" />
       <div className="flex justify-between items-center">
         <span className="text-gray-600 font-medium">Account Number:</span>
         <span className="text-gray-800 font-semibold">{selectedAccount.accountNumber}</span>
+        <button
+          onClick={() => copyToClipboard(selectedAccount.accountNumber)}
+          className="ml-2 text-gray-600 hover:text-blue-500"
+        >
+          {copiedText === selectedAccount.accountNumber ? (
+            <AiOutlineCheck />
+          ) : (
+            <AiOutlineCopy />
+          )}
+        </button>
       </div>
       <hr className="my-2 border-gray-300" />
       <div className="flex justify-between items-center">
         <span className="text-gray-600 font-medium">Routine Number:</span>
         <span className="text-gray-800 font-semibold">{selectedAccount.routineNumber}</span>
+        <button
+          onClick={() => copyToClipboard(selectedAccount.routineNumber)}
+          className="ml-2 text-gray-600 hover:text-blue-500"
+        >
+          {copiedText === selectedAccount.routineNumber ? (
+            <AiOutlineCheck />
+          ) : (
+            <AiOutlineCopy />
+          )}
+        </button>
       </div>
+      <hr className="my-2 border-gray-300" />
+      <div className="flex justify-between items-center">
+          <p className="text-lg font-bold">Total Amount:</p>
+          <p className="text-lg font-bold">${totalAmount}</p>
+      </div>
+      
     </div>
 
     {/* Additional Content */}
-    <div className="mt-8">
-      <p>
-        Send receipt of payment to <a href="mailto:mgtfireman@gmail.com" className="text-blue-500">mgtfireman@gmail.com</a>, after payments, then click on confirm payment to check mail!
-      </p>
-    </div>
+  
+   
     <button
       className="mt-4 bg-green-600 text-white py-2 px-4 rounded"
       onClick={() => setIsModalOpen(true)}
@@ -436,8 +516,39 @@ const Checkout = () => {
       <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
         <div className="bg-white p-6 rounded shadow-lg">
           <h2 className="text-lg font-bold mb-4">
-            Click confirm to get your order notification and confirm payment!
+            Upload Evidence of payment in the form below:
           </h2>
+          <form className="space-y-4">
+  {/* Email Field */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700" htmlFor="email">
+              Email:
+            </label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              className="mt-1 p-2 block w-full border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+              placeholder="Enter your email"
+              required
+            />
+          </div>
+
+  {/* Image Upload Field */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700" htmlFor="image">
+                Upload Image:
+              </label>
+              <input
+                type="file"
+                id="image"
+                name="image"
+                accept="image/*"
+                className="mt-1 p-2 block w-full border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                required
+              />
+            </div>
+        </form>
           <div className="flex justify-end">
             <button
               className="bg-red-600 text-white py-1 px-3 rounded mr-2"

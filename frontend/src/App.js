@@ -60,6 +60,7 @@ import {
   ShopAllOrders,
   ShopAllPosts,
   ShopAllQuestionaire,
+  ShopAllBankTransfers,
   ShopAllProducts,
   ShopAllRefunds,
   ShopCreateEvents,
@@ -301,6 +302,14 @@ const App = () => {
           element={
             <SellerProtectedRoute>
               <ShopAllQuestionaire />
+            </SellerProtectedRoute>
+          }
+        />
+
+      <Route path="/dashboard-allbanktransfer"
+          element={
+            <SellerProtectedRoute>
+              <ShopAllBankTransfers />
             </SellerProtectedRoute>
           }
         />
