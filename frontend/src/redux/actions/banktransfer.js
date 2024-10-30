@@ -34,7 +34,7 @@ export const getAllBankTransfersShop = (id) => async (dispatch) => {
         const { data } = await axios.get(
             `${server}/banktransfer/get-bank-transfer/${id}`, { withCredentials: true }
         );
-
+        console.log('tranfers', data)
         dispatch({
             type: "getAllBankTransfersShopSuccess",
             payload: data.data,
@@ -55,6 +55,7 @@ export const getAllBankTransfers = () => async (dispatch) => {
         });
 
         const { data } = await axios.get(`${server}/banktransfer/get-all-bank-transfers`);
+        console.log('tranfers', data)
         
         dispatch({
             type: "getAllBankTransfersSuccess",

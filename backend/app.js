@@ -26,6 +26,7 @@ app.use(morgan("dev"));
 app.use(express.json({ limit: '100mb' }));
 app.use(bodyParser.json({ limit: '100mb' }));
 app.use(bodyParser.urlencoded({ extended: true, limit: "100mb" }));
+app.use(express.urlencoded({ extended: true, limit: "100mb" }));
 app.use(cookieParser());
 app.use("/", express.static(path.join(__dirname, "./uploads")));
 
@@ -34,9 +35,9 @@ app.get("/", async (req, res, next) => {
   res.send({ message: "Welcome🚀" });
 });
 
-app.use(fileUpload({
-  limits: { fileSize: 100 * 1024 * 1024 },  // Set limit to 100MB
-}));
+// app.use(fileUpload({
+//   limits: { fileSize: 100 * 1024 * 1024 },  // Set limit to 100MB
+// }));
 
 
 

@@ -23,7 +23,7 @@ const Store = configureStore({
     order: orderReducer,
     category: categoryReducer,
     questionaire: questionaireReducer,
-    banktranfer: bankTransferReducer,
+    bankTransfer: bankTransferReducer,
   },
 });
 

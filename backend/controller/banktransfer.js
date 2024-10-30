@@ -4,7 +4,31 @@ const router = express.Router();
 const BankTransfer = require("../model/banktransfer");
 const catchAsyncErrors = require("../middleware/catchAsyncErrors");
 const multer = require("multer");
-const upload = multer(); 
+const path = require("path")
+
+const multerConfigs = {
+  storage: multer.diskStorage({
+    destination: (req,file,cb) => {
+      return cb(null, path.join(__dirname, "images"));
+    },
+    filename: (req, file, cb) => {
+      return cb(
+        null,
+        `${new Date().getTime() * Math.random()}${file.originalname}`
+      );
+    },
+  }),
+
+  fileFilter: (req, file, cb) => {
+    if (file.mimetype.includes('image')) {
+      return cb(null, true);
+    } else {
+      return cb(null, false);
+    }
+  },
+};
+
+const upload = multer(multerConfigs);
 
 // Create a new Bank Transfer
 router.post(
@@ -30,10 +54,7 @@ router.post(
       // Save transfer info with Cloudinary data in the database
       const bankTransfer = new BankTransfer({
         email,
-        file: {
-          public_id: result.public_id,
-          url: result.secure_url,
-        },
+        file: result.secure_url
       });
 
       await bankTransfer.save();
