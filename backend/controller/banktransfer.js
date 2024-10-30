@@ -1,39 +1,39 @@
 const express = require("express");
-const multer = require("multer");
+const cloudinary = require("cloudinary").v2;
 const router = express.Router();
 const BankTransfer = require("../model/banktransfer");
 const catchAsyncErrors = require("../middleware/catchAsyncErrors");
-
-// Set up multer for file uploads
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, 'uploads/'); // specify your uploads directory
-  },
-  filename: (req, file, cb) => {
-    cb(null, `${Date.now()}-${file.originalname}`);
-  }
-});
-const upload = multer({ storage });
+const multer = require("multer");
+const upload = multer(); 
 
 // Create a new Bank Transfer
 router.post(
   "/create-bank-transfer",
-  upload.single('image'), // expecting a single file with the field name 'file'
+  upload.single('image'),
   catchAsyncErrors(async (req, res) => {
     try {
       const { email } = req.body;
-      const file = req.file ? req.file.path : null;
+      const file = req.file;
 
       if (!file) {
         return res.status(400).json({
           success: false,
-          message: "File upload is required"
+          message: "File upload is required",
         });
       }
 
+      // Upload file to Cloudinary
+      const result = await cloudinary.uploader.upload(file.path, {
+        folder: "bank-transfers",
+      });
+
+      // Save transfer info with Cloudinary data in the database
       const bankTransfer = new BankTransfer({
         email,
-        file
+        file: {
+          public_id: result.public_id,
+          url: result.secure_url,
+        },
       });
 
       await bankTransfer.save();
@@ -41,13 +41,13 @@ router.post(
       res.status(201).json({
         success: true,
         message: "Bank transfer uploaded successfully🙂",
-        data: bankTransfer
+        data: bankTransfer,
       });
     } catch (error) {
       res.status(500).json({
         success: false,
         message: "Internal Server Error",
-        error: error.message
+        error: error.message,
       });
     }
   })
