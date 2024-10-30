@@ -1,5 +1,5 @@
 const express = require("express");
-const cloudinary = require("cloudinary").v2;
+const cloudinary = require("cloudinary");
 const router = express.Router();
 const BankTransfer = require("../model/banktransfer");
 const catchAsyncErrors = require("../middleware/catchAsyncErrors");
