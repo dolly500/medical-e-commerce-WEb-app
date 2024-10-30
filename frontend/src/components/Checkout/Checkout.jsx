@@ -41,7 +41,6 @@ const Checkout = () => {
   };
 
 
-
   const handleSubmited = async (e) => {
     e.preventDefault();
   
@@ -75,8 +74,6 @@ const Checkout = () => {
           setIsModalOpen(true);   // Open the modal if necessary
         }
       }, 10000); // 10 seconds delay
-  
-      // setMessage('Order placed successfully on bank transfer, check your mail!');
     } catch (error) {
       toast.error("Failed to submit details");
       setIsProcessing(false); // Ensure processing state is reset on error
