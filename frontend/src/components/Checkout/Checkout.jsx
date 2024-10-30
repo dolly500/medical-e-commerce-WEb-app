@@ -19,11 +19,46 @@ const Checkout = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch()
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [message, setMessage] = useState("");
+
 
   const navigate = useNavigate();
 
   const [email, setEmail] = useState("");
   const [image, setImage] = useState(null);
+
+  const handleBankTransferOrder = async (e) => {
+    e.preventDefault();
+    setIsProcessing(true);
+
+    try {
+      await axios.post(`${server}/order/online-payment?platform=banktransfer`, {
+        shippingAddress,
+        totalPrice,
+        user: user._id,
+        cart,
+        email: user.email,
+      });
+      setMessage("Order placed successfully for bank transfer! Check your Mail!");
+      setShowModal(true);  // Show modal on successful order
+    } catch (error) {
+      setMessage("Error placing order. Please try again.");
+      console.error("Order Error:", error);
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+
+
+  const handleConfirmPayments = () => {
+    setIsProcessing(true);
+    setTimeout(() => {
+      setIsProcessing(false); // Reset processing state after 30 seconds
+      setIsModalOpen(true); // Open the modal if necessary
+    }, 10000); // 30 seconds delay
+  };
 
   const handleSubmited = async (e) => {
     e.preventDefault();
@@ -50,7 +85,6 @@ const Checkout = () => {
     country: '',
   });
   const [paymentMethod, setPaymentMethod] = useState('paypal');
-  const [message, setMessage] = useState('');
   const [paypalClientId, setPaypalClientId] = useState(null);
 
   const [selectedAccount, setSelectedAccount] = useState(null);
@@ -96,27 +130,6 @@ const Checkout = () => {
       ...shippingAddress,
       [e.target.name]: e.target.value,
     });
-  };
-
-  const handleConfirmPayment = async () => {
-    setLoading(true);
-    try {
-      await axios.post(`${server}/order/online-payment?platform=banktransfer`, {
-        shippingAddress,
-        totalPrice,
-        user: user._id,
-        cart,
-        email: user.email,
-      });
-      setMessage('Order placed successfully! for bank transfer. Check your Mail!');
-      dispatch(getAllOrdersOfAdmin()); 
-      setIsModalOpen(false); // Close the modal after confirming
-    } catch (error) {
-      console.error('Payment error:', error);
-      setMessage('Failed to place the order. Please try again.');
-    }finally{
-      setLoading(false);
-    }
   };
 
   
@@ -528,12 +541,22 @@ const Checkout = () => {
     {/* Additional Content */}
   
    
-    <button
-      className="mt-4 bg-green-600 text-white py-2 px-4 rounded"
-      onClick={() => setIsModalOpen(true)}
-    >
-      Confirm Payment
-    </button>
+    <div>
+      {isProcessing ? (
+         <button
+         className="mt-4 bg-green-600 text-white py-2 px-4 rounded"
+       >
+         Processing Payment...
+       </button>
+      ) : (
+        <button
+          className="mt-4 bg-green-600 text-white py-2 px-4 rounded"
+          onClick={handleConfirmPayments}
+        >
+          Confirm Payment
+        </button>
+      )}
+    </div>
 
     {/* Modal */}
     {isModalOpen && (
@@ -585,12 +608,31 @@ const Checkout = () => {
                 Cancel
               </button>
             </Link>
+            <div>
+      <form onSubmit={handleBankTransferOrder}>
+        <button
+          type="submit"
+          className="bg-green-600 text-white py-1 px-3 rounded"
+          disabled={isProcessing}
+        >
+          {isProcessing ? "Processing Payment..." : "Submit"}
+        </button>
+      </form>
+
+      {showModal && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white p-4 rounded shadow-lg">
+            <p>{message}</p>
             <button
-              type="submit"
-              className="bg-green-600 text-white py-1 px-3 rounded"
+              onClick={() => setShowModal(false)}
+              className="mt-4 bg-green-600 text-white py-1 px-3 rounded"
             >
-              Submit
+              Close
             </button>
+          </div>
+        </div>
+      )}
+    </div>
           </div>
         </form>
         </div>

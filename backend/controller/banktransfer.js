@@ -85,7 +85,7 @@ router.get(
         message: "Bank transfers retrieved successfully",
         data: bankTransfers
       });
-    } catch (error) {
+    } catch (error) {x
       res.status(500).json({
         success: false,
         message: "Internal Server Error",
