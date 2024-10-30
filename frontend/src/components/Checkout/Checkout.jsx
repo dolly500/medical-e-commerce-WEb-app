@@ -57,7 +57,7 @@ const Checkout = () => {
     setTimeout(() => {
       setIsProcessing(false); // Reset processing state after 30 seconds
       setIsModalOpen(true); // Open the modal if necessary
-    }, 10000); // 30 seconds delay
+    }, 30000); // 30 seconds delay
   };
 
   const handleSubmited = async (e) => {
