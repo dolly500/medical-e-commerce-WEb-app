@@ -13,6 +13,7 @@ import { createBankTransfer } from '../../redux/actions/banktransfer'; // Adjust
 
 
 
+
 const Checkout = () => {
   const { cart } = useSelector((state) => state.cart);
   const { user } = useSelector((state) => state.user);
@@ -29,27 +30,6 @@ const Checkout = () => {
   const [email, setEmail] = useState("");
   const [image, setImage] = useState(null);
 
-  const handleBankTransferOrder = async (e) => {
-    e.preventDefault();
-    setIsProcessing(true);
-
-    try {
-      await axios.post(`${server}/order/online-payment?platform=banktransfer`, {
-        shippingAddress,
-        totalPrice,
-        user: user._id,
-        cart,
-        email: user.email,
-      });
-      setMessage("Order placed successfully for bank transfer! Check your Mail!");
-      setShowModal(true);  // Show modal on successful order
-    } catch (error) {
-      setMessage("Error placing order. Please try again.");
-      console.error("Order Error:", error);
-    } finally {
-      setIsProcessing(false);
-    }
-  };
 
 
   const handleConfirmPayments = () => {
@@ -57,25 +37,52 @@ const Checkout = () => {
     setTimeout(() => {
       setIsProcessing(false); // Reset processing state after 30 seconds
       setIsModalOpen(true); // Open the modal if necessary
-    }, 30000); // 30 seconds delay
+    }, 10000); // 30 seconds delay
   };
+
+
 
   const handleSubmited = async (e) => {
     e.preventDefault();
-
+  
     // Prepare form data for image upload
     const formData = new FormData();
     formData.append("email", email);
     formData.append("image", image);
-
+  
+    setIsProcessing(true); // Start processing state
+  
     try {
       await dispatch(createBankTransfer(formData)); // Dispatching the action with FormData
-      toast.success("Bank transfer details submitted successfully!");
-      navigate('/');
+  
+      // Delay the order notification
+      setTimeout(async () => {
+        try {
+          // Send order notification after delay
+          await axios.post(`${server}/order/online-payment?platform=banktransfer`, {
+            shippingAddress,
+            totalPrice,
+            user: user._id,
+            cart,
+            email: user.email,
+          });
+          setMessage('Order placed successfully on bank transfer, check your mail!');
+        } catch (error) {
+          console.error("Failed to send order notification:", error);
+          setMessage("There was an issue placing your order. Please try again.");
+        } finally {
+          setIsProcessing(false); // Reset processing state after the request completes
+          setIsModalOpen(true);   // Open the modal if necessary
+        }
+      }, 10000); // 10 seconds delay
+  
+      // setMessage('Order placed successfully on bank transfer, check your mail!');
     } catch (error) {
       toast.error("Failed to submit details");
+      setIsProcessing(false); // Ensure processing state is reset on error
     }
   };
+  
 
 
   const [shippingAddress, setShippingAddress] = useState({
@@ -233,6 +240,7 @@ const Checkout = () => {
       console.error('Error placing order:', error);
     }
   };
+
   
 
 
@@ -609,32 +617,30 @@ const Checkout = () => {
               </button>
             </Link>
             <div>
-      <form onSubmit={handleBankTransferOrder}>
-        <button
-          type="submit"
-          className="bg-green-600 text-white py-1 px-3 rounded"
-          disabled={isProcessing}
-        >
-          {isProcessing ? "Processing Payment..." : "Submit"}
-        </button>
-      </form>
+                  {isProcessing ? (
+                    <button 
+                    className="mt-4 bg-green-600 text-white py-2 px-4 rounded"
+                  >
+                    Processing Payment...
+                  </button>
+                  ) : (
+                    <>
+                    <button
+                      className="bg-green-600 text-white py-1 px-3 rounded"
+                    >
+                      Upload Payment
+                    </button>
 
-      {showModal && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white p-4 rounded shadow-lg">
-            <p>{message}</p>
-            <button
-              onClick={() => setShowModal(false)}
-              className="mt-4 bg-green-600 text-white py-1 px-3 rounded"
-            >
-              Close
-            </button>
-          </div>
-        </div>
-      )}
-    </div>
+                    </>
+                    
+                  )}
+                  
+                  <p style={{color: 'blue'}}>{message}</p>
+            </div>
           </div>
         </form>
+  
+        
         </div>
       </div>
     )}
