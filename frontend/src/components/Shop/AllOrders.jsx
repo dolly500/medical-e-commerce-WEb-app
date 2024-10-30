@@ -14,7 +14,7 @@ const AllOrders = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getAllOrdersOfShop(JSON.parse(localStorage.getItem("user"))?._id));
+    dispatch(getAllOrdersOfShop(seller._id));
   }, [dispatch]);
 
   const columns = [
@@ -75,7 +75,7 @@ const AllOrders = () => {
       row.push({
         id: item._id,
         itemsQty: item.cart.length,
-        total: "NGN ₦ " + item.totalPrice,
+        total: "$ " + item.totalPrice,
         status: item.status,
       });
     });

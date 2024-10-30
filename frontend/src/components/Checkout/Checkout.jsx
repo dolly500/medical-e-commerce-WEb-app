@@ -182,17 +182,17 @@ const Checkout = () => {
     const itemDesc = 'Payment for items in cart';
     const successUrl = 'https://medical-e-app.vercel.app/success';
     const cancelUrl = 'https://medical-e-app.vercel.app/cancel';
+
+     // Store order data in localStorage
+    localStorage.setItem('orderData', JSON.stringify({
+      shippingAddress,
+      totalPrice: amount,
+      userId: user._id,
+      cart,
+      email: user.email,
+    }));
+
     try {
-      // Send the order data to the server before redirecting to CoinPayments
-      await axios.post(`${server}/order/online-payment?platform=coinpayments`, {
-        shippingAddress,
-        totalPrice: amount, // Send the total amount including shipping
-        user: user._id,
-        cart,
-        email: user.email, // Include the user's email in the request
-      });
-      setMessage('Order placed successfully! for CoinPayments. Check your Mail!');
-      dispatch(getAllOrdersOfAdmin()); 
       // Create a form dynamically
       const form = document.createElement('form');
       form.method = 'POST';
@@ -459,12 +459,11 @@ const Checkout = () => {
 
         {/* Pay on Delivery Button */}
         {paymentMethod === 'payondelivery' && (
-          <button
-            onClick={handlePayOnDelivery}
-            className="mt-4 bg-yellow-600 text-white py-2 px-4 rounded"
-          >
-            Confirm Order (Pay on Delivery)
-          </button>
+         <>
+          <div className="mt-6 p-5 bg-white shadow-lg rounded-lg border border-gray-200">
+            Place Order on delivery by reaching out to <a href='#' style={{color: 'blue'}}>Medistorepro@outlook.com</a>
+          </div>
+         </>
         )}
 
 {paymentMethod === 'accountDetails' && selectedAccount && (
