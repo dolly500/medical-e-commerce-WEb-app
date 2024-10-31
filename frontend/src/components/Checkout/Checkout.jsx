@@ -191,6 +191,7 @@ const Checkout = () => {
       cart,
       email: user.email,
     }));
+    console.log('Order data stored:', localStorage.getItem('orderData'));
 
     try {
       // Create a form dynamically
