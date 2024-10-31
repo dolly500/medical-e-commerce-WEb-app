@@ -405,8 +405,15 @@ const Checkout = () => {
 
 
         {/* PayPal Buttons */}
-        {paymentMethod === 'paypal' && paypalClientId && (
+       <>
+      
+
+       {paymentMethod === 'paypal' && paypalClientId && (
           <PayPalScriptProvider options={{ 'client-id': paypalClientId }}>
+             <ul type='disc' className='mb-5'>
+              <li>- you will receive order notification after paypal payment process, kindly reply the email to send proof of payment after payment! Thank you!.</li>
+              <li>- failure to reply for proof of payment will be regarded as invalid payments.</li>
+        </ul>
             <PayPalButtons
               createOrder={(data, actions) => {
                 return actions.order.create({
@@ -443,6 +450,7 @@ const Checkout = () => {
             />
           </PayPalScriptProvider>
         )}
+       </>
 
         {/* CoinPayments Button */}
         {paymentMethod === 'coinpayments' && (         
