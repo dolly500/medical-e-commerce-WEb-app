@@ -73,7 +73,7 @@ const Checkout = () => {
           setIsProcessing(false); // Reset processing state after the request completes
           setIsModalOpen(true);   // Open the modal if necessary
         }
-      }, 20000); // 10 seconds delay
+      }, 30000); // 10 seconds delay
     } catch (error) {
       toast.error("Failed to submit details");
       setIsProcessing(false); // Ensure processing state is reset on error
