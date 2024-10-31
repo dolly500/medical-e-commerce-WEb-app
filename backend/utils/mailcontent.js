@@ -237,7 +237,7 @@ const sendOrderConfirmation = async (order, shippingFee, TotalFees) => {
 const sendAdminNotifcation = async(order, shippingFee, TotalFees) => {
      // Sending the email with HTML content
   const subject = "New Order Notification";
-  const email = "mgtfireman@gmail.com"
+  const email = "medistorepr@gmail.com"
   await sendMail({
     email,
     subject,
@@ -356,7 +356,7 @@ const sendAdminNotifcation = async(order, shippingFee, TotalFees) => {
 const sendOnlineAdminNotifcation = async(order, platform, shippingFee, TotalFees) => {
     // Sending the email with HTML content
  const subject = "New Order Notification";
- const email = "mgtfireman@gmail.com"
+ const email = "medistorepr@gmail.com"
  await sendMail({
    email,
    subject,
