@@ -157,55 +157,52 @@ const Checkout = () => {
   const handleCoinPaymentsPayment = async () => {
     const { address, city, postalCode, country } = shippingAddress;
   
-    // Ensure shipping address is filled
+    // Ensure all required fields in the shipping address are filled
     if (!address || !city || !postalCode || !country) {
       setMessage('Please fill in all shipping fields.');
       return;
     }
   
-    // Generate a unique invoice ID (ensure uniqueness to prevent conflicts)
     const invoice = `ORDER_${Math.random().toString(36).substr(2, 9).toUpperCase()}`;
-  
-    // Define CoinPayments merchant ID and other constants
     const merchantId = process.env.REACT_APP_COINPAYMENTS_MERCHANT_ID;
-    console.log('Merchant ID:', merchantId);
-  
+    
     if (!merchantId) {
       setMessage('Merchant ID not available.');
       return;
     }
   
-    const baseCurrency = 'USD'; // Your base currency
-    const targetCurrency = 'BTC'; // Target cryptocurrency
-    const amount = totalAmount; // Total amount including shipping fee
+    const baseCurrency = 'USD';
+    const targetCurrency = 'BTC';
+    const amount = totalAmount;
     const itemName = 'Cart Payment';
     const itemDesc = 'Payment for items in cart';
     const successUrl = 'https://medical-e-app.vercel.app/success';
     const cancelUrl = 'https://medical-e-app.vercel.app/cancel';
-
-     // Store order data in localStorage
-    localStorage.setItem('orderData', JSON.stringify({
-      shippingAddress,
-      totalPrice: amount,
-      userId: user._id,
-      cart,
-      email: user.email,
-    }));
-    console.log('Order data stored:', localStorage.getItem('orderData'));
-
+  
     try {
-      // Create a form dynamically
+      // Send order details to backend
+      await axios.post(`${server}/order/online-payment?platform=coinpayment`, {
+        shippingAddress,
+        totalPrice: amount,
+        user: user._id,
+        cart,
+        email: user.email,
+        invoice,
+      });
+      
+      setMessage('Order placed successfully on CoinPayments, check your mail!');
+  
+      // Proceed to create a form for CoinPayments
       const form = document.createElement('form');
       form.method = 'POST';
       form.action = 'https://www.coinpayments.net/index.php';
   
-      // Define hidden input fields required by CoinPayments
       const inputs = [
         { name: 'cmd', value: '_pay_simple' },
         { name: 'reset', value: '1' },
         { name: 'merchant', value: merchantId },
-        { name: 'currency', value: baseCurrency }, // Base currency (USD)
-        { name: 'currency2', value: targetCurrency }, // Target cryptocurrency (BTC)
+        { name: 'currency', value: baseCurrency },
+        { name: 'currency2', value: targetCurrency },
         { name: 'amountf', value: amount },
         { name: 'item_name', value: itemName },
         { name: 'item_desc', value: itemDesc },
@@ -221,7 +218,6 @@ const Checkout = () => {
         { name: 'cancel_url', value: cancelUrl },
       ];
   
-      // Append hidden inputs to the form
       inputs.forEach((input) => {
         const hiddenField = document.createElement('input');
         hiddenField.type = 'hidden';
@@ -230,14 +226,15 @@ const Checkout = () => {
         form.appendChild(hiddenField);
       });
   
-      // Append the form to the body and submit it
       document.body.appendChild(form);
       form.submit();
+  
     } catch (error) {
       setMessage('Failed to place order. Please try again.');
       console.error('Error placing order:', error);
     }
   };
+  
 
   
 
@@ -448,14 +445,21 @@ const Checkout = () => {
         )}
 
         {/* CoinPayments Button */}
-        {paymentMethod === 'coinpayments' && (
-          
-          <button
+        {paymentMethod === 'coinpayments' && (         
+          <>
+            <p>Note: 
+            </p>
+            <ul type='disc'>
+              <li>- you will receive order notification after coinpayment payment process, kindly reply the email to send proof of payment after payment! Thank you!.</li>
+              <li>- failure to reply for proof of payment will be regarded as invalid payments.</li>
+            </ul>
+            <button
             onClick={handleCoinPaymentsPayment}
             className="mt-4 bg-green-600 text-white py-2 px-4 rounded"
           >
             Pay with CoinPayments
           </button>
+          </>
         )}
 
         {/* Pay on Delivery Button */}
@@ -570,6 +574,12 @@ const Checkout = () => {
           <h2 className="text-lg font-bold mb-4">
             Upload Evidence of payment in the form below:
           </h2>
+         <div>
+         <ul type='disc'>
+              <li>- you will receive order notification after bank transfer payment upload process, kindly reply the email to send proof of payment after uploading payment! Thank you!.</li>
+              <li>- failure to reply for proof of payment will be regarded as invalid payments.</li>
+            </ul>
+         </div>
           <form onSubmit={handleSubmited} className="space-y-4">
           {/* Email Field */}
           <div>

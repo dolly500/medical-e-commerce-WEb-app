@@ -43,7 +43,7 @@ const SuccessPage = () => {
       <div className="bg-white p-8 rounded-lg shadow-lg text-center">
         <AiOutlineCheckCircle className="text-green-500 text-6xl mb-4" />
         <h1 className="text-3xl font-bold mb-4">Payment Successful!</h1>
-        <p className="text-gray-600 mb-6">{message}</p>
+        <p className="text-gray-600 mb-6">you will receive order notification after coinpayment payment process, kindly reply the email to send proof of payment!</p>
         <Link to='/'>
           <button className="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded transition duration-300">
             Continue Shopping
