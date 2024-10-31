@@ -77,7 +77,7 @@ router.post("/create-user", async (req, res, next) => {
             <p>If the button doesn't work, you can also copy and paste the following link into your browser:</p>
             <p><a href="${activationUrl}" style="color: #007BFF;">${activationUrl}</a></p>
             <p>Best regards,</p>
-            <p>The [Your Company Name] Team</p>
+            <p>The Medistorepro Team</p>
             <hr />
             <p style="font-size: 12px; color: #999;">If you did not sign up for an account, please ignore this email.</p>
           </div>
