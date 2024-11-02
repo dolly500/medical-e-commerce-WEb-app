@@ -60,75 +60,64 @@ const ProductCard = ({ data,isEvent }) => {
 
   return (
     <>
-      <div className="w-full h-[320px] bg-white-200 rounded-lg shadow-sm p-3 relative cursor-pointer">
-        <div className="flex justify-end"></div>
-        <Link to={`${isEvent === true ? `/product/${data?._id}?isEvent=true` : `/product/${data?._id}`}`}>
-          <img
-            src={`${data?.images && data?.images[0]?.url}`}
-            alt=""
-            className="w-full h-[170px] object-contain"
-          />
-        </Link>
-        {/* <Link to={`/shop/preview/${data?.shop?._id}`}>
-          <h5 className={`${styles.shop_name}`}>{data?.shop?.name}</h5>
-        </Link> */}
-        <Link to={`${isEvent === true ? `/product/${data?._id}?isEvent=true` : `/product/${data?._id}`}`}>
-          <h4 className="pb-3 font-[500]">
-            {data?.name?.length > 40 ? data?.name?.slice(0, 40) + "..." : data?.name}
-          </h4>
+     <div className="w-full h-[310px] bg-white-200 rounded-lg shadow-sm p-3 relative cursor-pointer">
+  <div className="flex justify-end"></div>
+  <Link to={`${isEvent === true ? `/product/${data?._id}?isEvent=true` : `/product/${data?._id}`}`}>
+    <img
+      src={`${data?.images && data?.images[0]?.url}`}
+      alt=""
+      className="w-full h-[170px] object-contain"
+    />
+  </Link>
+  
+  <Link to={`${isEvent === true ? `/product/${data?._id}?isEvent=true` : `/product/${data?._id}`}`}>
+    <h4 className="pb-3 font-[200] text-[12px] leading-snug text-ellipsis overflow-hidden">
+      {data?.name?.length > 40 ? data?.name?.slice(0, 40) + "..." : data?.name}
+    </h4>
 
-          {/* <div className="flex">
-          <Ratings rating={data?.ratings} />
-          </div> */}
-
-          <div className="py-2 flex items-center justify-between">
-            <div className="flex">
-              <h5 className={`${styles.productDiscountPrice}`}>
-              ${data?.originalPrice === 0
-                  ? data?.originalPrice
-                  : data?.discountPrice}
-                
-              </h5>
-              <h4 className={`${styles.price}`}>
-                {data?.originalPrice ? data?.originalPrice + " $" : null}
-              </h4>
-            </div>
-            <span className="font-[400] text-[17px] text-[#0000FF]">
-              {data?.sold_out} sold
-            </span>
-          </div>
-        </Link>
-
-        {/* side options */}
-        <div>
-          {click ? (
-            <AiFillHeart
-              size={22}
-              className="cursor-pointer absolute right-2 top-44"
-              onClick={() => removeFromWishlistHandler(data)}
-              color={click ? "red" : "#0000FF"}
-              title="Remove from wishlist"
-            />
-          ) : (
-            <AiOutlineHeart
-              size={22}
-              className="cursor-pointer absolute right-2 top-48"
-              onClick={() => addToWishlistHandler(data)}
-              color={click ? "red" : "#0000FF"}
-              title="Add to wishlist"
-            />
-          )}
-          {open ? <ProductDetailsCard setOpen={setOpen} data={data} /> : null}
-        </div>
-        <div className="absolute bottom-3 w-full flex justify-center">
-          <button
-            className="bg-blue-700 text-white px-4 py-2 rounded"
-            onClick={() => addToCartHandler(data?._id)}
-          >
-            Add to Cart
-          </button>
-        </div>
+    <div className="py-2 flex items-center justify-between">
+      <div className="flex">
+        <h4 className={`${styles.price} text-[12px] ml-2`}>
+          {data?.originalPrice ? `${data?.originalPrice} $` : null}
+        </h4>
       </div>
+      <span className="font-[400] text-[10px] text-[#0000FF]">
+        {data?.sold_out} sold
+      </span>
+    </div>
+  </Link>
+
+  <div>
+    {click ? (
+      <AiFillHeart
+        size={22}
+        className="cursor-pointer absolute right-2 top-48"
+        onClick={() => removeFromWishlistHandler(data)}
+        color="red"
+        title="Remove from wishlist"
+      />
+    ) : (
+      <AiOutlineHeart
+        size={22}
+        className="cursor-pointer absolute right-2 top-48"
+        onClick={() => addToWishlistHandler(data)}
+        color="#0000FF"
+        title="Add to wishlist"
+      />
+    )}
+    {open ? <ProductDetailsCard setOpen={setOpen} data={data} /> : null}
+  </div>
+  
+  <div className="absolute bottom-3 w-full flex justify-center">
+    <button
+      className="bg-blue-700 text-white px-4 py-2 rounded text-[12px]"
+      onClick={() => addToCartHandler(data?._id)}
+    >
+      Add to Cart
+    </button>
+  </div>
+</div>
+
     </>
   );
 };

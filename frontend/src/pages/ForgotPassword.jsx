@@ -40,7 +40,7 @@ const ForgotPassword = () => {
     <div className="min-h-screen flex items-center justify-center bg-white">
       <div className="bg-white p-8 shadow-md rounded-md w-96">
       <Link to="/">
-        <img src={logo} alt='' style={{ height: '130px', width: '120px', display: 'flex', margin: '0 auto' }}
+        <img src={logo} alt='' style={{ height: '60px', width: '160px', display: 'flex', margin: '0 auto' }}
         />
       </Link>
 
