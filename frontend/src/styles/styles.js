@@ -8,7 +8,7 @@ const styles = {
   },
   productTitle: 'text-[25px] font-[600] font-Montserrat text-[#000]',
   productDiscountPrice: "font-bold text-[18px] text-[#000] font-Montserrat",
-  price: "font-[500] text-[16px] text-[#000] pl-3 mt-[-4px] line-through",
+  price: "font-[500] text-[16px] text-[#000] pl-3 mt-[-4px]",
   shop_name: "pt-3 text-[15px] text-blue-700 pb-3",
   active_indicator: "absolute bottom-[-27%] left-0 h-[3px] w-full bg-[#0000FF]",
   button: '800:w-[100px] w-[120px] hover:bg-[#c79bb5] bg-[#0000FF] h-[50px] my-3 flex items-center justify-center rounded-xl cursor-pointer',
