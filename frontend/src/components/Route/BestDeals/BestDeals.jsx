@@ -9,10 +9,19 @@ const BestDeals = () => {
   const itemsPerPage = 4; // Number of products per page
   const { allProducts } = useSelector((state) => state.products);
 
+  // Function to shuffle array
+  const shuffleArray = (array) => {
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+  };
+
   useEffect(() => {
     const allProductsData = allProducts ? [...allProducts] : [];
-    const sortedData = allProductsData.sort((a, b) => b.sold_out - a.sold_out);
-    setData(sortedData); // Handle pagination here
+    const shuffledData = shuffleArray(allProductsData);
+    setData(shuffledData); // Set randomized data
   }, [allProducts]);
 
   // Calculate pagination
@@ -24,11 +33,11 @@ const BestDeals = () => {
   };
 
   return (
-    <div className={`${styles.section} bg-white`}> {/* Background is white for both mobile and desktop */}
+    <div className={`${styles.section} bg-white`}>
       <div className={`${styles.heading}`}>
         <h1 className="text-3xl font-bold text-blue-600 shadow-lg">Best Deals</h1>
       </div>
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12"> {/* Two columns on mobile, four on larger screens */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
         {currentData && currentData.length !== 0 && (
           currentData.map((item, index) => (
             <div key={index} className="flex-shrink-0">
