@@ -268,10 +268,6 @@ router.put('/reset-password', catchAsyncErrors(async (req, res, next) => {
 
 
 
-
-
-
-
 // // load shop
 router.get(
   "/getSeller",

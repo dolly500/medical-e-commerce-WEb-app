@@ -54,13 +54,13 @@ const DashboardHeader = () => {
               className="mx-5 cursor-pointer text-[#555] hover:text-[#8E376A]"
             />
           </Link> */}
-          {/* <Link to={`/shop/${seller._id}`}>
+          <Link to={`/shop/${seller._id}`}>
             <img
               src={`${seller?.avatar}}`}
               alt=""
               className="w-[50px] h-[50px] rounded-full object-cover"
             />
-          </Link> */}
+          </Link>
         </div>
       </div>
     </div>
