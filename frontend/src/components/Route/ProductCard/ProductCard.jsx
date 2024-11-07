@@ -71,19 +71,19 @@ const ProductCard = ({ data,isEvent }) => {
   </Link>
   
   <Link to={`${isEvent === true ? `/product/${data?._id}?isEvent=true` : `/product/${data?._id}`}`}>
-    <h4 className="pb-3 font-[200] text-[12px] leading-snug text-ellipsis overflow-hidden">
+    <h4 className="pb-3 font-[200] text-[11px] leading-snug text-ellipsis overflow-hidden">
       {data?.name?.length > 40 ? data?.name?.slice(0, 40) + "..." : data?.name}
     </h4>
 
     <div className="py-2 flex items-center justify-between">
       <div className="flex">
-        <h4 className={`${styles.price} text-[12px] ml-2`}>
+        <h4 className={`${styles.price} text-[10px] ml-2`}>
           {data?.originalPrice ? `${data?.originalPrice} $` : null}
         </h4>
       </div>
-      <span className="font-[400] text-[10px] text-[#0000FF]">
+      {/* <span className="font-[400] text-[10px] text-[#0000FF]">
         {data?.sold_out} sold
-      </span>
+      </span> */}
     </div>
   </Link>
 
@@ -110,7 +110,7 @@ const ProductCard = ({ data,isEvent }) => {
   
   <div className="absolute bottom-3 w-full flex justify-center">
     <button
-      className="bg-blue-700 text-white px-4 py-2 rounded text-[12px]"
+      className="bg-blue-700 text-white px-2 py-2 rounded text-[12px]"
       onClick={() => addToCartHandler(data?._id)}
     >
       Add to Cart
