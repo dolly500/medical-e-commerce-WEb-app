@@ -89,9 +89,9 @@ const ProductCard = ({ data,isEvent }) => {
 
   <div>
     {click ? (
-      <AiFillHeart
+      <AiFillHeart 
         size={22}
-        className="cursor-pointer absolute right-2 top-48"
+        className="cursor-pointer absolute right-2 top-48 mt-6"
         onClick={() => removeFromWishlistHandler(data)}
         color="red"
         title="Remove from wishlist"
@@ -99,7 +99,7 @@ const ProductCard = ({ data,isEvent }) => {
     ) : (
       <AiOutlineHeart
         size={22}
-        className="cursor-pointer absolute right-2 top-48"
+        className="cursor-pointer absolute right-2 top-48 mt-6"
         onClick={() => addToWishlistHandler(data)}
         color="#0000FF"
         title="Add to wishlist"
