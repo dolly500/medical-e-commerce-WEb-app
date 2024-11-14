@@ -14,7 +14,7 @@ const AllPosts = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getAllPostsShop(JSON.parse(localStorage.getItem("user"))?._id));
+    dispatch(getAllPostsShop(seller._id));
   }, [dispatch]);
 
   const handleDelete = async (id) => {

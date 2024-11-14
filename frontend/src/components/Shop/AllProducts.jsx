@@ -14,7 +14,7 @@ const AllProducts = () => {
 
   const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(getAllProductsShop(JSON.parse(localStorage.getItem("user"))?._id));
+    dispatch(getAllProductsShop(seller._id));
   }, [dispatch]);
 
   console.log("After API call, products:", products);
@@ -103,7 +103,7 @@ const AllProducts = () => {
       row.push({
         id: item._id,
         name: item.name,
-        price: "₦" + item.discountPrice,
+        price: "$" + item.discountPrice,
         Stock: item.stock,
         sold: item.sold_out,
       });

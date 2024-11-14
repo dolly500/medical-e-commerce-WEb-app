@@ -3,7 +3,6 @@ import { AiOutlinePlusCircle } from "react-icons/ai";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { createProduct } from "../../redux/actions/product";
-import { categories } from "../../static/data";
 import { toast } from "react-toastify";
 import { server } from "../../server";
 import axios from "axios";
@@ -92,7 +91,7 @@ const CreateProduct = () => {
      try {
       await dispatch(createProduct(data));
       toast.success("Product added successfully");
-      window.location.reload();
+      // window.location.reload();
     } catch (error) {
       toast.error("Failed to add product");
     }

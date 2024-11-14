@@ -19,8 +19,8 @@ const AllEvents = () => {
   
 
   useEffect(() => {
-    dispatch(getAllEvents(JSON.parse(localStorage.getItem("user"))?._id));
-  }, [dispatch]);
+    dispatch(getAllEvents(seller._id));
+  }, [dispatch],);
 
   const handleDelete = async (id) => {
     await dispatch(deleteEvent(id));
@@ -103,7 +103,7 @@ const AllEvents = () => {
       row.push({
         id: item._id,
         name: item.name,
-        price: "₦" + item.discountPrice,
+        price: "$" + item.discountPrice,
         Stock: item.stock,
         sold: item.sold_out,
       });

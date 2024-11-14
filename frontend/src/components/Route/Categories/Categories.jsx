@@ -13,7 +13,8 @@ const Categories = () => {
 
   useEffect(() => {
     axios.get(`${server}/category`, { withCredentials: true }).then((res) => {
-      setData(res.data.categorys);
+      console.log('data category', res.data)
+      setData(res?.data?.categorys);
     });
   }, []);
 
@@ -56,6 +57,7 @@ const Categories = () => {
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
           {currentCategories.map((i) => {
             const handleSubmit = (i) => {
+              console.log("Navigating to category:", i.name);
               navigate(`/products?category=${i.name}`);
             };
             return (

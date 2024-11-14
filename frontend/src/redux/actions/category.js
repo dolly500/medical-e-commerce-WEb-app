@@ -97,9 +97,6 @@ export const deleteCategory = (id) => async (dispatch) => {
         withCredentials: true,
       }
     );
-
-  
-
     dispatch({
       type: "deleteCategorySuccess",
       payload: data.message,

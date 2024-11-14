@@ -74,7 +74,6 @@ import {
   ShopWithDrawMoneyPage,
   ShopCreateCategory, 
   ShopAllCategory,
-  ShopInfo
 } from "./routes/ShopRoutes";
 import { server } from "./server";
 import { getAllCategories } from "./redux/actions/category.js";
@@ -83,7 +82,6 @@ import { getAllCategories } from "./redux/actions/category.js";
 
 
 const App = () => {
-  const [paystackApikey, setPaystackApiKey] = useState("");
   const [categoriesData, setCategoriesData] = useState([])
 
   // async function getPaystackApikey() {
