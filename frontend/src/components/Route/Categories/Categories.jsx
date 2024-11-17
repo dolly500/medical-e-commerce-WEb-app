@@ -9,11 +9,10 @@ const Categories = () => {
   const navigate = useNavigate();
   const [data, setData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const categoriesPerPage = 6; // Number of categories to show per page
+  const categoriesPerPage = 10; // Updated to show 10 categories per page
 
   useEffect(() => {
     axios.get(`${server}/category`, { withCredentials: true }).then((res) => {
-      console.log('data category', res.data)
       setData(res?.data?.categorys);
     });
   }, []);
@@ -48,16 +47,15 @@ const Categories = () => {
       </div>
 
       {/* Categories Section */}
-      <div className="p-6 rounded-lg mb-12 max-w-screen-lg mx-auto"> {/* Added max width and centered */}
+      <div className="p-6 rounded-lg mb-12 max-w-screen-lg mx-auto">
         <div className={`${styles.heading} mb-6`}>
           <h1 className="text-gray-800 text-3xl font-extrabold text-center">All Categories</h1>
         </div>
 
         {/* Category Grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
           {currentCategories.map((i) => {
             const handleSubmit = (i) => {
-              console.log("Navigating to category:", i.name);
               navigate(`/products?category=${i.name}`);
             };
             return (
@@ -66,6 +64,7 @@ const Categories = () => {
                 key={i?._id}
                 onClick={() => handleSubmit(i)}
               >
+                {/* Uncomment if image is available */}
                 {/* <img
                   src={i?.images?.[0]?.url}
                   className="w-full h-28 object-cover rounded-t-lg mb-2"
@@ -83,19 +82,20 @@ const Categories = () => {
         </div>
 
         {/* Pagination */}
-        <div className="flex justify-center mt-6 mb-14">
-          <ul className="inline-flex space-x-2">
-            {Array.from({ length: totalPages }, (_, index) => (
-              <li key={index} className={`${currentPage === index + 1 ? "bg-blue-600 text-white" : "bg-gray-300 text-gray-800"} rounded-full`}>
-                <button
-                  onClick={() => paginate(index + 1)}
-                  className="w-8 h-8 text-center rounded-full focus:outline-none"
-                >
-                  {index + 1}
-                </button>
-              </li>
-            ))}
-          </ul>
+        <div className="flex flex-wrap justify-center gap-2 mt-6 mb-14">
+          {Array.from({ length: totalPages }, (_, index) => (
+            <button
+              key={index}
+              onClick={() => paginate(index + 1)}
+              className={`w-8 h-8 flex items-center justify-center text-sm font-medium rounded-full ${
+                currentPage === index + 1
+                  ? "bg-blue-600 text-white border-blue-600"
+                  : "bg-gray-300 text-gray-800 hover:bg-gray-400"
+              }`}
+            >
+              {index + 1}
+            </button>
+          ))}
         </div>
       </div>
     </>

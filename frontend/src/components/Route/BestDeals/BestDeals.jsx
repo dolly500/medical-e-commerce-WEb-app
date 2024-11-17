@@ -46,13 +46,15 @@ const BestDeals = () => {
           ))
         )}
       </div>
-      {/* Pagination Controls */}
-      <div className="flex justify-center space-x-2 mt-4 mb-14">
+      {/* Responsive Pagination Controls */}
+      <div className="flex flex-wrap justify-center gap-2 mt-4 mb-14">
         {Array.from({ length: totalPages }, (_, index) => (
           <button
             key={index}
             onClick={() => handlePageChange(index + 1)}
-            className={`px-4 py-2 mb-14 rounded-full ${currentPage === index + 1 ? "bg-blue-600 text-white" : "bg-gray-200"}`}
+            className={`px-3 py-1 text-sm sm:text-base rounded-full transition-all ${
+              currentPage === index + 1 ? "bg-blue-600 text-white" : "bg-gray-200 hover:bg-blue-500 hover:text-white"
+            }`}
           >
             {index + 1}
           </button>

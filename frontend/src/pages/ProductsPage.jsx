@@ -63,14 +63,16 @@ const ProductsPage = () => {
                 No products Found!
               </h1>
             )}
-            {/* Pagination */}
-            <div className="flex justify-center mt-4 mb-14">
+            {/* Responsive Pagination */}
+            <div className="flex flex-wrap justify-center gap-2 mt-4 mb-14">
               {Array.from({ length: totalPages }, (_, index) => (
                 <button
                   key={index}
                   onClick={() => handlePageChange(index + 1)}
-                  className={`rounded-full mx-1 px-3 mb-14 py-1 border ${
-                    currentPage === index + 1 ? "bg-blue-500 text-white" : "bg-white text-black"
+                  className={`px-3 py-1 text-sm sm:text-base rounded-full transition-all border ${
+                    currentPage === index + 1
+                      ? "bg-blue-500 text-white border-blue-500"
+                      : "bg-white text-black border-gray-300 hover:bg-gray-200"
                   }`}
                 >
                   {index + 1}
