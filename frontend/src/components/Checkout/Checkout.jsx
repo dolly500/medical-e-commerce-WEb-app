@@ -457,7 +457,7 @@ const Checkout = () => {
   };
 
 
-  const [timeLeft, setTimeLeft] = useState(200);
+  const [timeLeft, setTimeLeft] = useState(30 * 60);
 
   useEffect(() => {
     if (timeLeft <= 0) return; // Stop if time is up
@@ -689,7 +689,7 @@ const Checkout = () => {
   <div className="mt-6 p-5 bg-white shadow-lg rounded-lg border border-gray-200">
       <div>
       <div style={{ fontSize: '1.4rem', margin: '20px 0', color: 'red' }}>
-        {timeLeft > 0 ? formatTime(timeLeft) : "00:00"}
+        {timeLeft > 0 ? formatTime(timeLeft) : "Payment Timeout"}
       </div>
     </div>
     <h3 className="text-xl font-semibold text-gray-800 mb-3">Bank Transfer Details</h3>
