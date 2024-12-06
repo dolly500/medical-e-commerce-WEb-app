@@ -4,7 +4,7 @@ module.exports = function(app) {
   app.use(
     '/api',
     createProxyMiddleware({
-      target: 'https://medical-e-app.vercel.app/',
+      target: 'https://www.medistorepro.com',
       changeOrigin: true,
     })
   );
