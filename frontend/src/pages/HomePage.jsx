@@ -20,7 +20,6 @@ const HomePage = () => {
   const [categoriesData, setCategoriesData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  // Function to verify transaction reference
   const verifyTrxRef = async (trxRef, typeParam) => {
     setIsLoading(true);
     try {
@@ -41,7 +40,6 @@ const HomePage = () => {
       } else {
         throw new Error(data.error || 'Verification failed'); 
       }
-
     } catch (error) {
       console.error('Error verifying trxRef:', error);
     } finally {
@@ -49,7 +47,6 @@ const HomePage = () => {
     }
   };
 
-  // Handle chat transaction
   const handleChatTransaction = async (data) => {
     const groupTitle = `${data._id}${user._id}`;
     const userId = user._id;
@@ -68,7 +65,6 @@ const HomePage = () => {
     }
   };
 
-  // Fetch categories data
   const fetchCategoriesData = async () => {
     try {
       const res = await axios.get(`${server}/category/`, { withCredentials: true });
@@ -78,7 +74,6 @@ const HomePage = () => {
     }
   };
 
-  // Handle navigation based on URL parameters
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const trxRefParam = urlParams.get('trxref'); 
@@ -91,11 +86,43 @@ const HomePage = () => {
     }
   }, []);
 
-  // Fetch categories on component mount
   useEffect(() => {
     window.scrollTo(0, 0);
     fetchCategoriesData();
   }, []);
+
+  useEffect(() => {
+    const script = document.createElement('script');
+    script.type = 'text/javascript';
+    script.src = 'https://dollytech.ladesk.com/scripts/track.js';
+    script.async = true;
+    document.body.appendChild(script);
+  
+    // Function to initialize LiveAgent after the script loads
+    script.onload = () => {
+      if (window.LiveAgent) {
+        try {
+          window.LiveAgent.createButton('ol5irb6p', script);
+        } catch (error) {
+          console.error('Error initializing LiveAgent:', error);
+        }
+      } else {
+        console.error('LiveAgent object is still not defined after script load.');
+      }
+    };
+  
+    // Handle script loading error
+    script.onerror = () => {
+      console.error('Failed to load the LiveAgent script.');
+    };
+  
+    // Cleanup the script on component unmount
+    return () => {
+      document.body.removeChild(script);
+    };
+  }, []);
+  
+  
 
   const handleFooterClick = () => {
     sessionStorage.setItem('scrollPosition', window.scrollY.toString());
@@ -114,19 +141,6 @@ const HomePage = () => {
   useEffect(() => {
     handleBackButtonClick();
   }, [navigate]);
-
-  // Add Tidio LiveChat script
-  useEffect(() => {
-    const script = document.createElement('script');
-    script.src = '//code.tidio.co/jixrjaohqp6dcq85zcobusr92zkk7frg.js'; // Replace 'your-unique-id' with your Tidio public key
-    script.async = true;
-    document.body.appendChild(script);
-
-    return () => {
-      // Clean up script when component unmounts
-      document.body.removeChild(script);
-    };
-  }, []);
 
   return (
     <div className="bg-gradient-to-r from-white-50 to-white-100 min-h-screen">
