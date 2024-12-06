@@ -98,20 +98,25 @@ const HomePage = () => {
     script.async = true;
     document.body.appendChild(script);
   
-    // Function to initialize LiveAgent after the script loads
-    script.onload = () => {
-      if (window.LiveAgent) {
+    const initializeLiveAgent = () => {
+      if (window.LiveAgent && typeof window.LiveAgent.createButton === 'function') {
         try {
           window.LiveAgent.createButton('ol5irb6p', script);
         } catch (error) {
           console.error('Error initializing LiveAgent:', error);
         }
       } else {
-        console.error('LiveAgent object is still not defined after script load.');
+        console.warn('LiveAgent is not fully initialized yet, retrying...');
+        setTimeout(initializeLiveAgent, 100); // Retry after 100ms
       }
     };
   
-    // Handle script loading error
+    // Call the initialization function after script loads
+    script.onload = () => {
+      initializeLiveAgent();
+    };
+  
+    // Handle script load error
     script.onerror = () => {
       console.error('Failed to load the LiveAgent script.');
     };
@@ -121,6 +126,7 @@ const HomePage = () => {
       document.body.removeChild(script);
     };
   }, []);
+  
   
   
 
