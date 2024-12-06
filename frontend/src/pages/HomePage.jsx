@@ -12,6 +12,7 @@ import FeaturedProduct from '../components/Route/FeaturedProduct/FeaturedProduct
 import Events from '../components/Events/Events';
 import Footer from '../components/Layout/Footer';
 import { server } from '../server';
+import LiveAgentChatButton  from './LiveAgentChatButton';
 
 const HomePage = () => {
   const navigate = useNavigate();
@@ -20,6 +21,7 @@ const HomePage = () => {
   const [categoriesData, setCategoriesData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
+  // Function to verify transaction reference
   const verifyTrxRef = async (trxRef, typeParam) => {
     setIsLoading(true);
     try {
@@ -40,6 +42,7 @@ const HomePage = () => {
       } else {
         throw new Error(data.error || 'Verification failed'); 
       }
+
     } catch (error) {
       console.error('Error verifying trxRef:', error);
     } finally {
@@ -47,6 +50,7 @@ const HomePage = () => {
     }
   };
 
+  // Handle chat transaction
   const handleChatTransaction = async (data) => {
     const groupTitle = `${data._id}${user._id}`;
     const userId = user._id;
@@ -65,6 +69,7 @@ const HomePage = () => {
     }
   };
 
+  // Fetch categories data
   const fetchCategoriesData = async () => {
     try {
       const res = await axios.get(`${server}/category/`, { withCredentials: true });
@@ -74,6 +79,7 @@ const HomePage = () => {
     }
   };
 
+  // Handle navigation based on URL parameters
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const trxRefParam = urlParams.get('trxref'); 
@@ -86,49 +92,11 @@ const HomePage = () => {
     }
   }, []);
 
+  // Fetch categories on component mount
   useEffect(() => {
     window.scrollTo(0, 0);
     fetchCategoriesData();
   }, []);
-
-  useEffect(() => {
-    const script = document.createElement('script');
-    script.type = 'text/javascript';
-    script.src = 'https://dollytech.ladesk.com/scripts/track.js';
-    script.async = true;
-    document.body.appendChild(script);
-  
-    const initializeLiveAgent = () => {
-      if (window.LiveAgent && typeof window.LiveAgent.createButton === 'function') {
-        try {
-          window.LiveAgent.createButton('ol5irb6p', script);
-        } catch (error) {
-          console.error('Error initializing LiveAgent:', error);
-        }
-      } else {
-        console.warn('LiveAgent is not fully initialized yet, retrying...');
-        setTimeout(initializeLiveAgent, 100); // Retry after 100ms
-      }
-    };
-  
-    // Call the initialization function after script loads
-    script.onload = () => {
-      initializeLiveAgent();
-    };
-  
-    // Handle script load error
-    script.onerror = () => {
-      console.error('Failed to load the LiveAgent script.');
-    };
-  
-    // Cleanup the script on component unmount
-    return () => {
-      document.body.removeChild(script);
-    };
-  }, []);
-  
-  
-  
 
   const handleFooterClick = () => {
     sessionStorage.setItem('scrollPosition', window.scrollY.toString());
@@ -148,6 +116,7 @@ const HomePage = () => {
     handleBackButtonClick();
   }, [navigate]);
 
+
   return (
     <div className="bg-gradient-to-r from-white-50 to-white-100 min-h-screen">
       {isLoading && <div className="text-blue">Verifying Transaction...</div>}
@@ -159,6 +128,7 @@ const HomePage = () => {
         <FeaturedProduct />
         <Events />
         <Footer onClick={handleFooterClick} />
+        <LiveAgentChatButton />
       </div>
     </div>
   );
