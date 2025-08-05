@@ -15,7 +15,7 @@ const swaggerDocument = require('./swagger-output.json');
 
 
 app.use(cors({
-  origin: ['https://www.medistorepro.com', 'https://medical-e-app.vercel.app'],
+  origin: ['https://www.medistorepro.com', 'https://medical-e-app.vercel.app', 'http://localhost:3000'],
   credentials: true,
   domain: 'https://www.medistorepro.com'
 }));
